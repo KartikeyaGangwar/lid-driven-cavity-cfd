@@ -636,6 +636,8 @@ class LidDrivenCavitySolver:
 
         self.p = p_new - np.mean(p_new[1:-1, 1:-1])
 
+    solve_pressure_poisson = calculate_pressure
+
     def solve(self, max_iterations=25000, tolerance=1e-5, min_iterations=300, log_interval=500, compute_pressure=True):
         """Main iterative coupling loop between vorticity transport and streamfunction."""
         print(f"\n{'='*65}")

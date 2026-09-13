@@ -79,7 +79,10 @@ def create_showcase_plots(data, filename=None, save=True, show=True, out_path=No
     _apply_latex_style()
 
     x, y = data["x"], data["y"]
-    X, Y = data["X"], data["Y"]
+    if "X" in data and "Y" in data:
+        X, Y = data["X"], data["Y"]
+    else:
+        X, Y = np.meshgrid(x, y, indexing='xy')
     psi, u, v = data["psi"], data["u"], data["v"]
     L = float(x[-1])
     N = len(x)
