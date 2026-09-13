@@ -1,0 +1,63 @@
+\begin{thebibliography}{10}
+
+\bibitem{ghia1982high}
+U.~Ghia, K.~N. Ghia, and C.~T. Shin.
+\newblock High-{Re} solutions for incompressible flow using the
+  {Navier}--{Stokes} equations and a multigrid method.
+\newblock {\em Journal of Computational Physics}, 48(3):387--411, 1982.
+
+\bibitem{erturk2005numerical}
+E.~Erturk, T.~C. Corke, and C.~G{\"o}k{\c{c}}{\"o}l.
+\newblock Numerical solutions of 2-{D} steady incompressible driven cavity flow
+  at high {Reynolds} numbers.
+\newblock {\em International Journal for Numerical Methods in Fluids},
+  48(7):747--774, 2005.
+
+\bibitem{bruneau20062d}
+Charles-Henri Bruneau and Mazen Saad.
+\newblock The 2{D} lid-driven cavity problem revisited.
+\newblock {\em Computers \& Fluids}, 35(3):326--348, 2006.
+
+\bibitem{peng2003transition}
+Y.~F. Peng, Y.~H. Shiau, and R.~R. Hwang.
+\newblock Transition in a 2-{D} lid-driven cavity flow.
+\newblock {\em Computers \& Fluids}, 32(3):337--352, 2003.
+
+\bibitem{raissi2019physics}
+Maziar Raissi, Paris Perdikaris, and George~E. Karniadakis.
+\newblock Physics-informed neural networks: A deep learning framework for
+  solving forward and inverse problems involving nonlinear partial differential
+  equations.
+\newblock {\em Journal of Computational Physics}, 378:686--707, 2019.
+
+\bibitem{thom1933flow}
+Alexander Thom.
+\newblock The flow past circular cylinders at low speeds.
+\newblock {\em Proceedings of the Royal Society of London. Series A},
+  141(845):651--669, 1933.
+
+\bibitem{botella1998benchmark}
+Olivier Botella and Roger Peyret.
+\newblock A benchmark spectral solution for the 2{D} lid-driven cavity flow.
+\newblock {\em Computers \& Fluids}, 27(4):421--433, 1998.
+
+\bibitem{batchelor1956steady}
+George~K. Batchelor.
+\newblock On steady laminar flow with closed streamlines at large {Reynolds}
+  number.
+\newblock {\em Journal of Fluid Mechanics}, 1(2):177--190, 1956.
+
+\bibitem{erturk2009discussions}
+Ercan Erturk.
+\newblock Discussions on driven cavity flow.
+\newblock {\em International Journal for Numerical Methods in Fluids},
+  60(3):275--294, 2009.
+
+\bibitem{erturk2009benchmarks}
+Ercan Erturk.
+\newblock The numerical benchmarks for 2{D} steady incompressible driven cavity
+  flow.
+\newblock \url{https://www.acenumerics.com/the-benchmarks.html}, 2009.
+\newblock ACE Numerics CFD Benchmark Suite.
+
+\end{thebibliography}
