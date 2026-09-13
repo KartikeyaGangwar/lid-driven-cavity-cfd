@@ -355,9 +355,10 @@ def run_ultra_unsteady(Re, N=1025, base_npz=None, dt=0.0005, total_steps=20000,
     print(f"[SAVED] Saved unsteady telemetry data to: {unsteady_out}")
 
     # Generate Animated GIF if requested
-    if make_gif and f0 > 0:
+    if make_gif:
+        eff_period = T_period if (f0 > 0 and 0.01 <= T_period <= 0.5) else 0.05
         gif_out = os.path.join(fig_dir, f"lid_driven_vortex_shedding_Re{Re}_N{N}.gif")
-        generate_synchronized_gif(solver, t_arr, u_bl_arr, v_bl_arr, T_period,
+        generate_synchronized_gif(solver, t_arr, u_bl_arr, v_bl_arr, eff_period,
                                   n_frames=gif_frames, out_path=gif_out)
 
     return unsteady_out
@@ -369,7 +370,7 @@ def generate_synchronized_gif(solver, t_history, u_hist, v_hist, T_period,
     Renders synchronized 60-frame publication GIF over one complete fundamental cycle.
     """
     print(f"[GIF] Generating {n_frames}-frame synchronized animation over T = {T_period:.3f}s ...", flush=True)
-    steps_per_frame = max(1, int(round((T_period / solver.dt) / n_frames)))
+    steps_per_frame = max(1, min(35, int(round((T_period / solver.dt) / n_frames))))
     
     frames = []
     t_cur = t_history[-1]
