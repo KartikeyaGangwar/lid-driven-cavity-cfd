@@ -17,6 +17,7 @@ License: MIT
 
 import os
 import sys
+import io
 import time
 import argparse
 import numpy as np
@@ -247,14 +248,18 @@ def run_ultra_unsteady(Re, N=1025, base_npz=None, dt=0.0005, total_steps=20000,
     print(f"ULTRA-RESOLUTION UNSTEADY MARCHING: Re = {Re:,} on Mesh {N}x{N} ({N*N:,} nodes)")
     print("=" * 80)
 
-    # Initialize solver with wall_beta = 1.0 (pure physical closure)
+    # Initialize solver with robust wall relaxation (0.50 for high Re stability)
     solver = LidDrivenCavitySolver(
         N=N, Re=Re, lid_velocity=1.0, L=1.0, lid_profile='constant',
-        poisson_solver='dst', convection_scheme='central', wall_bc='thom', wall_beta=1.0
+        poisson_solver='dst', convection_scheme='central', wall_bc='thom',
+        wall_beta=0.50 if Re >= 5000 else 0.60
     )
-    solver.dt = dt
-    solver.alpha_adi = (solver.nu * dt) / (2.0 * solver.h**2)
-    solver._init_adi_coefficients()
+    # Ensure dt strictly respects the viscous and convective CFL bounds
+    if dt is not None and dt < solver.dt:
+        solver.dt = dt
+        solver.alpha_adi = (solver.nu * solver.dt) / (2.0 * solver.h**2)
+        solver._init_adi_coefficients()
+    dt = solver.dt
 
     # Load initial condition
     if base_npz and os.path.exists(base_npz):
@@ -282,12 +287,14 @@ def run_ultra_unsteady(Re, N=1025, base_npz=None, dt=0.0005, total_steps=20000,
         else:
             raise FileNotFoundError(f"Base steady state not found for Re={Re}, N={N}")
 
-    # Seed localized shear-layer perturbation
-    X, Y = solver.X, solver.Y
-    perturb = 0.05 * np.exp(-((X - 0.8)**2 + (Y - 0.8)**2) / (0.05**2))
-    solver.omega += perturb
-    solver.solve_poisson()
-    solver.update_velocity()
+    # Seed gentle shear-layer perturbation only near critical bifurcation (Re <= 15,000)
+    # At Re >= 25,000, flow is naturally intrinsically unstable and sheds dynamically
+    if Re <= 15000:
+        X, Y = solver.X, solver.Y
+        perturb = 0.02 * np.exp(-((X - 0.8)**2 + (Y - 0.8)**2) / (0.05**2))
+        solver.omega += perturb
+        solver.solve_streamfunction()
+        solver.calculate_velocities()
 
     # Setup telemetry probe at BL secondary detachment zone (x=0.08, y=0.15)
     j_probe = int(np.argmin(np.abs(solver.x - 0.08)))
