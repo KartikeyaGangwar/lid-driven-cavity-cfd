@@ -570,6 +570,40 @@ class LidDrivenCavitySolver:
         omega_new[1:-1, 1:-1] = omega_new_inner
         return omega_new
 
+    def step_adi(self):
+        """Advance the vorticity field by one Peaceman-Rachford ADI step."""
+        self.omega = self.solve_vorticity_transport_ADI()
+        return self.omega
+
+    def solve_poisson(self):
+        """Invert the Poisson equation for streamfunction: del^2(psi) = -omega."""
+        self.solve_streamfunction()
+        return self.psi
+
+    def update_velocity(self):
+        """Update velocity components (u, v) from streamfunction derivatives."""
+        self.calculate_velocities()
+        return self.u, self.v
+
+    def update_wall_vorticity(self):
+        """Apply Thom's wall boundary conditions with under-relaxation."""
+        self.apply_boundary_conditions()
+        return self.omega
+
+    def step(self):
+        """
+        Advance complete coupled Navier-Stokes state by one physical time step:
+        1. ADI vorticity transport
+        2. Wall vorticity boundary enforcement
+        3. Poisson streamfunction inversion
+        4. Interior & wall velocity differentiation
+        """
+        self.omega = self.solve_vorticity_transport_ADI()
+        self.apply_boundary_conditions()
+        self.solve_streamfunction()
+        self.calculate_velocities()
+        return self.omega, self.psi
+
     def calculate_pressure(self, max_iter=2500, tol=1e-5):
         """
         Recover the pressure field by solving the pressure Poisson equation:

@@ -144,18 +144,8 @@ def solve_ultra_steady(Re, N=1025, source_file=None, max_iter=25000, tol=1e-6,
     converged = False
     
     for it in range(1, max_iter + 1):
-        # 1. Advance vorticity ADI
         omega_prev = solver.omega.copy()
-        solver.step_adi()
-        
-        # 2. Invert Poisson for streamfunction
-        solver.solve_poisson()
-        
-        # 3. Update velocity field
-        solver.update_velocity()
-        
-        # 4. Update wall vorticity with under-relaxation
-        solver.update_wall_vorticity()
+        solver.step()
 
         if it % check_interval == 0:
             diff = np.max(np.abs(solver.omega - omega_prev))
@@ -185,16 +175,20 @@ def solve_ultra_steady(Re, N=1025, source_file=None, max_iter=25000, tol=1e-6,
     # Generate showcase plot
     vortices = solver.get_vortex_centers()
     p = vortices['primary']
-    print(f"[EDDY RESULTS] Primary Vortex Center: ({p['x']:.5f}, {p['y']:.5f}) | psi_min: {p['psi_min']:.5f}")
+    psi_val = p.get('psi', p.get('psi_min', 0.0))
+    print(f"[EDDY RESULTS] Primary Vortex Center: ({p['x']:.5f}, {p['y']:.5f}) | psi_min: {psi_val:.5f}")
     if 'BR1' in vortices:
         br = vortices['BR1']
-        print(f"               BR1 Vortex Center:    ({br['x']:.5f}, {br['y']:.5f}) | psi_max: {br['psi_max']:.3e}")
+        br_psi = br.get('psi', br.get('psi_max', 0.0))
+        print(f"               BR1 Vortex Center:    ({br['x']:.5f}, {br['y']:.5f}) | psi_max: {br_psi:.3e}")
     if 'BL1' in vortices:
         bl = vortices['BL1']
-        print(f"               BL1 Vortex Center:    ({bl['x']:.5f}, {bl['y']:.5f}) | psi_max: {bl['psi_max']:.3e}")
+        bl_psi = bl.get('psi', bl.get('psi_max', 0.0))
+        print(f"               BL1 Vortex Center:    ({bl['x']:.5f}, {bl['y']:.5f}) | psi_max: {bl_psi:.3e}")
     if 'TL1' in vortices:
         tl = vortices['TL1']
-        print(f"               TL1 Vortex Center:    ({tl['x']:.5f}, {tl['y']:.5f}) | psi_max: {tl['psi_max']:.3e}")
+        tl_psi = tl.get('psi', tl.get('psi_max', 0.0))
+        print(f"               TL1 Vortex Center:    ({tl['x']:.5f}, {tl['y']:.5f}) | psi_max: {tl_psi:.3e}")
 
     # Verification against Erturk Table 3 if applicable
     verify_against_erturk_table3(out_file)
@@ -307,10 +301,7 @@ def run_ultra_unsteady(Re, N=1025, base_npz=None, dt=0.0005, total_steps=20000,
     t0 = time.perf_counter()
 
     for step in range(1, total_steps + 1):
-        solver.step_adi()
-        solver.solve_poisson()
-        solver.update_velocity()
-        solver.update_wall_vorticity()
+        solver.step()
 
         cur_t = step * dt
         t_arr.append(cur_t)
@@ -385,10 +376,7 @@ def generate_synchronized_gif(solver, t_history, u_hist, v_hist, T_period,
 
     for frame_idx in range(n_frames):
         for _ in range(steps_per_frame):
-            solver.step_adi()
-            solver.solve_poisson()
-            solver.update_velocity()
-            solver.update_wall_vorticity()
+            solver.step()
             t_cur += solver.dt
             probe_t.append(t_cur)
             probe_v.append(solver.v[int(np.argmin(np.abs(solver.y - 0.15))),
