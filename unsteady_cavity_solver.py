@@ -291,8 +291,8 @@ class UnsteadyCavitySolver:
         print(f"\n[GIF] Generating synchronized {n_frames}-frame animation over T = {period:.4f} s...")
         dt = self.dt
         total_steps_cycle = int(round(period / dt))
-        steps_per_frame = max(1, total_steps_cycle // n_frames)
-        actual_frames = total_steps_cycle // steps_per_frame
+        steps_per_frame = max(1, min(50, total_steps_cycle // n_frames))
+        actual_frames = n_frames
 
         probe_idx = (int(round(0.15 * (self.N - 1))), int(round(0.08 * (self.N - 1))))
         frames_data = []
@@ -557,6 +557,7 @@ def main():
     parser.add_argument('--N', type=int, default=257, help='Grid points along each axis')
     parser.add_argument('--dt', type=float, default=None, help='Physical time step (default auto-tuned by Re)')
     parser.add_argument('--t_end', type=float, default=None, help='Total physical time (default auto-tuned by Re)')
+    parser.add_argument('--steps', type=int, default=None, help='Total number of time steps (overrides t_end)')
     parser.add_argument('--sample_interval', type=int, default=10, help='Telemetry sampling frequency (in steps)')
     parser.add_argument('--init_npz', type=str, default=None, help='Initial solution path')
     parser.add_argument('--gif', action='store_true', default=True, help='Generate publication animated GIF')
@@ -566,12 +567,20 @@ def main():
     args = parser.parse_args()
 
     dt = args.dt
-    if dt is None:
-        dt = 0.0001 if args.Re >= 50000 else 0.001
+    if dt is None or (args.Re >= 100000 and dt > 1.8e-5):
+        if args.Re >= 100000:
+            dt = 1.8e-5
+        elif args.Re >= 50000:
+            dt = 3.6e-5
+        else:
+            dt = 0.001
 
-    t_end = args.t_end
-    if t_end is None:
-        t_end = 2.0 if args.Re >= 100000 else (5.0 if args.Re >= 50000 else 25.0)
+    if args.steps is not None:
+        t_end = args.steps * dt
+    else:
+        t_end = args.t_end
+        if t_end is None:
+            t_end = 0.25 if args.Re >= 100000 else (5.0 if args.Re >= 50000 else 25.0)
 
     init_path = args.init_npz
     if init_path is None:
