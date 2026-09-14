@@ -7,9 +7,9 @@
 **Manuscript Title:**  
 A High-Resolution Finite-Difference Benchmark for Steady Continuation and Hopf Bifurcation Dynamics up to Extreme Reynolds Numbers ($Re = 100,000$) in 2D Lid-Driven Cavity Flows  
 
-**Author:** Kartikeya Gangwar  
-Department of Mechanical Engineering, Indian Institute of Technology / Research Affiliate  
-Email: kartikeyagangwar@alumni.iit.ac.in  
+**Author:** Kartikey Singh  
+Department of Mathematics, University of Delhi, Delhi, 110007, India  
+Email: kartikeysingh525@protonmail.com | ORCID: https://orcid.org/0009-0009-1973-7532  
 
 ---
 
@@ -39,7 +39,7 @@ In this manuscript, we push the resolution and Reynolds frontiers of the standar
 - There are no competing financial or non-financial interests to declare.
 
 Sincerely yours,  
-**Kartikeya Gangwar**  
-Department of Mechanical Engineering  
-Indian Institute of Technology / Research Affiliate  
-Email: kartikeyagangwar@alumni.iit.ac.in  
+**Kartikey Singh**  
+Department of Mathematics  
+University of Delhi, Delhi, 110007, India  
+Email: kartikeysingh525@protonmail.com | ORCID: https://orcid.org/0009-0009-1973-7532  

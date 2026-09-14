@@ -2,7 +2,7 @@
 
 **Journal:** *Computers & Fluids* (Elsevier)  
 **Title:** A High-Resolution Finite-Difference Benchmark for Steady Continuation and Hopf Bifurcation Dynamics up to Extreme Reynolds Numbers ($Re = 100,000$) in 2D Lid-Driven Cavity Flows  
-**Author:** Kartikeya Gangwar  
+**Author:** Kartikey Singh (ORCID: https://orcid.org/0009-0009-1973-7532)  
 
 ---
 
