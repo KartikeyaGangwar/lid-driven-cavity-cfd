@@ -41,6 +41,18 @@ Olivier Botella and Roger Peyret.
 \newblock A benchmark spectral solution for the 2{D} lid-driven cavity flow.
 \newblock {\em Computers \& Fluids}, 27(4):421--433, 1998.
 
+\bibitem{spalding1972novel}
+D.~B. Spalding.
+\newblock A novel finite-difference formulation for differential expressions
+  involving both first and second derivatives.
+\newblock {\em International Journal for Numerical Methods in Engineering},
+  4(4):551--559, 1972.
+
+\bibitem{patankar1980numerical}
+Suhas~V. Patankar.
+\newblock {\em Numerical Heat Transfer and Fluid Flow}.
+\newblock Hemisphere Publishing Corporation, Washington, D.C., 1980.
+
 \bibitem{batchelor1956steady}
 George~K. Batchelor.
 \newblock On steady laminar flow with closed streamlines at large {Reynolds}

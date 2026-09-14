@@ -463,8 +463,8 @@ def plot_phase_portrait_and_psd(fft_data, Re, save_path='figures/lid_driven_unst
     n_pts = len(u)
     colors = np.linspace(0, 1, n_pts)
     ax1.plot(u, v, color='#1f77b4', linewidth=1.5, alpha=0.85, label=r'Phase Orbit $(u(t), v(t))$')
-    # Mark start and end points
-    ax1.scatter(u[0], v[0], color='#2ca02c', s=55, zorder=5, label=r'Cycle Entry ($t=10.0$)')
+    t_entry = fft_data['t_stat'][0] if ('t_stat' in fft_data and len(fft_data['t_stat']) > 0) else 10.0
+    ax1.scatter(u[0], v[0], color='#2ca02c', s=55, zorder=5, label=rf'Cycle Entry ($t={t_entry:.1f}$)')
     ax1.scatter(u[-1], v[-1], color='#d62728', marker='s', s=55, zorder=5, label=r'Cycle Terminal Point')
 
     ax1.set_xlabel(r'Horizontal Velocity $u/U$', fontsize=12)
