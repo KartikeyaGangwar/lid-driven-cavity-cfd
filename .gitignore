@@ -209,3 +209,11 @@ __marimo__/
 # Temporary scratch files and animation frames
 figures/temp_*
 scratch/
+
+# LaTeX auxiliary files
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.blg
+paper/*.bbl
+
