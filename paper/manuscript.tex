@@ -23,7 +23,7 @@
 
 \title{\LARGE \textbf{A High-Resolution Finite-Difference Benchmark for Steady Continuation and Hopf Bifurcation Dynamics up to Extreme Reynolds Numbers ($Re = 100,000$) in 2D Lid-Driven Cavity Flows}}
 
-\author{\textbf{Kartikey Singh}\thanks{Independent Computational Engineering Researcher. Contact and open-source project repository: \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}. Permanent Archive DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}.}}
+\author{\textbf{Kartikeya Gangwar}\thanks{Department of Mechanical Engineering, Indian Institute of Technology / Independent Computational Engineering Researcher. Corresponding author email: \texttt{kartikeyagangwar@alumni.iit.ac.in}. Open-source repository: \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}. Permanent Archive DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}.}}
 
 \date{September 2026}
 
@@ -32,11 +32,11 @@
 \maketitle
 
 \begin{abstract}
-The two-dimensional incompressible lid-driven cavity problem serves as one of the most fundamental validation benchmarks in computational fluid dynamics (CFD), aerodynamic code verification, and high-order Navier--Stokes algorithm development. However, the vast majority of published open-source solvers suffer from numerical instability beyond $Re = 1,000$, rely on unphysical numerical upwinding (artificial viscosity) to artificially stabilize convection, or provide only sparse 17-point discrete centerline profiles originating from legacy multigrid calculations (Ghia et al., 1982). In this work, we present a high-performance, reference-grade finite-difference computational suite operating in the streamfunction--vorticity ($\psi$--$\omega$) formulation across both steady and unsteady flow regimes up to extreme Reynolds numbers ($Re = 100,000$). The numerical engine integrates an exact $\mathcal{O}(N^2 \log N)$ Discrete Sine Transform (DST-I) spectral Poisson solver, eliminating iterative Poisson residuals, coupled with a vectorized Alternating Direction Implicit (ADI) marching scheme and a parameter homotopy continuation ladder. Across laminar and moderate-to-high Reynolds regimes ($Re \le 50,000$), the solver operates with \emph{pure second-order central differencing} ($\nu_{\text{num}} = 0$). At the extreme frontier of $Re = 100,000$, where cell P\'eclet numbers reach $Pe = 195.3 \gg 2$ on a $513 \times 513$ grid, we formulate a localized Spalding--Patankar hybrid differencing scheme that retains strictly zero numerical dissipation ($\nu_{\text{num}} = 0$) throughout the recirculating core while arresting high-frequency dispersive corner shocks in thin wall shear layers ($\delta \sim L/\sqrt{Re}$). On ultra-fine uniform meshes up to $1025 \times 1025$ ($1,050,625$ collocation nodes), steady continuation accurately resolves primary, secondary (BR1, BL1, TL1), tertiary, and quaternary wall eddies, exhibiting outstanding agreement with Ghia et al. (1982) and Erturk et al. (2005) ($\Delta = 0.00688$ at $Re = 25,000$). At $Re = 50,000$ and $Re = 100,000$, the primary vortex core converges symmetrically to $x_c = 0.50000$ on $513 \times 513$ and $x_c = 0.4990$ on $1025 \times 1025$ ($\psi_{\min} = -0.12572$), providing quantitative numerical confirmation of Batchelor's core theorem for asymptotic high-Reynolds recirculation. Furthermore, physical time-accurate simulations spanning extended convective time scales ($t = 8.0\,\text{s}$ to $12.0\,\text{s}$) on $513 \times 513$ meshes resolve the supercritical primary Hopf bifurcation ($Re_{\text{cr}} \approx 8,000 \sim 10,000$, $St = 0.6661$), capture the secondary Hopf 2-torus quasi-periodic attractor at $Re = 15,000$ ($St = 0.6662$), and trace the non-linear transition into multi-harmonic limit-cycle dynamics at $Re = 25,000$ ($St = 0.1282$, $T = 7.8000\,\text{s}$), $Re = 50,000$ ($St = 0.4615$, $T = 2.1667\,\text{s}$, $4.61$ shedding cycles), and $Re = 100,000$ ($St = 0.1923$, $T = 5.2000\,\text{s}$). All source code, automated scripts, high-resolution figures, and 28 full 2D precomputed flow fields are released freely and openly to the global scientific community.
+The 2D incompressible lid-driven cavity problem serves as a fundamental benchmark in computational fluid dynamics. However, established benchmarks stagnate at $Re \le 10,000$ or inject artificial viscosity. We present a reference-grade finite-difference suite in streamfunction--vorticity formulation across steady and unsteady regimes up to extreme Reynolds numbers ($Re = 100,000$). The numerical engine integrates an exact $\mathcal{O}(N^2 \log N)$ Discrete Sine Transform (DST-I) Poisson solver, eliminating iterative residuals, coupled with vectorized Alternating Direction Implicit marching and parameter homotopy. Across $Re \le 50,000$, the solver operates with pure second-order central differencing ($\nu_{\text{num}} = 0$). At $Re = 100,000$ ($Pe = 195.3$), a localized Spalding--Patankar hybrid differencing scheme arrests corner shocks in thin wall shear layers ($\delta \sim 0.003$) while preserving zero artificial dissipation in the recirculating core. On uniform meshes up to $1025 \times 1025$, steady continuation accurately resolves primary, secondary, and quaternary corner eddies, demonstrating outstanding agreement with Ghia et al. and Erturk et al. At $Re = 50,000$ and $Re = 100,000$, the primary vortex core converges symmetrically to $x_c = 0.50000$ with $\psi_{\min} = -0.12572$, confirming Batchelor's asymptotic recirculating core theorem. Physical time-accurate marching on $513 \times 513$ grids ($t = 8.0\,\text{s}$--$12.0\,\text{s}$) resolves the supercritical primary Hopf bifurcation ($St = 0.6661$), secondary Hopf 2-torus quasi-periodicity ($St = 0.6662$), multi-harmonic folding ($Re = 25,000$, $St = 0.1282$), multi-frequency limit cycles ($Re = 50,000$, $St = 0.4615$, $4.61$ cycles), and extreme frontier limit loops ($Re = 100,000$, $St = 0.1923$). All datasets, automated tools, and animations are openly archived.
 \end{abstract}
 
 \vspace{0.5em}
-\noindent \textbf{Keywords:} Lid-driven cavity, Finite difference method, Streamfunction--vorticity, Zero artificial viscosity, Cell P\'eclet number, Extreme Reynolds number, Hopf bifurcation, Batchelor theorem, Open science.
+\noindent \textbf{Keywords:} Lid-driven cavity, Finite difference method, Streamfunction--vorticity, Zero artificial viscosity, Hopf bifurcation, Batchelor theorem.
 
 \vspace{1em}
 \hrule
@@ -565,8 +565,20 @@ This paper presented a high-resolution finite-difference framework for the 2D li
 
 By releasing all source codes, benchmark datasets, and animation pipelines openly and permanently under the MIT license, this work provides a reliable, reproducible, and accessible CFD reference for researchers, students, and practitioners worldwide.
 
-\section*{Code \& Data Availability}
-The complete software repository, documentation, precomputed datasets, and high-resolution figures are openly available at \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}. The archival release is permanently indexed with DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}.
+\section*{CRediT Authorship Contribution Statement}
+\textbf{Kartikeya Gangwar:} Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing -- original draft, Writing -- review \& editing, Visualization.
+
+\section*{Declaration of Competing Interest}
+The author declares that he has no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Funding}
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+\section*{Declaration of Generative AI in the Manuscript Preparation Process}
+During the preparation of this work, the author used AI-assisted technologies solely for editorial consistency, grammar verification, and scientific language polishing. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content and conclusions of the published article.
+
+\section*{Data Availability}
+The underlying research data, full 2D tensor fields (.npz), verification scripts, and high-resolution animation pipelines are openly available on Zenodo under permanent DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938} and hosted on GitHub at \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}.
 
 \bibliographystyle{unsrt}
 \bibliography{references}
