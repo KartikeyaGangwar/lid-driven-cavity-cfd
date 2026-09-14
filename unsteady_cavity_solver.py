@@ -46,16 +46,21 @@ class UnsteadyCavitySolver:
     """
 
     def __init__(self, N=257, Re=10000, lid_velocity=1.0, L=1.0, dt=0.001,
-                 lid_profile='constant', convection_scheme='central', wall_bc='thom'):
+                 lid_profile='constant', convection_scheme=None, wall_bc='thom', wall_beta=None):
         self.N = N
         self.Re = Re
         self.U = lid_velocity
         self.L = L
         self.dt = dt
         self.lid_profile = lid_profile
+        if convection_scheme is None:
+            convection_scheme = 'hybrid' if Re >= 100000 else 'central'
         self.convection_scheme = convection_scheme
         self.wall_bc = wall_bc
-        self.wall_beta = 0.85 if Re >= 50000 else 1.0
+        if wall_beta is None:
+            self.wall_beta = 0.75 if Re >= 100000 else (0.85 if Re >= 50000 else 1.0)
+        else:
+            self.wall_beta = wall_beta
 
         # Base solver instance with appropriate wall_beta for high-Re stability
         self.solver = LidDrivenCavitySolver(
@@ -291,7 +296,7 @@ class UnsteadyCavitySolver:
         print(f"\n[GIF] Generating synchronized {n_frames}-frame animation over T = {period:.4f} s...")
         dt = self.dt
         total_steps_cycle = int(round(period / dt))
-        steps_per_frame = max(1, min(50, total_steps_cycle // n_frames))
+        steps_per_frame = max(1, total_steps_cycle // n_frames)
         actual_frames = n_frames
 
         probe_idx = (int(round(0.15 * (self.N - 1))), int(round(0.08 * (self.N - 1))))
@@ -559,6 +564,9 @@ def main():
     parser.add_argument('--t_end', type=float, default=None, help='Total physical time (default auto-tuned by Re)')
     parser.add_argument('--steps', type=int, default=None, help='Total number of time steps (overrides t_end)')
     parser.add_argument('--sample_interval', type=int, default=10, help='Telemetry sampling frequency (in steps)')
+    parser.add_argument('--convection', type=str, default=None, choices=['central', 'hybrid', 'upwind'],
+                        help='Convection scheme (default: hybrid for Re >= 100000, central for Re < 100000)')
+    parser.add_argument('--wall_beta', type=float, default=None, help='Wall boundary under-relaxation parameter')
     parser.add_argument('--init_npz', type=str, default=None, help='Initial solution path')
     parser.add_argument('--gif', action='store_true', default=True, help='Generate publication animated GIF')
     parser.add_argument('--no_gif', dest='gif', action='store_false')
@@ -566,10 +574,14 @@ def main():
     parser.add_argument('--fps', type=int, default=12, help='Frames per second for output GIF')
     args = parser.parse_args()
 
+    conv_scheme = args.convection
+    if conv_scheme is None:
+        conv_scheme = 'hybrid' if args.Re >= 100000 else 'central'
+
     dt = args.dt
-    if dt is None or (args.Re >= 100000 and dt > 1.8e-5):
+    if dt is None:
         if args.Re >= 100000:
-            dt = 1.8e-5
+            dt = 1.0e-4 if conv_scheme == 'hybrid' else 1.8e-5
         elif args.Re >= 50000:
             dt = 3.6e-5
         else:
@@ -580,7 +592,7 @@ def main():
     else:
         t_end = args.t_end
         if t_end is None:
-            t_end = 0.25 if args.Re >= 100000 else (5.0 if args.Re >= 50000 else 25.0)
+            t_end = 1.0 if args.Re >= 100000 else (5.0 if args.Re >= 50000 else 25.0)
 
     init_path = args.init_npz
     if init_path is None:
@@ -599,7 +611,7 @@ def main():
 
     unsteady_sim = UnsteadyCavitySolver(
         N=args.N, Re=args.Re, dt=dt,
-        convection_scheme='central', wall_bc='thom'
+        convection_scheme=conv_scheme, wall_bc='thom', wall_beta=args.wall_beta
     )
 
     unsteady_sim.initialize_from_npz(init_path, add_seed_perturbation=True)
