@@ -344,7 +344,7 @@ class UnsteadyCavitySolver:
         ax_trace.set_xlabel(r'Normalized Cycle Time $t / T$', fontsize=11)
         ax_trace.set_ylabel(r'Velocity Component', fontsize=11)
         ax_trace.set_xlim(0.0, 1.0)
-        ax_trace.set_title(rf'\textbf{{Real-Time Probe Telemetry}} ({self.N} $\times$ {self.N})', fontsize=12, pad=8)
+        ax_trace.set_title(rf'$\mathbf{{Real\text{{-}}Time\ Probe\ Telemetry}}$ ({self.N} $\times$ {self.N})', fontsize=12, pad=8)
         ax_trace.grid(True, linestyle='--', alpha=0.5)
         ax_trace.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
                         ncol=2, frameon=True, fancybox=True, edgecolor='#cccccc', fontsize=9.5)
@@ -357,7 +357,7 @@ class UnsteadyCavitySolver:
             ax_flow.contour(X, Y, fd['psi'], levels=levels_psi_neg, colors='black', linewidths=0.6, alpha=0.7)
             ax_flow.contour(X, Y, fd['psi'], levels=levels_psi_pos, colors='red', linewidths=0.8, alpha=0.8)
 
-            ax_flow.set_title(rf'\textbf{{Vorticity \& Streamlines}} ($\theta = {fd["phase_deg"]:.0f}^\circ$)', fontsize=12, pad=8)
+            ax_flow.set_title(rf'Vorticity & Streamlines ($\theta = {fd["phase_deg"]:.0f}^\circ$)', fontsize=12, fontweight='bold', pad=8)
             ax_flow.set_xlabel(r'$x/L$', fontsize=11)
             ax_flow.set_ylabel(r'$y/L$', fontsize=11)
             ax_flow.set_aspect('equal')
@@ -366,7 +366,7 @@ class UnsteadyCavitySolver:
             dot_u.set_data([t_norm[idx]], [u_tracker[idx]])
             dot_v.set_data([t_norm[idx]], [v_tracker[idx]])
 
-            fig.suptitle(rf'\textbf{{Dynamic Vortex Shedding}} --- $Re = {self.Re}$, \textbf{{Ultra-Fine}} ${self.N} \times {self.N}$',
+            fig.suptitle(rf'$\mathbf{{Dynamic\ Vortex\ Shedding}}$ --- $Re = {self.Re}$, $\mathbf{{Ultra\text{{-}}Fine}}$ ${self.N} \times {self.N}$',
                          fontsize=13, y=0.98)
             plt.subplots_adjust(bottom=0.20, top=0.88, wspace=0.28)
             frame_path = os.path.join(temp_dir, f"frame_{idx:03d}.png")
@@ -419,7 +419,7 @@ def plot_unsteady_timeseries(telemetry, Re, save_path='figures/lid_driven_unstea
              label=r'TR Shear $v(t)$ ($x=0.85, y=0.85$)')
 
     ax1.set_ylabel(r'Velocity Component ($u/U, v/U$)', fontsize=12)
-    ax1.set_title(rf'\textbf{{Unsteady Vortex Telemetry}} --- $Re = {Re}$ (Hopf Limit Cycle Onset)', fontsize=13, pad=10)
+    ax1.set_title(rf'Unsteady Vortex Telemetry --- $Re = {Re}$ (Hopf Limit Cycle Onset)', fontsize=13, fontweight='bold', pad=10)
     ax1.grid(True, linestyle='--', alpha=0.5)
 
     # Panel 2: Total Kinetic Energy & Enstrophy
@@ -469,7 +469,7 @@ def plot_phase_portrait_and_psd(fft_data, Re, save_path='figures/lid_driven_unst
 
     ax1.set_xlabel(r'Horizontal Velocity $u/U$', fontsize=12)
     ax1.set_ylabel(r'Vertical Velocity $v/U$', fontsize=12)
-    ax1.set_title(rf'\textbf{{Phase-Space Limit-Cycle Attractor}} ($Re={Re}$)', fontsize=13, pad=10)
+    ax1.set_title(rf'Phase-Space Limit-Cycle Attractor ($Re={Re}$)', fontsize=13, fontweight='bold', pad=10)
     ax1.grid(True, linestyle='--', alpha=0.5)
     ax1.legend(loc='upper center', bbox_to_anchor=(0.5, -0.16),
                ncol=3, frameon=True, fancybox=True, edgecolor='#cccccc', fontsize=9.5)
@@ -491,14 +491,15 @@ def plot_phase_portrait_and_psd(fft_data, Re, save_path='figures/lid_driven_unst
 
     # Annotate peak
     max_psd = np.max(psd[mask]) if np.any(mask) else (np.max(psd) if len(psd) > 0 else 1.0)
-    ax2.annotate(rf'\textbf{{Peak:}} $St = {strouhal:.3f}$ ($f_0 = {f_dom:.3f}$ Hz)',
+    ax2.annotate(rf'Peak: $St = {strouhal:.3f}$ ($f_0 = {f_dom:.3f}$ Hz)',
                  xy=(f_dom, max_psd), xytext=(f_dom + 0.35, max_psd * 0.85),
                  arrowprops=dict(facecolor='black', shrink=0.08, width=1, headwidth=6),
-                 fontsize=10.5, bbox=dict(boxstyle='round,pad=0.3', facecolor='#ffffcc', edgecolor='#cccc99'))
+                 fontsize=10.5, fontweight='bold',
+                 bbox=dict(boxstyle='round,pad=0.3', facecolor='#ffffcc', edgecolor='#cccc99'))
 
     ax2.set_xlabel(r'Non-Dimensional Frequency $f \cdot (L/U)$ / Strouhal $St$', fontsize=12)
     ax2.set_ylabel(r'Power Spectral Density (PSD)', fontsize=12)
-    ax2.set_title(rf'\textbf{{FFT Power Spectrum}} (Hopf Fundamental Frequency)', fontsize=13, pad=10)
+    ax2.set_title('FFT Power Spectrum (Hopf Fundamental Frequency)', fontsize=13, fontweight='bold', pad=10)
     ax2.grid(True, linestyle='--', alpha=0.5)
     ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.16),
                ncol=2, frameon=True, fancybox=True, edgecolor='#cccccc', fontsize=9.5)
@@ -534,15 +535,15 @@ def plot_cycle_snapshots(snapshots, solver, Re, save_path='figures/lid_driven_un
         # Secondary positive contours
         ax.contour(X, Y, psi, levels=np.linspace(1e-4, 3.5e-3, 9), colors='red', linewidths=0.8, alpha=0.8)
 
-        ax.set_title(rf'\textbf{{Phase}} $\theta = {deg:.0f}^\circ$', fontsize=12, pad=8)
+        ax.set_title(rf'Phase $\theta = {deg:.0f}^\circ$', fontsize=12, fontweight='bold', pad=8)
         ax.set_xlabel(r'$x/L$', fontsize=11)
         if idx == 0:
             ax.set_ylabel(r'$y/L$', fontsize=11)
         ax.set_aspect('equal')
         ax.grid(True, linestyle=':', alpha=0.4)
 
-    fig.suptitle(rf'\textbf{{Dynamic Vortex Shedding Over One Complete Cycle}} --- $Re = {Re}$',
-                 fontsize=14, y=0.98)
+    fig.suptitle(rf'Dynamic Vortex Shedding Over One Complete Cycle --- $Re = {Re}$',
+                 fontsize=14, fontweight='bold', y=0.98)
 
     # Colorbar below all subplots
     cbar_ax = fig.add_axes([0.25, 0.08, 0.50, 0.035])
