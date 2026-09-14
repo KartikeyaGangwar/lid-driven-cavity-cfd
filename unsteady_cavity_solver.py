@@ -123,31 +123,95 @@ class UnsteadyCavitySolver:
             self.solver.calculate_velocities()
             print("[INIT] Applied localized shear perturbation (amplitude = 0.05) to trigger Hopf eigenmode.", flush=True)
 
-    def run_simulation(self, t_end=25.0, sample_interval=10, log_interval=2000):
+    def resume_from_unsteady_npz(self, npz_path):
         """
-        Advance in physical time up to t_end.
+        Resume flow field and continuous probe telemetry from an existing unsteady npz archive.
+        Preserves past physical history and restores machine-accurate flow state.
+        """
+        if not os.path.exists(npz_path):
+            raise FileNotFoundError(f"Unsteady checkpoint file not found: {npz_path}")
+        print(f"\n[RESUME] Loading existing simulation state from: {npz_path}", flush=True)
+        data = np.load(npz_path)
+
+        # 1. Restore flow fields
+        if 'final_omega' in data and 'final_psi' in data:
+            self.solver.omega = data['final_omega'].copy()
+            self.solver.psi = data['final_psi'].copy()
+            print("  [STATE] Restored full flow fields from 'final_omega' and 'final_psi'.")
+        elif 'snapshot_270_omega' in data and 'snapshot_270_psi' in data:
+            self.solver.omega = data['snapshot_270_omega'].copy()
+            self.solver.psi = data['snapshot_270_psi'].copy()
+            print("  [STATE] Restored full flow fields from 'snapshot_270' terminal phase.")
+        elif 'snapshot_0_omega' in data and 'snapshot_0_psi' in data:
+            self.solver.omega = data['snapshot_0_omega'].copy()
+            self.solver.psi = data['snapshot_0_psi'].copy()
+            print("  [STATE] Restored flow fields from 'snapshot_0'.")
+        else:
+            raise KeyError(f"No valid flow field matrices found in {npz_path} to resume from.")
+
+        self.solver.apply_boundary_conditions()
+        self.solver.calculate_velocities()
+
+        # 2. Restore continuous telemetry history
+        prior_time = list(data['time'])
+        t_start = float(prior_time[-1])
+
+        telemetry = {
+            'time': prior_time,
+            'u_probes': {
+                'BL': list(data['u_BL']),
+                'TR': list(data['u_TR']),
+                'TL': list(data['u_TL']) if 'u_TL' in data else [0.0]*len(prior_time),
+                'Core': list(data['u_Core']) if 'u_Core' in data else [0.0]*len(prior_time),
+            },
+            'v_probes': {
+                'BL': list(data['v_BL']),
+                'TR': list(data['v_TR']),
+                'TL': list(data['v_TL']) if 'v_TL' in data else [0.0]*len(prior_time),
+                'Core': list(data['v_Core']) if 'v_Core' in data else [0.0]*len(prior_time),
+            },
+            'kinetic_energy': list(data['kinetic_energy']),
+            'enstrophy': list(data['enstrophy']),
+        }
+        self.telemetry = telemetry
+        print(f"  [TELEMETRY] Successfully restored {len(prior_time)} prior data points up to t = {t_start:.4f} s.")
+        return t_start, telemetry
+
+    def run_simulation(self, t_end=25.0, sample_interval=10, log_interval=2000, t_start=0.0, initial_telemetry=None):
+        """
+        Advance in physical time from t_start up to t_end.
         Samples probe data, kinetic energy, and enstrophy.
         """
         dt = self.dt
+        step_start = int(round(t_start / dt))
         total_steps = int(round(t_end / dt))
+        steps_to_run = total_steps - step_start
+
+        if steps_to_run <= 0:
+            print(f"[WARN] Requested t_end ({t_end:.2f} s) <= t_start ({t_start:.2f} s). No new steps to execute.")
+            return self.telemetry if hasattr(self, 'telemetry') else {}
+
         print(f"\n{'='*75}")
         print(f"STARTING UNSTEADY MARCHING: Re = {self.Re} | Grid = {self.N}x{self.N}")
-        print(f"Total Duration: {t_end:.2f} s ({total_steps} physical time steps) | dt = {dt:.4e} s")
+        print(f"Physical Window: {t_start:.3f} s -> {t_end:.3f} s ({steps_to_run} steps to execute) | dt = {dt:.4e} s")
         print(f"Sampling Interval: every {sample_interval} steps ({sample_interval*dt:.4e} s)")
         print(f"{'='*75}\n", flush=True)
 
-        telemetry = {
-            'time': [],
-            'u_probes': {p['key']: [] for p in self.probes},
-            'v_probes': {p['key']: [] for p in self.probes},
-            'kinetic_energy': [],
-            'enstrophy': [],
-        }
+        if initial_telemetry is not None:
+            telemetry = initial_telemetry
+        else:
+            telemetry = {
+                'time': [],
+                'u_probes': {p['key']: [] for p in self.probes},
+                'v_probes': {p['key']: [] for p in self.probes},
+                'kinetic_energy': [],
+                'enstrophy': [],
+            }
 
         h2 = self.solver.h**2
-        t_start = time.time()
+        t_clock_start = time.time()
 
-        for step in range(1, total_steps + 1):
+        for step in range(step_start + 1, total_steps + 1):
             # 1. ADI step for omega
             self.solver.omega = self.solver.solve_vorticity_transport_ADI()
             # 2. Update wall vorticity
@@ -174,16 +238,18 @@ class UnsteadyCavitySolver:
                 telemetry['enstrophy'].append(float(ens))
 
             # Logging
-            if step % log_interval == 0 or step == total_steps:
-                elapsed = time.time() - t_start
-                rate = step / elapsed if elapsed > 0 else 0
+            steps_done = step - step_start
+            if steps_done % log_interval == 0 or step == total_steps:
+                elapsed = time.time() - t_clock_start
+                rate = steps_done / elapsed if elapsed > 0 else 0
                 bl_u = self.solver.u[self.probes[0]['idx']]
                 bl_v = self.solver.v[self.probes[0]['idx']]
-                print(f"Step {step:6d}/{total_steps} | t = {current_time:6.2f}s ({step/total_steps*100:4.1f}%) | "
+                pct = (steps_done / steps_to_run) * 100.0
+                print(f"Step {step:6d}/{total_steps} (done {steps_done:5d}/{steps_to_run}) | t = {current_time:6.2f}s ({pct:4.1f}%) | "
                       f"BL Eddy (u={bl_u:+8.4f}, v={bl_v:+8.4f}) | Rate: {rate:5.1f} steps/s", flush=True)
 
-        total_elapsed = time.time() - t_start
-        print(f"\n[COMPLETE] Simulated {t_end:.2f} s ({total_steps} steps) in {total_elapsed:.2f} s ({total_steps/total_elapsed:.1f} steps/s).\n")
+        total_elapsed = time.time() - t_clock_start
+        print(f"\n[COMPLETE] Simulated {t_start:.2f} s -> {t_end:.2f} s ({steps_to_run} steps) in {total_elapsed:.2f} s ({steps_to_run/total_elapsed:.1f} steps/s).\n")
 
         for k in telemetry['u_probes']:
             telemetry['u_probes'][k] = np.array(telemetry['u_probes'][k])
@@ -569,6 +635,8 @@ def main():
                         help='Convection scheme (default: hybrid for Re >= 100000, central for Re < 100000)')
     parser.add_argument('--wall_beta', type=float, default=None, help='Wall boundary under-relaxation parameter')
     parser.add_argument('--init_npz', type=str, default=None, help='Initial solution path')
+    parser.add_argument('--resume', action='store_true', help='Resume simulation from existing unsteady npz file')
+    parser.add_argument('--additional_time', type=float, default=None, help='Additional physical time to run when resuming')
     parser.add_argument('--gif', action='store_true', default=True, help='Generate publication animated GIF')
     parser.add_argument('--no_gif', dest='gif', action='store_false')
     parser.add_argument('--gif_frames', type=int, default=36, help='Number of frames in animated GIF')
@@ -592,7 +660,7 @@ def main():
         t_end = args.steps * dt
     else:
         t_end = args.t_end
-        if t_end is None:
+        if t_end is None and not args.resume:
             t_end = 1.0 if args.Re >= 100000 else (5.0 if args.Re >= 50000 else 25.0)
 
     init_path = args.init_npz
@@ -615,10 +683,23 @@ def main():
         convection_scheme=conv_scheme, wall_bc='thom', wall_beta=args.wall_beta
     )
 
-    unsteady_sim.initialize_from_npz(init_path, add_seed_perturbation=True)
+    t_start = 0.0
+    initial_telemetry = None
+    if args.resume:
+        unsteady_npz = args.init_npz or f'data/unsteady_Re{args.Re}_N{args.N}.npz'
+        t_start, initial_telemetry = unsteady_sim.resume_from_unsteady_npz(unsteady_npz)
+        if args.additional_time is not None:
+            t_end = t_start + args.additional_time
+        elif t_end is None or t_end <= t_start:
+            t_end = t_start + 5.0
+    else:
+        unsteady_sim.initialize_from_npz(init_path, add_seed_perturbation=True)
 
     # 1. Run simulation
-    telemetry = unsteady_sim.run_simulation(t_end=t_end, sample_interval=args.sample_interval)
+    telemetry = unsteady_sim.run_simulation(
+        t_end=t_end, sample_interval=args.sample_interval,
+        t_start=t_start, initial_telemetry=initial_telemetry
+    )
 
     # 2. Analyze Limit Cycle & FFT
     fft_data = unsteady_sim.analyze_frequency_and_attractor(probe_key='BL', t_start_analysis=None)
@@ -642,6 +723,8 @@ def main():
         f_dom=fft_data['f_dom'],
         strouhal=fft_data['strouhal'],
         period=fft_data['period'],
+        final_omega=unsteady_sim.solver.omega,
+        final_psi=unsteady_sim.solver.psi,
         snapshot_0_omega=snapshots[0]['omega'],
         snapshot_0_psi=snapshots[0]['psi'],
         snapshot_90_omega=snapshots[1]['omega'],
