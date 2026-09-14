@@ -55,13 +55,14 @@ class UnsteadyCavitySolver:
         self.lid_profile = lid_profile
         self.convection_scheme = convection_scheme
         self.wall_bc = wall_bc
+        self.wall_beta = 0.85 if Re >= 50000 else 1.0
 
-        # Base solver instance with wall_beta=1.0 (pure physical boundary condition)
+        # Base solver instance with appropriate wall_beta for high-Re stability
         self.solver = LidDrivenCavitySolver(
             N=N, Re=Re, lid_velocity=lid_velocity, L=L,
             lid_profile=lid_profile, poisson_solver='dst',
             convection_scheme=convection_scheme,
-            wall_bc=wall_bc, wall_beta=1.0
+            wall_bc=wall_bc, wall_beta=self.wall_beta
         )
 
         # Set physical time step and update ADI coefficients
@@ -89,8 +90,22 @@ class UnsteadyCavitySolver:
             raise FileNotFoundError(f"Initial field file not found: {npz_path}")
         print(f"[INIT] Loading initial solution from: {npz_path}", flush=True)
         data = np.load(npz_path)
-        self.solver.psi = data['psi'].copy()
-        self.solver.omega = data['omega'].copy()
+
+        src_N = len(data['x'])
+        if src_N == self.N:
+            self.solver.psi = data['psi'].copy()
+            self.solver.omega = data['omega'].copy()
+        elif src_N == 2 * (self.N - 1) + 1:
+            print(f"[INIT] Exact injection from {src_N}x{src_N} -> {self.N}x{self.N} [::2, ::2]")
+            self.solver.psi = data['psi'][::2, ::2].copy()
+            self.solver.omega = data['omega'][::2, ::2].copy()
+        else:
+            from lid_driven_cavity_fdm import prolong_fields
+            print(f"[INIT] Prolonging from {src_N}x{src_N} -> {self.N}x{self.N}")
+            self.solver.psi, self.solver.omega = prolong_fields(
+                data['psi'], data['omega'], data['x'], data['y'], self.solver.x, self.solver.y
+            )
+
         self.solver.calculate_velocities()
 
         if add_seed_perturbation:
@@ -175,12 +190,15 @@ class UnsteadyCavitySolver:
         self.telemetry = telemetry
         return telemetry
 
-    def analyze_frequency_and_attractor(self, probe_key='BL', t_start_analysis=10.0):
+    def analyze_frequency_and_attractor(self, probe_key='BL', t_start_analysis=None):
         """
         Analyze the periodic limit cycle using FFT on the statistically stationary interval (t >= t_start_analysis).
         Extracts dominant frequency, Strouhal number St = f*L/U, and phase portrait data.
         """
         t = self.telemetry['time']
+        if t_start_analysis is None or t_start_analysis >= t[-1]:
+            t_start_analysis = t[0] + 0.35 * (t[-1] - t[0])
+
         mask = t >= t_start_analysis
         t_stat = t[mask]
         v_signal = self.telemetry['v_probes'][probe_key][mask]
@@ -201,13 +219,19 @@ class UnsteadyCavitySolver:
 
         # Ignore DC / very low frequency (< 0.05 Hz)
         valid_idx = freqs >= 0.05
-        f_valid = freqs[valid_idx]
-        psd_valid = psd[valid_idx]
+        if np.any(valid_idx):
+            f_valid = freqs[valid_idx]
+            psd_valid = psd[valid_idx]
+            dom_idx = np.argmax(psd_valid)
+            f_dom = float(f_valid[dom_idx])
+        else:
+            f_dom = float(freqs[1]) if len(freqs) > 1 else 1.0
 
-        dom_idx = np.argmax(psd_valid)
-        f_dom = float(f_valid[dom_idx])
         strouhal = f_dom * self.L / self.U
-        period = 1.0 / f_dom if f_dom > 0 else np.nan
+        period = 1.0 / f_dom if f_dom > 0 else 1.0
+        if np.isnan(period) or period <= 0:
+            period = 1.0
+            strouhal = 1.0
 
         print(f"[FFT ANALYSIS] Dominant Frequency: f_0 = {f_dom:.4f} Hz")
         print(f"[FFT ANALYSIS] Non-Dimensional Strouhal Number: St = {strouhal:.4f}")
@@ -230,7 +254,7 @@ class UnsteadyCavitySolver:
         """
         print(f"\n[SNAPSHOTS] Capturing {n_phases} flow field phases over one period T = {period:.4f} s...")
         dt = self.dt
-        steps_per_phase = int(round((period / n_phases) / dt))
+        steps_per_phase = max(1, int(round((period / n_phases) / dt)))
         snapshots = []
 
         for phase_idx in range(n_phases):
@@ -253,6 +277,123 @@ class UnsteadyCavitySolver:
                 self.solver.calculate_velocities()
 
         return snapshots
+
+    def generate_shedding_gif(self, period, n_frames=36, fps=12, out_path=None):
+        """
+        Marches across one complete fundamental cycle of the established attractor
+        and generates a synchronized 2-panel publication animated GIF.
+        """
+        if out_path is None:
+            suffix = f"_N{self.N}" if self.N != 257 else ""
+            out_path = f"figures/lid_driven_vortex_shedding_Re{self.Re}{suffix}.gif"
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+
+        print(f"\n[GIF] Generating synchronized {n_frames}-frame animation over T = {period:.4f} s...")
+        dt = self.dt
+        total_steps_cycle = int(round(period / dt))
+        steps_per_frame = max(1, total_steps_cycle // n_frames)
+        actual_frames = total_steps_cycle // steps_per_frame
+
+        probe_idx = (int(round(0.15 * (self.N - 1))), int(round(0.08 * (self.N - 1))))
+        frames_data = []
+        t_tracker, u_tracker, v_tracker = [], [], []
+        t_curr = 0.0
+
+        for f in range(actual_frames):
+            for _ in range(steps_per_frame):
+                self.solver.omega = self.solver.solve_vorticity_transport_ADI()
+                self.solver.apply_boundary_conditions()
+                self.solver.solve_streamfunction()
+                self.solver.calculate_velocities()
+                t_curr += dt
+
+            t_tracker.append(t_curr)
+            u_tracker.append(float(self.solver.u[probe_idx]))
+            v_tracker.append(float(self.solver.v[probe_idx]))
+            frames_data.append({
+                't': t_curr,
+                'omega': self.solver.omega.copy(),
+                'psi': self.solver.psi.copy(),
+                'phase_deg': (f / actual_frames) * 360.0
+            })
+
+        _apply_latex_style()
+        temp_dir = f"figures/temp_frames_Re{self.Re}_N{self.N}"
+        os.makedirs(temp_dir, exist_ok=True)
+        frame_paths = []
+
+        fig, (ax_flow, ax_trace) = plt.subplots(1, 2, figsize=(13, 5.5))
+        levels_omega = np.linspace(-20, 20, 69)
+        levels_psi_neg = np.linspace(-0.13, 0.0, 18)
+        levels_psi_pos = np.linspace(1e-4, 3.5e-3, 9)
+
+        t_norm = np.array(t_tracker) / period
+        u_arr = np.array(u_tracker)
+        v_arr = np.array(v_tracker)
+
+        ax_trace.plot(t_norm, u_arr, color='#1f77b4', linewidth=2.0, label=r'BL Eddy $u(t)$')
+        ax_trace.plot(t_norm, v_arr, color='#d62728', linewidth=2.0, linestyle='--', label=r'BL Eddy $v(t)$')
+        dot_u, = ax_trace.plot([], [], 'o', color='#1f77b4', markersize=9)
+        dot_v, = ax_trace.plot([], [], 's', color='#d62728', markersize=9)
+
+        ax_trace.set_xlabel(r'Normalized Cycle Time $t / T$', fontsize=11)
+        ax_trace.set_ylabel(r'Velocity Component', fontsize=11)
+        ax_trace.set_xlim(0.0, 1.0)
+        ax_trace.set_title(rf'\textbf{{Real-Time Probe Telemetry}} ({self.N} $\times$ {self.N})', fontsize=12, pad=8)
+        ax_trace.grid(True, linestyle='--', alpha=0.5)
+        ax_trace.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+                        ncol=2, frameon=True, fancybox=True, edgecolor='#cccccc', fontsize=9.5)
+
+        X, Y = self.solver.X, self.solver.Y
+
+        for idx, fd in enumerate(frames_data):
+            ax_flow.clear()
+            ax_flow.contourf(X, Y, fd['omega'], levels=levels_omega, cmap='coolwarm', extend='both', alpha=0.85)
+            ax_flow.contour(X, Y, fd['psi'], levels=levels_psi_neg, colors='black', linewidths=0.6, alpha=0.7)
+            ax_flow.contour(X, Y, fd['psi'], levels=levels_psi_pos, colors='red', linewidths=0.8, alpha=0.8)
+
+            ax_flow.set_title(rf'\textbf{{Vorticity \& Streamlines}} ($\theta = {fd["phase_deg"]:.0f}^\circ$)', fontsize=12, pad=8)
+            ax_flow.set_xlabel(r'$x/L$', fontsize=11)
+            ax_flow.set_ylabel(r'$y/L$', fontsize=11)
+            ax_flow.set_aspect('equal')
+            ax_flow.grid(True, linestyle=':', alpha=0.4)
+
+            dot_u.set_data([t_norm[idx]], [u_tracker[idx]])
+            dot_v.set_data([t_norm[idx]], [v_tracker[idx]])
+
+            fig.suptitle(rf'\textbf{{Dynamic Vortex Shedding}} --- $Re = {self.Re}$, \textbf{{Ultra-Fine}} ${self.N} \times {self.N}$',
+                         fontsize=13, y=0.98)
+            plt.subplots_adjust(bottom=0.20, top=0.88, wspace=0.28)
+            frame_path = os.path.join(temp_dir, f"frame_{idx:03d}.png")
+            plt.savefig(frame_path, dpi=120, bbox_inches='tight')
+            frame_paths.append(frame_path)
+
+        plt.close(fig)
+
+        from PIL import Image
+        images = [Image.open(p) for p in frame_paths]
+        images[0].save(
+            out_path,
+            save_all=True,
+            append_images=images[1:],
+            duration=int(1000 / fps),
+            loop=0,
+            optimize=True
+        )
+
+        for p in frame_paths:
+            try:
+                os.remove(p)
+            except OSError:
+                pass
+        try:
+            os.rmdir(temp_dir)
+        except OSError:
+            pass
+
+        size_mb = os.path.getsize(out_path) / (1024 * 1024)
+        print(f"[SUCCESS] Saved dynamic animated GIF to: {out_path} ({size_mb:.2f} MB)")
+        return out_path
 
 
 def plot_unsteady_timeseries(telemetry, Re, save_path='figures/lid_driven_unsteady_timeseries_Re10000.png'):
@@ -334,14 +475,17 @@ def plot_phase_portrait_and_psd(fft_data, Re, save_path='figures/lid_driven_unst
     f_dom = fft_data['f_dom']
     strouhal = fft_data['strouhal']
 
-    # Display up to 2.5 Hz (capturing fundamental + harmonics)
-    mask = (freqs >= 0.05) & (freqs <= 2.5)
+    # Display up to fundamental + harmonics
+    mask = (freqs >= 0.05) & (freqs <= max(2.5, f_dom * 2.5))
+    if not np.any(mask):
+        mask = np.ones_like(freqs, dtype=bool)
+
     ax2.plot(freqs[mask], psd[mask], color='#d62728', linewidth=1.8, label=r'Power Spectral Density $|V(f)|^2$')
     ax2.axvline(f_dom, color='#1f77b4', linestyle='--', linewidth=1.4,
                 label=rf'Dominant $f_0 = {f_dom:.3f}$ ($St = {strouhal:.3f}$)')
 
     # Annotate peak
-    max_psd = np.max(psd[mask])
+    max_psd = np.max(psd[mask]) if np.any(mask) else (np.max(psd) if len(psd) > 0 else 1.0)
     ax2.annotate(rf'\textbf{{Peak:}} $St = {strouhal:.3f}$ ($f_0 = {f_dom:.3f}$ Hz)',
                  xy=(f_dom, max_psd), xytext=(f_dom + 0.35, max_psd * 0.85),
                  arrowprops=dict(facecolor='black', shrink=0.08, width=1, headwidth=6),
@@ -411,28 +555,51 @@ def main():
     parser = argparse.ArgumentParser(description='Time-Accurate Unsteady Cavity Flow Solver')
     parser.add_argument('--Re', type=int, default=10000, help='Reynolds number')
     parser.add_argument('--N', type=int, default=257, help='Grid points along each axis')
-    parser.add_argument('--dt', type=float, default=0.001, help='Physical time step')
-    parser.add_argument('--t_end', type=float, default=25.0, help='Total physical time')
+    parser.add_argument('--dt', type=float, default=None, help='Physical time step (default auto-tuned by Re)')
+    parser.add_argument('--t_end', type=float, default=None, help='Total physical time (default auto-tuned by Re)')
     parser.add_argument('--sample_interval', type=int, default=10, help='Telemetry sampling frequency (in steps)')
     parser.add_argument('--init_npz', type=str, default=None, help='Initial solution path')
+    parser.add_argument('--gif', action='store_true', default=True, help='Generate publication animated GIF')
+    parser.add_argument('--no_gif', dest='gif', action='store_false')
+    parser.add_argument('--gif_frames', type=int, default=36, help='Number of frames in animated GIF')
+    parser.add_argument('--fps', type=int, default=12, help='Frames per second for output GIF')
     args = parser.parse_args()
+
+    dt = args.dt
+    if dt is None:
+        dt = 0.0001 if args.Re >= 50000 else 0.001
+
+    t_end = args.t_end
+    if t_end is None:
+        t_end = 2.0 if args.Re >= 100000 else (5.0 if args.Re >= 50000 else 25.0)
 
     init_path = args.init_npz
     if init_path is None:
-        init_path = f'data/flow_fields_Re{args.Re}_N{args.N}.npz'
+        # Check standard N path first, then fallback to N=1025
+        cand1 = f'data/flow_fields_Re{args.Re}_N{args.N}.npz'
+        cand2 = f'data/flow_fields_Re{args.Re}_N1025.npz'
+        cand3 = f'data/flow_fields_Re{args.Re}_N513.npz'
+        if os.path.exists(cand1):
+            init_path = cand1
+        elif os.path.exists(cand2):
+            init_path = cand2
+        elif os.path.exists(cand3):
+            init_path = cand3
+        else:
+            init_path = cand1
 
     unsteady_sim = UnsteadyCavitySolver(
-        N=args.N, Re=args.Re, dt=args.dt,
+        N=args.N, Re=args.Re, dt=dt,
         convection_scheme='central', wall_bc='thom'
     )
 
     unsteady_sim.initialize_from_npz(init_path, add_seed_perturbation=True)
 
     # 1. Run simulation
-    telemetry = unsteady_sim.run_simulation(t_end=args.t_end, sample_interval=args.sample_interval)
+    telemetry = unsteady_sim.run_simulation(t_end=t_end, sample_interval=args.sample_interval)
 
     # 2. Analyze Limit Cycle & FFT
-    fft_data = unsteady_sim.analyze_frequency_and_attractor(probe_key='BL', t_start_analysis=8.0)
+    fft_data = unsteady_sim.analyze_frequency_and_attractor(probe_key='BL', t_start_analysis=None)
 
     # 3. Capture 4-phase cycle snapshots
     snapshots = unsteady_sim.capture_cycle_snapshots(period=fft_data['period'], n_phases=4)
@@ -472,7 +639,15 @@ def main():
     plot_phase_portrait_and_psd(fft_data, args.Re, f'figures/lid_driven_unsteady_phase_portrait_Re{args.Re}{suffix}.png')
     plot_cycle_snapshots(snapshots, unsteady_sim.solver, args.Re, f'figures/lid_driven_unsteady_cycle_snapshots_Re{args.Re}{suffix}.png')
 
-    print("\n[SUCCESS] Option 3 Time-Accurate Simulation and Publication Visuals Complete!\n")
+    # 6. Generate Synchronized Publication Animated GIF
+    if args.gif:
+        unsteady_sim.generate_shedding_gif(
+            period=fft_data['period'],
+            n_frames=args.gif_frames,
+            fps=args.fps
+        )
+
+    print("\n[SUCCESS] Time-Accurate Unsteady Simulation, Visuals & Animated GIF Complete!\n")
 
 
 if __name__ == '__main__':
