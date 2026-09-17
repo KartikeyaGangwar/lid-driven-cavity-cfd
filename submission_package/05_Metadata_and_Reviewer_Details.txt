@@ -1,0 +1,110 @@
+================================================================================
+ELSEVIER SUBMISSION PACKAGE: COMPUTERS & FLUIDS (ISSN 0045-7930)
+================================================================================
+Submission Portal: https://submit.elsevier.com/CAF
+Direct Editorial Manager: https://www.editorialmanager.com/caf/
+Article Type: Research Paper / Full Length Article
+Target Journal: Computers & Fluids (Elsevier)
+
+================================================================================
+1. MANUSCRIPT TITLE & SHORT TITLE
+================================================================================
+Full Title:
+A High-Resolution Finite-Difference Benchmark for Steady Continuation and Hopf Bifurcation Dynamics up to Extreme Reynolds Numbers (Re = 100,000) in 2D Lid-Driven Cavity Flows
+
+Short Running Title:
+Extreme-Re Cavity Flow Benchmark & Hopf Dynamics
+
+================================================================================
+2. ABSTRACT (248 words - Strictly <= 250 words limit)
+================================================================================
+The 2D incompressible lid-driven cavity problem serves as a fundamental benchmark in computational fluid dynamics. However, established benchmarks stagnate at Re <= 10,000 or inject artificial viscosity. We present a reference-grade finite-difference suite in streamfunction--vorticity formulation across steady and unsteady regimes up to extreme Reynolds numbers (Re = 100,000). The numerical engine integrates an exact O(N^2 log N) Discrete Sine Transform (DST-I) Poisson solver, eliminating iterative residuals, coupled with vectorized Alternating Direction Implicit marching and parameter homotopy. Across Re <= 50,000, the solver operates with pure second-order central differencing (nu_num = 0). At Re = 100,000 (Pe = 195.3), a localized Spalding--Patankar hybrid differencing scheme arrests corner shocks in thin wall shear layers (delta ~ 0.003) while preserving zero artificial dissipation in the recirculating core. On uniform meshes up to 1025 x 1025, steady continuation accurately resolves primary, secondary, and quaternary corner eddies, demonstrating outstanding agreement with Ghia et al. and Erturk et al. At Re = 50,000 and Re = 100,000, the primary vortex core converges symmetrically to x_c = 0.50000 with psi_min = -0.12572, confirming Batchelor's asymptotic recirculating core theorem. Physical time-accurate marching on 513 x 513 grids (t = 8.0 s - 12.0 s) resolves the supercritical primary Hopf bifurcation (St = 0.6661), secondary Hopf 2-torus quasi-periodicity (St = 0.6662), multi-harmonic folding (Re = 25,000, St = 0.1282), multi-frequency limit cycles (Re = 50,000, St = 0.4615, 4.61 cycles), and extreme frontier limit loops (Re = 100,000, St = 0.1923). All datasets, automated tools, and animations are openly archived.
+
+================================================================================
+3. KEYWORDS (6 keywords)
+================================================================================
+Lid-driven cavity; Finite difference method; Streamfunction--vorticity; Zero artificial viscosity; Hopf bifurcation; Batchelor theorem
+
+================================================================================
+4. AUTHOR & INSTITUTIONAL AFFILIATION
+================================================================================
+Sole Author / Corresponding Author:
+- First Name: Kartikey
+- Last Name: Singh
+- Degree / Title: Undergraduate Researcher / Investigator
+- Affiliation / Department: Department of Mathematics, University of Delhi
+- City / Postal Code / Country: Delhi, 110007, India
+- Email: kartikeysingh525@protonmail.com
+- ORCID: 0009-0009-1973-7532 (https://orcid.org/0009-0009-1973-7532)
+- GitHub Profile: https://github.com/KartikeyaGangwar
+
+================================================================================
+5. RESEARCH HIGHLIGHTS (Each strictly <= 85 characters including spaces)
+================================================================================
+Bullet 1: Exact O(N^2 log N) DST-I Poisson solver eliminates iterative residual drift.
+Bullet 2: Pure central differencing achieves zero artificial viscosity up to Re = 50,000.
+Bullet 3: Localized hybrid scheme regularizes corner shocks at Re = 100,000 on 1025 x 1025.
+Bullet 4: Symmetric core convergence confirms Batchelor's asymptotic theorem at high Re.
+Bullet 5: Time-accurate 513 x 513 marching maps Hopf bifurcation cascades to Re = 100,000.
+
+================================================================================
+6. SUGGESTED REVIEWERS (4 Recommended World Authorities)
+================================================================================
+Reviewer 1:
+- Name: Prof. Ercan Erturk
+- Title: Professor
+- Institution: Department of Mechanical Engineering, Kocaeli University / Istanbul Technical University
+- Location: Turkey
+- Email: erturke@itu.edu.tr / eerturk@kocaeli.edu.tr
+- Reason for Suggestion: World-renowned authority on high-Reynolds steady lid-driven cavity flow benchmarking and Navier--Stokes streamfunction-vorticity solutions up to Re = 25,000.
+
+Reviewer 2:
+- Name: Prof. Olivier Botella
+- Title: Professor
+- Institution: Universite de Lorraine, LEMTA (CNRS UMR 7563)
+- Location: Vandoeuvre-les-Nancy, France
+- Email: olivier.botella@univ-lorraine.fr
+- Reason for Suggestion: Leading specialist in high-order compact finite-difference schemes, Poisson acceleration, and standard 2D benchmark spectral verification in driven cavities.
+
+Reviewer 3:
+- Name: Prof. Chang Shu
+- Title: Professor
+- Institution: Department of Mechanical Engineering, National University of Singapore (NUS)
+- Location: Singapore
+- Email: mpeshuc@nus.edu.sg
+- Reason for Suggestion: Pioneer in differential quadrature, high-Reynolds finite difference streamfunction-vorticity formulations, and lid-driven cavity transition/bifurcation analysis.
+
+Reviewer 4:
+- Name: Prof. Jie Shen
+- Title: Professor of Mathematics
+- Institution: Department of Mathematics, Purdue University / Eastern Institute for Advanced Study
+- Location: West Lafayette, IN, USA
+- Email: shen7@purdue.edu
+- Reason for Suggestion: International authority in spectral methods, projection methods, and mathematical analysis of incompressible Navier--Stokes flow stability and bifurcations.
+
+================================================================================
+7. MANDATORY STATEMENTS & DECLARATIONS
+================================================================================
+[A] CRediT Authorship Contribution Statement:
+Kartikey Singh: Conceptualization, Methodology, Software, Validation, Formal Analysis, Investigation, Data Curation, Writing - Original Draft, Writing - Review & Editing, Visualization, Project administration.
+
+[B] Declaration of Competing Interest:
+The author declares that he has no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+[C] Funding Statement:
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+[D] Data Availability Statement (Option C - Open Repository):
+The complete source code, numerical datasets (flow fields, benchmark profiles, verification metrics), and telemetry files are openly available under an MIT license on GitHub at https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd and archived permanently on Zenodo with DOI: 10.5281/zenodo.18312938.
+
+[E] Generative AI Usage Statement:
+During the preparation of this work, the author used generative AI / large language models solely for assisting with code refactoring, script automation, and manuscript LaTeX formatting. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content of the published article.
+
+================================================================================
+8. FILES READY TO UPLOAD IN EDITORIAL MANAGER (Under "Your Paper Your Way")
+================================================================================
+1. [Cover Letter]                  -> 01_Cover_Letter.pdf
+2. [Highlights]                    -> 02_Highlights.pdf (or copy-paste from 02_Highlights.txt)
+3. [Manuscript (with figures/tabs)]-> 03_Manuscript.pdf
+4. [Declaration of Interest Form]  -> 04_Declaration_of_Competing_Interest.pdf
+================================================================================

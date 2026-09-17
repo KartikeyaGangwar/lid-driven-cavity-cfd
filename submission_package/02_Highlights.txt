@@ -1,0 +1,5 @@
+- Exact O(N^2 log N) DST-I Poisson solver eliminates iterative residual drift.
+- Pure central differencing achieves zero artificial viscosity up to Re = 50,000.
+- Localized hybrid scheme regularizes corner shocks at Re = 100,000 on 1025 x 1025.
+- Symmetric core convergence confirms Batchelor's asymptotic theorem at high Re.
+- Time-accurate 513 x 513 marching maps Hopf bifurcation cascades to Re = 100,000.
