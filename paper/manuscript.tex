@@ -547,7 +547,7 @@ Table~\ref{tab:unsteady_summary} summarizes the numerical parameters, shedding p
 \toprule
 $Re$ & $\Delta t$ & $t_{\text{end}}$ & $T$ & $St$ & Cycles & Dynamical Attractor Regime \\
 \midrule
-$10,000$  & $5.0 \times 10^{-4}$ & $22.0$ & $1.5012$ & $0.6661$ & $8.0$ & Supercritical Hopf primary limit cycle ($\epsilon_{\text{rec}} < 0.08\%$) \\
+$10,000$  & $5.0 \times 10^{-4}$ & $22.0$ & $1.5006$ & $0.6664$ & $8.0$ & Bounded oscillatory orbital band ($St = 0.6664$) \\
 $15,000$  & $4.0 \times 10^{-4}$ & $10.0$ & $1.5010$ & $0.6662$ & $5.3$ & Secondary Hopf 2-torus quasi-periodic attractor \\
 $25,000$  & $3.0 \times 10^{-4}$ & $12.0$ & $7.8000$ & $0.1282$ & $1.0$ & Nonlinear folded dynamics with floor detachment \\
 $50,000$  & $2.0 \times 10^{-4}$ & $10.0$ & $2.1667$ & $0.4615$ & $4.0$ & Multi-frequency limit loop with boundary micro-vortices \\
@@ -557,12 +557,12 @@ $100,000$ & $2.0 \times 10^{-4}$ & $8.0$  & $5.2000$ & $0.1923$ & $1.0$ & High-R
 \end{table}
 
 \subsection{Dynamic 4-Phase Vortex Shedding Snapshots \& High-Resolution Animations}
-Figure~\ref{fig:snapshots} visualizes the instantaneous vorticity field ($\omega$) and streamfunction contours ($\psi$) decomposed across one complete shedding period ($T \approx 1.5012$) into four discrete phase angles: $\theta = 0^\circ, 90^\circ, 180^\circ, 270^\circ$. The continuous expansion, elongation, pinch-off, and wall-advection of the bottom-left secondary eddy demonstrate the physical mechanisms of high-Re vortex shedding. Fully synchronized animated GIFs computed strictly on the $513 \times 513$ mesh across all unsteady regimes ($Re \in \{10000, 15000, 25000, 50000, 100000\}$, available in the open repository) illustrate real-time limit-cycle, 2-torus, and multi-harmonic dynamics alongside continuous probe telemetry.
+Figure~\ref{fig:snapshots} visualizes the instantaneous vorticity field ($\omega$) and streamfunction contours ($\psi$) decomposed across one complete shedding period ($T \approx 1.5006$) into four discrete phase angles: $\theta = 0^\circ, 90^\circ, 180^\circ, 270^\circ$. The continuous expansion, elongation, pinch-off, and wall-advection of the bottom-left secondary eddy demonstrate the physical mechanisms of high-Re vortex shedding. Fully synchronized animated GIFs computed strictly on the $513 \times 513$ mesh across all unsteady regimes ($Re \in \{10000, 15000, 25000, 50000, 100000\}$, available in the open repository) illustrate real-time limit-cycle, 2-torus, and multi-harmonic dynamics alongside continuous probe telemetry.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.95\textwidth]{../figures/lid_driven_unsteady_cycle_snapshots_Re10000_N513.png}
-\caption{Dynamic vortex shedding cycle on $513 \times 513$ grid at $Re = 10,000$ decomposed into four distinct phase angles ($\theta = 0^\circ, 90^\circ, 180^\circ, 270^\circ$) over one complete shedding period ($T = 1.5012$).}
+\caption{Dynamic vortex shedding cycle on $513 \times 513$ grid at $Re = 10,000$ decomposed into four distinct phase angles ($\theta = 0^\circ, 90^\circ, 180^\circ, 270^\circ$) over one complete shedding period ($T = 1.5006$).}
 \label{fig:snapshots}
 \end{figure}
 
