@@ -1,5 +1,5 @@
 """
-Richardson Extrapolation & ASME PTC 19.1 / Roache Grid Convergence Index (GCI)
+Richardson Extrapolation & ASME V&V 20-2009 / Roache Grid Convergence Index (GCI)
 Rigorous numerical verification tool for 2D Lid-Driven Cavity CFD solutions.
 
 Computes:
@@ -193,7 +193,7 @@ def extract_ghia_centerlines(re_list=[1000, 5000, 10000, 25000, 50000, 100000]):
 
 if __name__ == "__main__":
     print("=" * 80)
-    print("ASME PTC 19.1 / ROACHE GRID CONVERGENCE INDEX (GCI) VERIFICATION")
+    print("ASME V&V 20-2009 / ROACHE GRID CONVERGENCE INDEX (GCI) VERIFICATION")
     print("=" * 80)
 
     # Analyze triplets
