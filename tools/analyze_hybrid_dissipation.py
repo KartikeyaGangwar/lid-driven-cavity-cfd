@@ -101,9 +101,14 @@ def generate_figures():
         print(f"  Mean Viscosity Ratio over Cavity:   {s['nu_ratio_mean']:6.2f}x nu")
         print("-" * 70)
 
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    from lid_driven_cavity_fdm import _apply_latex_style
+    _apply_latex_style()
+
     # 3-Panel Publication Figure
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4.5), dpi=300)
-    plt.subplots_adjust(wspace=0.32, bottom=0.15, top=0.88)
+    fig, axes = plt.subplots(1, 3, figsize=(16, 5.0), dpi=300)
+    plt.subplots_adjust(wspace=0.35, bottom=0.24, top=0.88)
 
     X513, Y513 = np.meshgrid(stats_513['x'], stats_513['y'])
 
@@ -114,10 +119,10 @@ def generate_figures():
     cs0 = ax0.contour(X513, Y513, stats_513['Pemax'], levels=[2.0], colors='red', linewidths=1.8, linestyles='--')
     ax0.clabel(cs0, fmt={2.0: r'$Pe=2$ (Switch)'}, fontsize=9, colors='red')
     cb0 = fig.colorbar(cf0, ax=ax0, shrink=0.85)
-    cb0.set_label(r'$\max(Pe_x, Pe_y)$', fontsize=10)
-    ax0.set_title(r'(a) Cell Péclet Number $Pe_{h}$ ($513^2$)', fontsize=11, pad=8)
-    ax0.set_xlabel(r'$x / L$')
-    ax0.set_ylabel(r'$y / L$')
+    cb0.set_label(r'$\max(Pe_x, Pe_y)$', fontsize=11)
+    ax0.set_title(r'(a) Cell P\'eclet Number $Pe_{h}$ ($513^2$)', fontsize=12, pad=8)
+    ax0.set_xlabel(r'$x / L$', fontsize=11)
+    ax0.set_ylabel(r'$y / L$', fontsize=11)
     ax0.set_aspect('equal')
 
     # Panel (b): Numerical-to-Molecular Viscosity Ratio nu_num / nu
@@ -127,10 +132,10 @@ def generate_figures():
     cs1 = ax1.contour(X513, Y513, stats_513['nu_ratio'], levels=[1.0, 5.0, 20.0], colors='white', linewidths=1.0, alpha=0.8)
     ax1.clabel(cs1, fmt='%1.0fx', fontsize=8, colors='white')
     cb1 = fig.colorbar(cf1, ax=ax1, shrink=0.85)
-    cb1.set_label(r'$\nu_{\mathrm{num}} / \nu_{\mathrm{mol}}$', fontsize=10)
-    ax1.set_title(r'(b) Numerical Dissipation Ratio $\nu_{\mathrm{num}}/\nu$', fontsize=11, pad=8)
-    ax1.set_xlabel(r'$x / L$')
-    ax1.set_ylabel(r'$y / L$')
+    cb1.set_label(r'$\nu_{\mathrm{num}} / \nu$', fontsize=11)
+    ax1.set_title(r'(b) Numerical Dissipation Ratio $\nu_{\mathrm{num}}/\nu$', fontsize=12, pad=8)
+    ax1.set_xlabel(r'$x / L$', fontsize=11)
+    ax1.set_ylabel(r'$y / L$', fontsize=11)
     ax1.set_aspect('equal')
 
     # Panel (c): Vertical Centerline Profiles (x = 0.5) comparing 513 vs 1025
@@ -145,27 +150,28 @@ def generate_figures():
     nu_cut_513 = stats_513['nu_ratio'][:, mid_j_513]
     nu_cut_1025 = stats_1025['nu_ratio'][:, mid_j_1025]
 
-    ax2.plot(pe_cut_513, y513, 'b-', label=r'$Pe$ ($513\times 513$)')
-    ax2.plot(pe_cut_1025, y1025, 'b--', label=r'$Pe$ ($1025\times 1025$)')
-    ax2.axvline(2.0, color='red', linestyle=':', label=r'Threshold ($Pe=2$)')
-    ax2.set_xlabel(r'Cell Péclet Number $Pe_x(0.5, y)$', color='blue')
+    ax2.plot(pe_cut_513, y513, 'b-', linewidth=1.5, label=r'$Pe$ ($513\times 513$)')
+    ax2.plot(pe_cut_1025, y1025, 'b--', linewidth=1.5, label=r'$Pe$ ($1025\times 1025$)')
+    ax2.axvline(2.0, color='red', linestyle=':', linewidth=1.3, label=r'Switch ($Pe=2$)')
+    ax2.set_xlabel(r'Cell P\'eclet Number $Pe_x(0.5, y)$', color='blue', fontsize=11)
     ax2.tick_params(axis='x', labelcolor='blue')
-    ax2.set_ylabel(r'Vertical Station $y / L$')
+    ax2.set_ylabel(r'Vertical Station $y / L$', fontsize=11)
     ax2.set_xlim(-1, 55)
     ax2.grid(True, linestyle=':', alpha=0.5)
 
     ax2_twin = ax2.twiny()
-    ax2_twin.plot(nu_cut_513, y513, 'm-', label=r'$\nu_{\mathrm{num}}/\nu$ ($513^2$)')
-    ax2_twin.plot(nu_cut_1025, y1025, 'm--', label=r'$\nu_{\mathrm{num}}/\nu$ ($1025^2$)')
-    ax2_twin.set_xlabel(r'Dissipation Ratio $\nu_{\mathrm{num}} / \nu$', color='purple')
+    ax2_twin.plot(nu_cut_513, y513, color='purple', linestyle='-', linewidth=1.5, label=r'$\nu_{\mathrm{num}}/\nu$ ($513^2$)')
+    ax2_twin.plot(nu_cut_1025, y1025, color='purple', linestyle='--', linewidth=1.5, label=r'$\nu_{\mathrm{num}}/\nu$ ($1025^2$)')
+    ax2_twin.set_xlabel(r'Dissipation Ratio $\nu_{\mathrm{num}} / \nu$', color='purple', fontsize=11)
     ax2_twin.tick_params(axis='x', labelcolor='purple')
     ax2_twin.set_xlim(-0.5, 25)
 
-    # Combined legend
+    # Combined legend strictly below x-axis
     lines1, labels1 = ax2.get_legend_handles_labels()
     lines2, labels2 = ax2_twin.get_legend_handles_labels()
-    ax2.legend(lines1 + lines2, labels1 + labels2, loc='center left', frameon=True, fontsize=8)
-    ax2.set_title(r'(c) Mid-Plane Profiles ($x = 0.5$)', fontsize=11, pad=8)
+    ax2.legend(lines1 + lines2, labels1 + labels2, loc='upper center', bbox_to_anchor=(0.5, -0.22),
+               ncol=2, frameon=True, fancybox=True, edgecolor='#cccccc', fontsize=8.5)
+    ax2.set_title(r'(c) Mid-Plane Profiles ($x = 0.5$)', fontsize=12, pad=8)
 
     out_path = 'figures/lid_driven_peclet_dissipation_map_Re100000.png'
     fig.savefig(out_path, dpi=300, bbox_inches='tight')

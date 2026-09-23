@@ -157,39 +157,21 @@ def prolong_fields(psi_old, omega_old, old_x, old_y, new_x, new_y):
 
 def _apply_latex_style():
     """Apply publication-grade LaTeX Computer Modern typography and clean grid styling."""
-    import shutil
-    has_latex = shutil.which('latex') is not None and shutil.which('dvipng') is not None
-    if has_latex:
-        plt.rcParams.update({
-            'text.usetex': True,
-            'font.family': 'serif',
-            'font.serif': ['Computer Modern Roman', 'cmr10'],
-            'text.latex.preamble': r'\usepackage{amsmath}\usepackage{amssymb}',
-            'axes.formatter.use_mathtext': True,
-            'font.size': 11,
-            'axes.labelsize': 13,
-            'axes.titlesize': 14,
-            'legend.fontsize': 10,
-            'xtick.labelsize': 10.5,
-            'ytick.labelsize': 10.5,
-            'figure.autolayout': False,
-        })
-    else:
-        plt.rcParams.update({
-            'text.usetex': False,
-            'font.family': 'serif',
-            'font.serif': ['Computer Modern Roman', 'DejaVu Serif', 'Times New Roman', 'serif'],
-            'mathtext.fontset': 'cm',
-            'mathtext.rm': 'serif',
-            'axes.formatter.use_mathtext': True,
-            'font.size': 11,
-            'axes.labelsize': 13,
-            'axes.titlesize': 14,
-            'legend.fontsize': 10,
-            'xtick.labelsize': 10.5,
-            'ytick.labelsize': 10.5,
-            'figure.autolayout': False,
-        })
+    plt.rcParams.update({
+        'text.usetex': False,
+        'font.family': 'serif',
+        'font.serif': ['Computer Modern Roman', 'DejaVu Serif', 'Times New Roman', 'serif'],
+        'mathtext.fontset': 'cm',
+        'mathtext.rm': 'serif',
+        'axes.formatter.use_mathtext': True,
+        'font.size': 11,
+        'axes.labelsize': 13,
+        'axes.titlesize': 14,
+        'legend.fontsize': 10,
+        'xtick.labelsize': 10.5,
+        'ytick.labelsize': 10.5,
+        'figure.autolayout': False,
+    })
 
 
 class LidDrivenCavitySolver:

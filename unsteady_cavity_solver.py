@@ -555,9 +555,9 @@ def plot_phase_portrait_and_psd(fft_data, Re, save_path='figures/lid_driven_unst
     ax2.axvline(f_dom, color='#1f77b4', linestyle='--', linewidth=1.4,
                 label=rf'Dominant $f_0 = {f_dom:.3f}$ ($St = {strouhal:.3f}$)')
 
-    # Annotate peak
     max_psd = np.max(psd[mask]) if np.any(mask) else (np.max(psd) if len(psd) > 0 else 1.0)
-    ax2.annotate(rf'Peak: $St = {strouhal:.3f}$ ($f_0 = {f_dom:.3f}$ Hz)',
+    period = fft_data.get('period', 1.0 / f_dom if f_dom > 0 else 1.0)
+    ax2.annotate(rf'Peak: $St = {strouhal:.4f}$ ($T = {period:.4f}$)',
                  xy=(f_dom, max_psd), xytext=(f_dom + 0.35, max_psd * 0.85),
                  arrowprops=dict(facecolor='black', shrink=0.08, width=1, headwidth=6),
                  fontsize=10.5, fontweight='bold',
