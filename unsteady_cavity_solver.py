@@ -632,16 +632,24 @@ def plot_phase_portrait_and_psd(fft_data, Re, save_path='figures/lid_driven_unst
     if not np.any(mask):
         mask = np.ones_like(freqs, dtype=bool)
 
+    strouhal_unc = fft_data.get('strouhal_uncertainty', None)
+    period = fft_data.get('period', 1.0 / f_dom if f_dom > 0 else 1.0)
+    if strouhal_unc is not None and strouhal_unc > 0:
+        label_vline = rf'Dominant $f_0 = {f_dom:.4f}$ ($St = {strouhal:.4f} \pm {strouhal_unc:.4f}$)'
+        annotation_text = rf'Peak: $St = {strouhal:.4f} \pm {strouhal_unc:.4f}$' + '\n' + rf'($T = {period:.4f}$)'
+    else:
+        label_vline = rf'Dominant $f_0 = {f_dom:.4f}$ ($St = {strouhal:.4f}$)'
+        annotation_text = rf'Peak: $St = {strouhal:.4f}$ ($T = {period:.4f}$)'
+
     ax2.plot(freqs[mask], psd[mask], color='#d62728', linewidth=1.8, label=r'Power Spectral Density $|V(f)|^2$')
-    ax2.axvline(f_dom, color='#1f77b4', linestyle='--', linewidth=1.4,
-                label=rf'Dominant $f_0 = {f_dom:.3f}$ ($St = {strouhal:.3f}$)')
+    ax2.axvline(f_dom, color='#1f77b4', linestyle='--', linewidth=1.4, label=label_vline)
 
     max_psd = np.max(psd[mask]) if np.any(mask) else (np.max(psd) if len(psd) > 0 else 1.0)
-    period = fft_data.get('period', 1.0 / f_dom if f_dom > 0 else 1.0)
-    ax2.annotate(rf'Peak: $St = {strouhal:.4f}$ ($T = {period:.4f}$)',
-                 xy=(f_dom, max_psd), xytext=(f_dom + 0.35, max_psd * 0.85),
+    x_offset = 0.22 if f_dom < 1.0 else 0.15
+    ax2.annotate(annotation_text,
+                 xy=(f_dom, max_psd), xytext=(f_dom + x_offset, max_psd * 0.85),
                  arrowprops=dict(facecolor='black', shrink=0.08, width=1, headwidth=6),
-                 fontsize=10.5, fontweight='bold',
+                 fontsize=10.0, fontweight='bold',
                  bbox=dict(boxstyle='round,pad=0.3', facecolor='#ffffcc', edgecolor='#cccc99'))
 
     ax2.set_xlabel(r'Non-Dimensional Frequency $f \cdot (L/U)$ / Strouhal $St$', fontsize=12)
