@@ -216,4 +216,11 @@ paper/*.log
 paper/*.out
 paper/*.blg
 paper/*.bbl
+submission_package/*.aux
+submission_package/*.log
+submission_package/*.out
+submission_package/cover_letter.pdf
+
+# Dataset backups
+data/backups/
 

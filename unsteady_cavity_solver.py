@@ -177,10 +177,12 @@ class UnsteadyCavitySolver:
         print(f"  [TELEMETRY] Successfully restored {len(prior_time)} prior data points up to t = {t_start:.4f} s.")
         return t_start, telemetry
 
-    def run_simulation(self, t_end=25.0, sample_interval=10, log_interval=2000, t_start=0.0, initial_telemetry=None):
+    def run_simulation(self, t_end=25.0, sample_interval=10, log_interval=2000, t_start=0.0, initial_telemetry=None,
+                       checkpoint_path=None, checkpoint_interval=2500):
         """
         Advance in physical time from t_start up to t_end.
         Samples probe data, kinetic energy, and enstrophy.
+        Safely saves periodic atomic checkpoints to checkpoint_path if provided.
         """
         dt = self.dt
         step_start = int(round(t_start / dt))
@@ -195,6 +197,8 @@ class UnsteadyCavitySolver:
         print(f"STARTING UNSTEADY MARCHING: Re = {self.Re} | Grid = {self.N}x{self.N}")
         print(f"Physical Window: {t_start:.3f} s -> {t_end:.3f} s ({steps_to_run} steps to execute) | dt = {dt:.4e} s")
         print(f"Sampling Interval: every {sample_interval} steps ({sample_interval*dt:.4e} s)")
+        if checkpoint_path is not None:
+            print(f"Periodic Checkpoint: every {checkpoint_interval} steps ({checkpoint_interval*dt:.4e} s) -> {checkpoint_path}")
         print(f"{'='*75}\n", flush=True)
 
         if initial_telemetry is not None:
@@ -237,8 +241,31 @@ class UnsteadyCavitySolver:
                 telemetry['kinetic_energy'].append(float(ke))
                 telemetry['enstrophy'].append(float(ens))
 
-            # Logging
+            # Periodic atomic checkpointing
             steps_done = step - step_start
+            if checkpoint_path is not None and steps_done > 0 and steps_done % checkpoint_interval == 0 and step < total_steps:
+                try:
+                    tmp_cp = checkpoint_path + ".tmp.npz"
+                    np.savez_compressed(
+                        tmp_cp,
+                        time=np.array(telemetry['time']),
+                        u_BL=np.array(telemetry['u_probes']['BL']),
+                        v_BL=np.array(telemetry['v_probes']['BL']),
+                        u_TR=np.array(telemetry['u_probes']['TR']),
+                        v_TR=np.array(telemetry['v_probes']['TR']),
+                        kinetic_energy=np.array(telemetry['kinetic_energy']),
+                        enstrophy=np.array(telemetry['enstrophy']),
+                        final_omega=self.solver.omega,
+                        final_psi=self.solver.psi,
+                        Re=self.Re,
+                        N=self.N
+                    )
+                    os.replace(tmp_cp, checkpoint_path)
+                    print(f"  [CHECKPOINT] Periodic state safely saved at t = {current_time:.2f}s (step {step}/{total_steps})", flush=True)
+                except Exception as cp_err:
+                    print(f"  [WARNING] Periodic checkpoint save failed: {cp_err}", flush=True)
+
+            # Logging
             if steps_done % log_interval == 0 or step == total_steps:
                 elapsed = time.time() - t_clock_start
                 rate = steps_done / elapsed if elapsed > 0 else 0
@@ -266,14 +293,14 @@ class UnsteadyCavitySolver:
         Analyze the periodic limit cycle using FFT on the statistically stationary interval (t >= t_start_analysis).
         Extracts dominant frequency, Strouhal number St = f*L/U, and phase portrait data.
         """
-        t = self.telemetry['time']
+        t = np.asarray(self.telemetry['time'])
         if t_start_analysis is None or t_start_analysis >= t[-1]:
             t_start_analysis = t[0] + 0.35 * (t[-1] - t[0])
 
         mask = t >= t_start_analysis
         t_stat = t[mask]
-        v_signal = self.telemetry['v_probes'][probe_key][mask]
-        u_signal = self.telemetry['u_probes'][probe_key][mask]
+        v_signal = np.asarray(self.telemetry['v_probes'][probe_key])[mask]
+        u_signal = np.asarray(self.telemetry['u_probes'][probe_key])[mask]
 
         dt_sample = t_stat[1] - t_stat[0]
         N_samples = len(v_signal)
@@ -410,7 +437,7 @@ class UnsteadyCavitySolver:
         ax_trace.set_xlabel(r'Normalized Cycle Time $t / T$', fontsize=11)
         ax_trace.set_ylabel(r'Velocity Component', fontsize=11)
         ax_trace.set_xlim(0.0, 1.0)
-        ax_trace.set_title(rf'$\mathbf{{Real\text{{-}}Time\ Probe\ Telemetry}}$ ({self.N} $\times$ {self.N})', fontsize=12, pad=8)
+        ax_trace.set_title(rf'Real-Time Probe Telemetry (${self.N} \times {self.N}$)', fontsize=12, fontweight='bold', pad=8)
         ax_trace.grid(True, linestyle='--', alpha=0.5)
         ax_trace.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
                         ncol=2, frameon=True, fancybox=True, edgecolor='#cccccc', fontsize=9.5)
@@ -423,7 +450,7 @@ class UnsteadyCavitySolver:
             ax_flow.contour(X, Y, fd['psi'], levels=levels_psi_neg, colors='black', linewidths=0.6, alpha=0.7)
             ax_flow.contour(X, Y, fd['psi'], levels=levels_psi_pos, colors='red', linewidths=0.8, alpha=0.8)
 
-            ax_flow.set_title(rf'Vorticity & Streamlines ($\theta = {fd["phase_deg"]:.0f}^\circ$)', fontsize=12, fontweight='bold', pad=8)
+            ax_flow.set_title(rf'Vorticity \& Streamlines ($\theta = {fd["phase_deg"]:.0f}^\circ$)', fontsize=12, fontweight='bold', pad=8)
             ax_flow.set_xlabel(r'$x/L$', fontsize=11)
             ax_flow.set_ylabel(r'$y/L$', fontsize=11)
             ax_flow.set_aspect('equal')
@@ -432,8 +459,8 @@ class UnsteadyCavitySolver:
             dot_u.set_data([t_norm[idx]], [u_tracker[idx]])
             dot_v.set_data([t_norm[idx]], [v_tracker[idx]])
 
-            fig.suptitle(rf'$\mathbf{{Dynamic\ Vortex\ Shedding}}$ --- $Re = {self.Re}$, $\mathbf{{Ultra\text{{-}}Fine}}$ ${self.N} \times {self.N}$',
-                         fontsize=13, y=0.98)
+            fig.suptitle(rf'Dynamic Vortex Shedding --- $Re = {self.Re}$, Ultra-Fine ${self.N} \times {self.N}$',
+                         fontsize=13, fontweight='bold', y=0.98)
             plt.subplots_adjust(bottom=0.20, top=0.88, wspace=0.28)
             frame_path = os.path.join(temp_dir, f"frame_{idx:03d}.png")
             plt.savefig(frame_path, dpi=120, bbox_inches='tight')
