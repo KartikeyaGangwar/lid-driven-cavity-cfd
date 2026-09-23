@@ -18,13 +18,13 @@ A high-performance, publication-grade finite-difference computational fluid dyna
 | $Re = 10,000$ ($513 \times 513$ Ultra-Fine Mesh) | $Re = 15,000$ ($513 \times 513$ Ultra-Fine Mesh) |
 | :---: | :---: |
 | ![Lid-Driven Cavity Vortex Shedding Re=10000 N513](figures/lid_driven_vortex_shedding_Re10000_N513.gif) | ![Lid-Driven Cavity Vortex Shedding Re=15000 N513](figures/lid_driven_vortex_shedding_Re15000_N513.gif) |
-| **Primary Supercritical Hopf Limit Cycle** ($St = 0.6661, T = 1.5012\,\text{s}$) | **Secondary Hopf Bifurcation & 2-Torus Attractor** ($St = 0.6662, T = 1.5010\,\text{s}$) |
+| **Primary Hopf Limit Cycle** ($St = 0.6249 \pm 0.0416, T = 1.6002\,\text{s}$) | **Modulated Multi-Frequency Response** ($St = 0.5364 \pm 0.0278, T = 1.8643\,\text{s}$) |
 | **$Re = 25,000$ ($513 \times 513$ Ultra-Fine Mesh)** | **$Re = 50,000$ ($513 \times 513$ Extreme Frontier)** |
 | ![Lid-Driven Cavity Vortex Shedding Re=25000 N513](figures/lid_driven_vortex_shedding_Re25000_N513.gif) | ![Lid-Driven Cavity Vortex Shedding Re=50000 N513](figures/lid_driven_vortex_shedding_Re50000_N513.gif) |
-| **Multi-Harmonic Infold Attractor** ($St = 0.2856, T = 3.5010\,\text{s}$) | **Extreme Micro-Vortex Cascades** ($St = 0.3331, T = 3.0020\,\text{s}$) |
+| **Folded Multi-Frequency Orbit** ($St = 0.0953 \pm 0.0281, T = 10.490\,\text{s}$) | **Multi-Frequency Boundary Shedding** ($St = 0.2581 \pm 0.0300, T = 3.8751\,\text{s}$) |
 | **$Re = 100,000$ ($513 \times 513$ Extreme Frontier)** | |
 | ![Lid-Driven Cavity Vortex Shedding Re=100000 N513](figures/lid_driven_vortex_shedding_Re100000_N513.gif) | |
-| **Extreme Limit-Cycle Attractor** ($St = 0.5128, T = 1.9500\,\text{s}$) | |
+| **Frontier High-$Re$ Shedding (Hybrid)** ($St = 0.1908 \pm 0.0379, T = 5.2402\,\text{s}$) | |
 
 *Real-time synchronized physical time-accurate vortex shedding across fundamental cycles with continuous probe telemetry tracked along the bottom-left boundary eddy detachment zone ($x=0.08, y=0.15$), simulated strictly on $513 \times 513$ grid ($263,169$ nodes).*
 
@@ -32,15 +32,15 @@ A high-performance, publication-grade finite-difference computational fluid dyna
 
 ## Key Highlights & Capabilities
 
-- **Zero Artificial Viscosity ($\nu_{\text{num}} = 0$)**: Pure second-order central differencing for all convective and diffusive terms on meshes up to $513 \times 513$ for $Re \le 50,000$, and localized hybrid differencing at $Re = 100,000$ preserving zero dissipation in the recirculation core.
+- **Zero Artificial Viscosity ($\nu_{\text{num}} = 0$)**: Pure second-order central differencing for all convective and diffusive terms on meshes up to $513 \times 513$ for $Re \le 50,000$, and an interior Spalding--Patankar hybrid differencing scheme at $Re = 100,000$ stabilizing the corner singularity while maintaining well-bounded numerical dissipation in the core ($\bar{\nu}_{\text{num}}^{\text{excess}}/\nu \le 0.99$ on $513 \times 513$ and $0.24$ on $1025 \times 1025$).
 - **Ultra-Fast Discrete Sine Transform (DST) Poisson Engine**: Direct spectral Poisson solver with exact machine-precision Dirichlet enforcement scaling at $O(N^2 \log N)$ (sub-millisecond per Poisson solve). Precomputed sparse direct LU decomposition (`splu`) and vectorized Red–Black SOR also supported.
 - **Vectorized Alternating Direction Implicit (ADI) Marching**: Vectorized Thomas algorithm marching across all rows and columns simultaneously with exact tridiagonal boundary closures.
 - **Reynolds Number Continuation Ladder (Homotopy)**: Automated parameter continuation transitioning smoothly across Reynolds stages ($100 \to 100,000$), accelerating convergence by $3\times-5\times$ and eliminating startup shock.
 - **Bicubic Spline Mesh Prolongation**: Smooth transfer of flow fields from coarse meshes ($129 \times 129$) to ultra-fine meshes ($257 \times 257 \to 513 \times 513 \to 1025 \times 1025$) with boundary re-enforcement.
 - **Time-Accurate Unsteady & Bifurcation Analysis**:
-  - **Supercritical Hopf Bifurcation ($Re \approx 8,000 \sim 10,000$)**: Stable limit-cycle attractor capturing vortex shedding frequency $St = 0.6661$.
-  - **Secondary Hopf Bifurcation ($Re = 15,000$)**: Multi-loop 2-torus quasi-periodic attractor with corner eddy detachment.
-  - **Multi-Harmonic & Extreme Limit-Cycle Transitions ($Re = 25,000 \to 100,000$)**: Self-folding attractors, multi-frequency sidebands, and high-Re wall vortex shedding up to $Re = 100,000$ ($St = 0.5128$).
+  - **Supercritical Hopf Bifurcation ($Re \approx 8,000 \sim 10,000$)**: Stable limit-cycle attractor capturing refined vortex shedding frequency $St = 0.6249 \pm 0.0416$.
+  - **Modulated Multi-Frequency Dynamics ($Re = 15,000$)**: Multi-frequency response with low-frequency envelope modulation ($St = 0.5364 \pm 0.0278$).
+  - **Nonlinear Wall Shedding & High-$Re$ Transitions ($Re = 25,000 \to 100,000$)**: Folded multi-frequency orbit at $Re = 25,000$ ($St = 0.0953 \pm 0.0281$), multi-frequency boundary-layer vortex shedding at $Re = 50,000$ ($St = 0.2581 \pm 0.0300$), and high-$Re$ shedding at $Re = 100,000$ ($St = 0.1908 \pm 0.0379$).
 - **Publication-Grade Visualizations**: Beautiful LaTeX typography (`Computer Modern`), zero legend-data obstruction, streamline contours, vorticity fields, centerline velocity profiles, pressure recovery, FFT power spectra, and phase-space attractors.
 
 ---
@@ -59,7 +59,7 @@ Comparison against the gold-standard reference data of **Ghia, Ghia \& Shin (198
 | **$5,000$** | $257 \times 257$ | $(0.5156, 0.5352)$ | $(0.5117, 0.5352)$ | $-0.12255$ | $-0.11900$ | **$\Delta = 0.0039$** |
 | **$7,500$** | $257 \times 257$ | $(0.5117, 0.5312)$ | $(0.5117, 0.5322)$ | $-0.12351$ | $-0.11990$ | **$\Delta = 0.0010$** |
 | **$10,000$** | $257 \times 257$ | $(0.5234, 0.5352)$ | $(0.5117, 0.5333)$ | $-0.12821$ | $-0.11970$ | **Valid** |
-| **$10,000$** | $513 \times 513$ | **$(0.5117, 0.5215)$** | **$(0.5117, 0.5333)$** | **$-0.12642$** | $-0.11970$ | **Exact $x_c$ match!** |
+| **$10,000$** | $513 \times 513$ | **$(0.5117, 0.5215)$** | **$(0.5117, 0.5333)$** | **$-0.12868$** | $-0.11970$ | **Exact $x_c$ match!** |
 | **$15,000$** | $513 \times 513$ | $(0.5039, 0.5352)$ | $(0.5167, 0.5300)^*$ | $-0.12790$ | $-0.12000^*$ | **Valid** |
 | **$20,000$** | $513 \times 513$ | $(0.5117, 0.5391)$ | $(0.5150, 0.5283)^*$ | $-0.12722$ | $-0.11800^*$ | **Valid** |
 | **$25,000$** | $513 \times 513$ | **$(0.5195, 0.5254)$** | **$(0.5133, 0.5283)^*$** | **$-0.12631$** | $-0.11780^*$ | **$\Delta = 0.00688$** |
@@ -114,22 +114,27 @@ Quantitative comparison against the benchmark dataset of Dr. Ercan Erturk (*acen
 
 ---
 
-### 5. Dynamic Unsteady Vortex Shedding ($Re = 10,000 \to 50,000$ on $513 \times 513$)
+### 5. Dynamic Unsteady Vortex Shedding ($Re = 10,000 \to 100,000$ on $513 \times 513$)
 
-| Feature | $Re = 10,000$ ($N=513$) | $Re = 15,000$ ($N=513$) | $Re = 25,000$ ($N=513$) | $Re = 50,000$ ($N=513$) |
-| :--- | :---: | :---: | :---: | :---: |
-| **Bifurcation Regime** | Primary Supercritical Hopf | Secondary Hopf (Torus) | Multi-Harmonic Fold | Extreme Frontier Dynamics |
-| **Dominant Frequency ($f_0$)** | $0.6661\,\text{Hz}$ | $0.6662\,\text{Hz}$ | $0.2856\,\text{Hz}$ | $0.3331\,\text{Hz}$ |
-| **Strouhal Number ($St = \frac{f L}{U}$)** | **$0.6661$** | **$0.6662$** | **$0.2856$** | **$0.3331$** |
-| **Fundamental Period ($T$)** | $1.5012\,\text{s}$ | $1.5010\,\text{s}$ | $3.5010\,\text{s}$ | $3.0020\,\text{s}$ |
-| **Attractor Topology** | Single Limit-Cycle Orbit | Multi-Loop 2-Torus | Inflected Self-Folding Loop | Complex Multi-Loop Orbit |
-| **Physical Mechanism** | Steady eddy oscillation | Envelope beat modulation | Secondary blob detachment/pairing | Multi-corner micro-vortex cascades |
+| Feature | $Re = 10,000$ ($N=513$) | $Re = 15,000$ ($N=513$) | $Re = 25,000$ ($N=513$) | $Re = 50,000$ ($N=513$) | $Re = 100,000$ ($N=513$) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Bifurcation Regime** | Primary Hopf limit cycle | Modulated multi-frequency response | Folded multi-frequency orbit | Multi-frequency boundary shedding | Frontier high-$Re$ shedding (hybrid) |
+| **Analysis Window ($t$)** | $[10.0, 22.0]$ | $[2.0, 20.0]$ | $[4.2, 22.0]$ | $[1.33, 18.0]$ | $[2.8, 16.0]$ |
+| **Bin Resolution ($\Delta f$)** | $0.0833\,\text{Hz}$ | $0.0555\,\text{Hz}$ | $0.0562\,\text{Hz}$ | $0.0600\,\text{Hz}$ | $0.0757\,\text{Hz}$ |
+| **Dominant Peak ($f_0$)** | $0.6249\,\text{Hz}$ | $0.5364\,\text{Hz}$ | $0.0953\,\text{Hz}$ | $0.2581\,\text{Hz}$ | $0.1908\,\text{Hz}$ |
+| **Strouhal Number ($St \pm \frac{\Delta f}{2}$)** | **$0.6249 \pm 0.0416$** | **$0.5364 \pm 0.0278$** | **$0.0953 \pm 0.0281$** | **$0.2581 \pm 0.0300$** | **$0.1908 \pm 0.0379$** |
+| **Fundamental Period ($T$)** | $1.6002\,\text{s}$ | $1.8643\,\text{s}$ | $10.490\,\text{s}$ | $3.8751\,\text{s}$ | $5.2402\,\text{s}$ |
+| **Time-Domain Period ($T_{\text{TD}}$)** | $1.68 \pm 0.18\,\text{s}$ | $1.74 \pm 0.39\,\text{s}$ | $10.23\,\text{s}$ | $3.23 \pm 0.73\,\text{s}$ | $4.85\,\text{s}$ |
+| **Attractor Topology** | Single Limit-Cycle Orbit | Multi-Loop Band | Inflected Self-Folding Loop | Complex Multi-Loop Orbit | Bounded Nonlinear Orbit |
+| **Physical Mechanism** | Steady eddy oscillation | Envelope beat modulation | Secondary blob detachment/pairing | Multi-corner micro-vortex cascades | Multi-vortex triad pulsation & translation |
 
 | Phase-Space Attractor ($Re = 10,000$, $N=513$) | Phase-Space Attractor ($Re = 15,000$, $N=513$) |
 | :---: | :---: |
 | ![Phase Portrait Re=10000 N513](figures/lid_driven_unsteady_phase_portrait_Re10000_N513.png) | ![Phase Portrait Re=15000 N513](figures/lid_driven_unsteady_phase_portrait_Re15000_N513.png) |
 | **Phase-Space Attractor ($Re = 25,000$, $N=513$)** | **Phase-Space Attractor ($Re = 50,000$, $N=513$)** |
 | ![Phase Portrait Re=25000 N513](figures/lid_driven_unsteady_phase_portrait_Re25000_N513.png) | ![Phase Portrait Re=50000 N513](figures/lid_driven_unsteady_phase_portrait_Re50000_N513.png) |
+| **Phase-Space Attractor ($Re = 100,000$, $N=513$)** | |
+| ![Phase Portrait Re=100000 N513](figures/lid_driven_unsteady_phase_portrait_Re100000_N513.png) | |
 
 ---
 
@@ -151,12 +156,11 @@ lid-driven-cavity-cfd/
 │   ├── manuscript.tex           # LaTeX source
 │   ├── manuscript.pdf           # Compiled 13-page research paper (15.5 MB)
 │   └── references.bib           # BibTeX bibliography
-├── data/                        # 26 precomputed flow fields (.npz) up to Re=50,000
+├── data/                        # 28 precomputed flow fields (.npz) up to Re=100,000
 │   ├── flow_fields_Re100_N129.npz ... flow_fields_Re30000_N257.npz
-│   ├── flow_fields_Re10000_N513.npz ... flow_fields_Re50000_N513.npz
-│   ├── unsteady_Re10000_N257.npz & unsteady_Re10000_N513.npz
-│   ├── unsteady_Re15000_N257.npz & unsteady_Re15000_N513.npz
-│   └── unsteady_Re25000_N513.npz & unsteady_Re50000_N513.npz
+│   ├── flow_fields_Re10000_N513.npz ... flow_fields_Re100000_N513.npz
+│   ├── flow_fields_Re100000_N1025.npz (1.05M nodes mega-mesh benchmark)
+│   └── unsteady_Re10000_N513.npz ... unsteady_Re100000_N513.npz
 └── figures/                     # 55+ publication PNGs (300 DPI) + 513x513 animated GIFs
 ```
 

@@ -149,10 +149,10 @@ class UnsteadyCavitySolver:
         else:
             raise KeyError(f"No valid flow field matrices found in {npz_path} to resume from.")
 
-        self.solver.apply_boundary_conditions()
+        # 2. Restore velocities without modifying boundary vorticity values
         self.solver.calculate_velocities()
 
-        # 2. Restore continuous telemetry history
+        # 3. Restore continuous telemetry history
         prior_time = list(data['time'])
         t_start = float(prior_time[-1])
 
@@ -317,13 +317,36 @@ class UnsteadyCavitySolver:
 
         # Ignore DC / very low frequency (< 0.05 Hz)
         valid_idx = freqs >= 0.05
-        if np.any(valid_idx):
-            f_valid = freqs[valid_idx]
+        # Ignore DC / very low frequency (< 0.05 Hz)
+        valid_idx = np.where(freqs >= 0.05)[0]
+        if len(valid_idx) > 0:
             psd_valid = psd[valid_idx]
-            dom_idx = np.argmax(psd_valid)
-            f_dom = float(f_valid[dom_idx])
+            local_argmax = np.argmax(psd_valid)
+            k = valid_idx[local_argmax]
+            f_bin = float(freqs[k])
+
+            # Sub-bin 3-point parabolic peak interpolation on log-PSD
+            delta_f = float(freqs[1] - freqs[0]) if len(freqs) > 1 else 1.0
+            if 0 < k < len(psd) - 1:
+                eps = 1e-30
+                y1 = np.log(psd[k - 1] + eps)
+                y2 = np.log(psd[k] + eps)
+                y3 = np.log(psd[k + 1] + eps)
+                denom = y1 - 2.0 * y2 + y3
+                if np.abs(denom) > 1e-12:
+                    delta = 0.5 * (y1 - y3) / denom
+                    delta = float(np.clip(delta, -0.5, 0.5))
+                else:
+                    delta = 0.0
+                f_dom = float(freqs[k] + delta * delta_f)
+            else:
+                delta = 0.0
+                f_dom = f_bin
         else:
-            f_dom = float(freqs[1]) if len(freqs) > 1 else 1.0
+            delta_f = float(freqs[1] - freqs[0]) if len(freqs) > 1 else 1.0
+            f_bin = float(freqs[1]) if len(freqs) > 1 else 1.0
+            f_dom = f_bin
+            delta = 0.0
 
         strouhal = f_dom * self.L / self.U
         period = 1.0 / f_dom if f_dom > 0 else 1.0
@@ -331,16 +354,41 @@ class UnsteadyCavitySolver:
             period = 1.0
             strouhal = 1.0
 
-        print(f"[FFT ANALYSIS] Dominant Frequency: f_0 = {f_dom:.4f} Hz")
-        print(f"[FFT ANALYSIS] Non-Dimensional Strouhal Number: St = {strouhal:.4f}")
-        print(f"[FFT ANALYSIS] Fundamental Oscillation Period: T = {period:.4f} s")
+        strouhal_uncertainty = (delta_f / 2.0) * self.L / self.U
+        n_stat_cycles = (t_stat[-1] - t_stat[0]) / period if period > 0 else 0.0
+
+        # Time-domain zero-crossings / peak periods for cross-verification
+        period_td_mean = period
+        period_td_std = 0.0
+        try:
+            from scipy.signal import find_peaks
+            min_dist = max(1, int(0.6 * period / dt_sample))
+            peaks, _ = find_peaks(v_detrend, distance=min_dist)
+            if len(peaks) >= 2:
+                periods_td = np.diff(t_stat[peaks])
+                period_td_mean = float(np.mean(periods_td))
+                period_td_std = float(np.std(periods_td))
+        except Exception:
+            pass
+
+        print(f"[FFT ANALYSIS] Raw Bin Frequency: f_bin = {f_bin:.4f} Hz (bin delta_f = {delta_f:.4f} Hz)")
+        print(f"[FFT ANALYSIS] Parabolic Refined Frequency: f_0 = {f_dom:.4f} Hz")
+        print(f"[FFT ANALYSIS] Non-Dimensional Strouhal: St = {strouhal:.4f} +/- {strouhal_uncertainty:.4f}")
+        print(f"[FFT ANALYSIS] Fundamental Period: T = {period:.4f} s (Time-Domain: {period_td_mean:.4f} +/- {period_td_std:.4f} s)")
+        print(f"[FFT ANALYSIS] Resolved Cycles in Window: {n_stat_cycles:.2f} cycles")
 
         return {
             'freqs': freqs,
             'psd': psd,
             'f_dom': f_dom,
+            'f_bin': f_bin,
+            'delta_f': delta_f,
             'strouhal': strouhal,
+            'strouhal_uncertainty': strouhal_uncertainty,
             'period': period,
+            'period_time_domain': period_td_mean,
+            'period_td_std': period_td_std,
+            'n_cycles': n_stat_cycles,
             't_stat': t_stat,
             'u_stat': u_signal,
             'v_stat': v_signal
@@ -348,9 +396,12 @@ class UnsteadyCavitySolver:
 
     def capture_cycle_snapshots(self, period, n_phases=4):
         """
-        March for one additional period T to capture n_phases equidistant snapshots of the flow field.
+        March for one additional period T using an ISOLATED solver deepcopy
+        to capture n_phases equidistant snapshots of the flow field without mutating self.solver.
         """
-        print(f"\n[SNAPSHOTS] Capturing {n_phases} flow field phases over one period T = {period:.4f} s...")
+        import copy
+        isolated_solver = copy.deepcopy(self.solver)
+        print(f"\n[SNAPSHOTS] Capturing {n_phases} flow field phases over one period T = {period:.4f} s (isolated clone)...")
         dt = self.dt
         steps_per_phase = max(1, int(round((period / n_phases) / dt)))
         snapshots = []
@@ -361,32 +412,35 @@ class UnsteadyCavitySolver:
             snapshots.append({
                 'phase_deg': phase_deg,
                 'time_in_period': phase_idx * (period / n_phases),
-                'psi': self.solver.psi.copy(),
-                'omega': self.solver.omega.copy(),
-                'u': self.solver.u.copy(),
-                'v': self.solver.v.copy(),
+                'psi': isolated_solver.psi.copy(),
+                'omega': isolated_solver.omega.copy(),
+                'u': isolated_solver.u.copy(),
+                'v': isolated_solver.v.copy(),
             })
 
-            # Advance by steps_per_phase
+            # Advance by steps_per_phase on the isolated clone
             for _ in range(steps_per_phase):
-                self.solver.omega = self.solver.solve_vorticity_transport_ADI()
-                self.solver.apply_boundary_conditions()
-                self.solver.solve_streamfunction()
-                self.solver.calculate_velocities()
+                isolated_solver.omega = isolated_solver.solve_vorticity_transport_ADI()
+                isolated_solver.apply_boundary_conditions()
+                isolated_solver.solve_streamfunction()
+                isolated_solver.calculate_velocities()
 
         return snapshots
 
     def generate_shedding_gif(self, period, n_frames=36, fps=12, out_path=None):
         """
-        Marches across one complete fundamental cycle of the established attractor
-        and generates a synchronized 2-panel publication animated GIF.
+        Marches across one complete fundamental cycle using an ISOLATED solver deepcopy
+        and generates a synchronized 2-panel publication animated GIF without mutating self.solver.
         """
+        import copy
+        isolated_solver = copy.deepcopy(self.solver)
+
         if out_path is None:
             suffix = f"_N{self.N}" if self.N != 257 else ""
             out_path = f"figures/lid_driven_vortex_shedding_Re{self.Re}{suffix}.gif"
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
-        print(f"\n[GIF] Generating synchronized {n_frames}-frame animation over T = {period:.4f} s...")
+        print(f"\n[GIF] Generating synchronized {n_frames}-frame animation over T = {period:.4f} s (isolated clone)...")
         dt = self.dt
         total_steps_cycle = int(round(period / dt))
         steps_per_frame = max(1, total_steps_cycle // n_frames)
@@ -399,19 +453,19 @@ class UnsteadyCavitySolver:
 
         for f in range(actual_frames):
             for _ in range(steps_per_frame):
-                self.solver.omega = self.solver.solve_vorticity_transport_ADI()
-                self.solver.apply_boundary_conditions()
-                self.solver.solve_streamfunction()
-                self.solver.calculate_velocities()
+                isolated_solver.omega = isolated_solver.solve_vorticity_transport_ADI()
+                isolated_solver.apply_boundary_conditions()
+                isolated_solver.solve_streamfunction()
+                isolated_solver.calculate_velocities()
                 t_curr += dt
 
             t_tracker.append(t_curr)
-            u_tracker.append(float(self.solver.u[probe_idx]))
-            v_tracker.append(float(self.solver.v[probe_idx]))
+            u_tracker.append(float(isolated_solver.u[probe_idx]))
+            v_tracker.append(float(isolated_solver.v[probe_idx]))
             frames_data.append({
                 't': t_curr,
-                'omega': self.solver.omega.copy(),
-                'psi': self.solver.psi.copy(),
+                'omega': isolated_solver.omega.copy(),
+                'psi': isolated_solver.psi.copy(),
                 'phase_deg': (f / actual_frames) * 360.0
             })
 

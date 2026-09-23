@@ -27,13 +27,17 @@ def analyze_hybrid_scheme(npz_path):
     h = 1.0 / (N - 1)
     nu = 1.0 / Re
 
-    Pex = np.abs(u) * h * Re
-    Pey = np.abs(v) * h * Re
+    # Signed cell Peclet numbers and magnitudes
+    Pe_tilde_x = u * h / nu
+    Pe_tilde_y = v * h / nu
+    Pex = np.abs(Pe_tilde_x)
+    Pey = np.abs(Pe_tilde_y)
     Pemax = np.maximum(Pex, Pey)
 
-    # Effective added numerical viscosity under 1st-order upwinding:
-    # Truncation error diffusion is |u|*h/2 in each direction.
-    # The hybrid scheme adds artificial viscosity only when |Pe| > 2:
+    # Directional excess numerical viscosity under 1st-order upwinding:
+    # Truncation error diffusion of upwinding is |u|*h/2.
+    # The Spalding excess artificial diffusion beyond physical nu is max(0, |u|*h/2 - nu).
+    # The scalar isotropic metric is defined as the directional average:
     nu_num_x = np.maximum(0.0, np.abs(u) * h / 2.0 - nu)
     nu_num_y = np.maximum(0.0, np.abs(v) * h / 2.0 - nu)
     nu_num_eff = 0.5 * (nu_num_x + nu_num_y)
@@ -42,7 +46,7 @@ def analyze_hybrid_scheme(npz_path):
     central_fraction = np.mean(Pemax <= 2.0) * 100.0
     upwind_fraction = np.mean(Pemax > 2.0) * 100.0
 
-    # Center value at (0.5, 0.5)
+    # Center value at geometric center (0.5, 0.5)
     ci, cj = N // 2, N // 2
     pe_center = float(Pemax[ci, cj])
     nu_ratio_center = float(nu_ratio[ci, cj])
