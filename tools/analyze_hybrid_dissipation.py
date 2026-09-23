@@ -34,13 +34,16 @@ def analyze_hybrid_scheme(npz_path):
     Pey = np.abs(Pe_tilde_y)
     Pemax = np.maximum(Pex, Pey)
 
-    # Directional excess numerical viscosity under 1st-order upwinding:
-    # Truncation error diffusion of upwinding is |u|*h/2.
-    # The Spalding excess artificial diffusion beyond physical nu is max(0, |u|*h/2 - nu).
-    # The scalar isotropic metric is defined as the directional average:
-    nu_num_x = np.maximum(0.0, np.abs(u) * h / 2.0 - nu)
-    nu_num_y = np.maximum(0.0, np.abs(v) * h / 2.0 - nu)
-    nu_num_eff = 0.5 * (nu_num_x + nu_num_y)
+    # Added artificial numerical viscosity under operator-split ADI upwinding:
+    # When Pe <= 2, pure central differencing preserves zero artificial diffusion (nu_art = 0).
+    # When Pe > 2, 1st-order upwinding introduces leading truncation diffusion |u|*h/2.
+    # Because molecular diffusion nu is retained in the ADI implicit solve, the added viscosity is:
+    # nu_art_x = (|u|*h/2) * 1_{Pe_x > 2}, nu_art_y = (|v|*h/2) * 1_{Pe_y > 2}.
+    # The directional average added viscosity ratio is:
+    # bar_nu_art / nu = (1/4) * [ Pe_x * 1_{Pe_x > 2} + Pe_y * 1_{Pe_y > 2} ].
+    nu_art_x = np.where(Pex > 2.0, np.abs(u) * h / 2.0, 0.0)
+    nu_art_y = np.where(Pey > 2.0, np.abs(v) * h / 2.0, 0.0)
+    nu_num_eff = 0.5 * (nu_art_x + nu_art_y)
     nu_ratio = nu_num_eff / nu
 
     central_fraction = np.mean(Pemax <= 2.0) * 100.0

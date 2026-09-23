@@ -18,13 +18,13 @@ A high-performance, publication-grade finite-difference computational fluid dyna
 | $Re = 10,000$ ($513 \times 513$ Ultra-Fine Mesh) | $Re = 15,000$ ($513 \times 513$ Ultra-Fine Mesh) |
 | :---: | :---: |
 | ![Lid-Driven Cavity Vortex Shedding Re=10000 N513](figures/lid_driven_vortex_shedding_Re10000_N513.gif) | ![Lid-Driven Cavity Vortex Shedding Re=15000 N513](figures/lid_driven_vortex_shedding_Re15000_N513.gif) |
-| **Primary Hopf Limit Cycle** ($St = 0.6249 \pm 0.0416, T = 1.6002\,\text{s}$) | **Modulated Multi-Frequency Response** ($St = 0.5364 \pm 0.0278, T = 1.8643\,\text{s}$) |
+| **Primary Hopf Limit Cycle** ($St = 0.6249 \pm 0.0416, T = 1.6002\,\text{c.t.u.}$) | **Modulated Multi-Frequency Response** ($St = 0.5364 \pm 0.0278, T = 1.8643\,\text{c.t.u.}$) |
 | **$Re = 25,000$ ($513 \times 513$ Ultra-Fine Mesh)** | **$Re = 50,000$ ($513 \times 513$ Extreme Frontier)** |
 | ![Lid-Driven Cavity Vortex Shedding Re=25000 N513](figures/lid_driven_vortex_shedding_Re25000_N513.gif) | ![Lid-Driven Cavity Vortex Shedding Re=50000 N513](figures/lid_driven_vortex_shedding_Re50000_N513.gif) |
-| **Folded Multi-Frequency Orbit** ($St = 0.0953 \pm 0.0281, T = 10.490\,\text{s}$) | **Multi-Frequency Boundary Shedding** ($St = 0.2581 \pm 0.0300, T = 3.8751\,\text{s}$) |
+| **Folded Multi-Frequency Orbit** ($St = 0.0953 \pm 0.0281, T = 10.490\,\text{c.t.u.}$) | **Multi-Frequency Boundary Shedding** ($St = 0.2581 \pm 0.0300, T = 3.8751\,\text{c.t.u.}$) |
 | **$Re = 100,000$ ($513 \times 513$ Extreme Frontier)** | |
 | ![Lid-Driven Cavity Vortex Shedding Re=100000 N513](figures/lid_driven_vortex_shedding_Re100000_N513.gif) | |
-| **Frontier High-$Re$ Shedding (Hybrid)** ($St = 0.1908 \pm 0.0379, T = 5.2402\,\text{s}$) | |
+| **Frontier High-$Re$ Shedding (Hybrid)** ($St = 0.1908 \pm 0.0379, T = 5.2402\,\text{c.t.u.}$) | |
 
 *Real-time synchronized physical time-accurate vortex shedding across fundamental cycles with continuous probe telemetry tracked along the bottom-left boundary eddy detachment zone ($x=0.08, y=0.15$), simulated strictly on $513 \times 513$ grid ($263,169$ nodes).*
 
@@ -32,7 +32,7 @@ A high-performance, publication-grade finite-difference computational fluid dyna
 
 ## Key Highlights & Capabilities
 
-- **Zero Artificial Viscosity ($\nu_{\text{num}} = 0$)**: Pure second-order central differencing for all convective and diffusive terms on meshes up to $513 \times 513$ for $Re \le 50,000$, and an interior Spalding--Patankar hybrid differencing scheme at $Re = 100,000$ stabilizing the corner singularity while maintaining well-bounded numerical dissipation in the core ($\bar{\nu}_{\text{num}}^{\text{excess}}/\nu \le 0.99$ on $513 \times 513$ and $0.24$ on $1025 \times 1025$).
+- **Zero Artificial Viscosity ($\nu_{\text{art}} = 0$)**: Pure second-order central differencing for all convective and diffusive terms on meshes up to $513 \times 513$ for $Re \le 50,000$, and an interior Spalding--Patankar hybrid differencing scheme at $Re = 100,000$ stabilizing the corner singularity while maintaining well-bounded numerical dissipation in the core ($\bar{\nu}_{\text{art}}/\nu = 1.485$ at the core on $513 \times 513$, reducing to $0.74$ on $1025 \times 1025$).
 - **Ultra-Fast Discrete Sine Transform (DST) Poisson Engine**: Direct spectral Poisson solver with exact machine-precision Dirichlet enforcement scaling at $O(N^2 \log N)$ (sub-millisecond per Poisson solve). Precomputed sparse direct LU decomposition (`splu`) and vectorized Red–Black SOR also supported.
 - **Vectorized Alternating Direction Implicit (ADI) Marching**: Vectorized Thomas algorithm marching across all rows and columns simultaneously with exact tridiagonal boundary closures.
 - **Reynolds Number Continuation Ladder (Homotopy)**: Automated parameter continuation transitioning smoothly across Reynolds stages ($100 \to 100,000$), accelerating convergence by $3\times-5\times$ and eliminating startup shock.
@@ -65,8 +65,8 @@ Comparison against the gold-standard reference data of **Ghia, Ghia \& Shin (198
 | **$25,000$** | $513 \times 513$ | **$(0.5195, 0.5254)$** | **$(0.5133, 0.5283)^*$** | **$-0.12631$** | $-0.11780^*$ | **$\Delta = 0.00688$** |
 | **$30,000$** | $513 \times 513$ | $(0.5039, 0.5176)$ | — | $-0.12579$ | — | **Resolved** |
 | **$35,000$** | $513 \times 513$ | $(0.5020, 0.5195)$ | — | $-0.12583$ | — | **Frontier** |
-| **$40,000$** | $513 \times 513$ | $(0.5000, 0.5195)$ | — | $-0.12582$ | — | **Batchelor Core** |
-| **$45,000$** | $513 \times 513$ | $(0.5000, 0.5215)$ | — | $-0.12577$ | — | **Batchelor Core** |
+| **$40,000$** | $513 \times 513$ | $(0.5000, 0.5195)$ | — | $-0.12582$ | — | **Core Homogenization** |
+| **$45,000$** | $513 \times 513$ | $(0.5000, 0.5215)$ | — | $-0.12577$ | — | **Core Homogenization** |
 | **$50,000$** | $513 \times 513$ | **$(0.5000, 0.5234)$** | — | **$-0.12573$** | — | **Symmetric Core ($x_c=0.500$)** |
 | **$100,000$** | $513 \times 513$ | **$(0.5000, 0.5234)$** | — | **$-0.12572$** | — | **Symmetric Core ($x_c=0.500$)** |
 | **$100,000$** | $1025 \times 1025$ | **$(0.4990, 0.5234)$** | — | **$-0.12572$** | — | **Mega-Mesh Benchmark** |
@@ -75,11 +75,11 @@ Comparison against the gold-standard reference data of **Ghia, Ghia \& Shin (198
 
 ---
 
-### 2. Extreme Frontier & Asymptotic Batchelor Core Theorem ($Re \to 50,000$)
+### 2. Extreme Frontier & Core Homogenization ($Re \to 50,000$)
 
-According to Batchelor's asymptotic core theorem (1956) for high-Reynolds 2D recirculating flows, the core approaching $Re \to \infty$ becomes an inviscid region of uniform vorticity bounded by thin wall layers. In a square cavity, geometric symmetry requires the primary core center to converge toward $x_c \to 0.50000$.
+Batchelor's core theorem (1956) predicts that for steady 2D laminar recirculating flows with closed streamlines as $Re \to \infty$, viscous diffusion across closed streamlines drives the core to a state of uniform vorticity bounded by thin boundary shear layers. In a square cavity, geometric symmetry requires the primary core center to converge toward $x_c \to 0.50000$.
 
-Our solver quantitatively confirms this theorem: as $Re$ is marched from $10,000$ to $50,000$, the primary vortex core migrates from $x_c = 0.5117$ to **exactly $x_c = 0.50000$**, with core streamfunction saturating at $\psi_{\min} \approx -0.1257$.
+Our numerical continuation solutions show qualitative alignment with this core homogenization hypothesis: as $Re$ is marched from $10,000$ to $50,000$, the primary vortex core migrates from $x_c = 0.5117$ to **$x_c = 0.50000$**, with core streamfunction saturating at $\psi_{\min} \approx -0.1257$.
 
 ---
 
@@ -119,14 +119,15 @@ Quantitative comparison against the benchmark dataset of Dr. Ercan Erturk (*acen
 | Feature | $Re = 10,000$ ($N=513$) | $Re = 15,000$ ($N=513$) | $Re = 25,000$ ($N=513$) | $Re = 50,000$ ($N=513$) | $Re = 100,000$ ($N=513$) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Bifurcation Regime** | Primary Hopf limit cycle | Modulated multi-frequency response | Folded multi-frequency orbit | Multi-frequency boundary shedding | Frontier high-$Re$ shedding (hybrid) |
-| **Analysis Window ($t$)** | $[10.0, 22.0]$ | $[2.0, 20.0]$ | $[4.2, 22.0]$ | $[1.33, 18.0]$ | $[2.8, 16.0]$ |
-| **Bin Resolution ($\Delta f$)** | $0.0833\,\text{Hz}$ | $0.0555\,\text{Hz}$ | $0.0562\,\text{Hz}$ | $0.0600\,\text{Hz}$ | $0.0757\,\text{Hz}$ |
-| **Dominant Peak ($f_0$)** | $0.6249\,\text{Hz}$ | $0.5364\,\text{Hz}$ | $0.0953\,\text{Hz}$ | $0.2581\,\text{Hz}$ | $0.1908\,\text{Hz}$ |
+| **Analysis Window ($t$, c.t.u.)** | $[10.0, 22.0]$ | $[2.0, 20.0]$ | $[4.2, 22.0]$ | $[1.33, 18.0]$ | $[2.8, 16.0]$ |
+| **Bin Resolution ($\Delta f$, c.t.u.$^{-1}$)** | $0.0833$ | $0.0555$ | $0.0562$ | $0.0600$ | $0.0757$ |
 | **Strouhal Number ($St \pm \frac{\Delta f}{2}$)** | **$0.6249 \pm 0.0416$** | **$0.5364 \pm 0.0278$** | **$0.0953 \pm 0.0281$** | **$0.2581 \pm 0.0300$** | **$0.1908 \pm 0.0379$** |
-| **Fundamental Period ($T$)** | $1.6002\,\text{s}$ | $1.8643\,\text{s}$ | $10.490\,\text{s}$ | $3.8751\,\text{s}$ | $5.2402\,\text{s}$ |
-| **Time-Domain Period ($T_{\text{TD}}$)** | $1.68 \pm 0.18\,\text{s}$ | $1.74 \pm 0.39\,\text{s}$ | $10.23\,\text{s}$ | $3.23 \pm 0.73\,\text{s}$ | $4.85\,\text{s}$ |
+| **Fundamental Period ($T$, c.t.u.)** | $1.6002$ | $1.8643$ | $10.490$ | $3.8751$ | $5.2402$ |
+| **Time-Domain Period ($T_{\text{TD}}$, c.t.u.)** | $1.68 \pm 0.18$ | $1.74 \pm 0.39$ | $10.23$ | $3.23 \pm 0.73$ | $4.85$ |
 | **Attractor Topology** | Single Limit-Cycle Orbit | Multi-Loop Band | Inflected Self-Folding Loop | Complex Multi-Loop Orbit | Bounded Nonlinear Orbit |
 | **Physical Mechanism** | Steady eddy oscillation | Envelope beat modulation | Secondary blob detachment/pairing | Multi-corner micro-vortex cascades | Multi-vortex triad pulsation & translation |
+
+*All unsteady quantities are reported in non-dimensional convective time units (c.t.u., $L/U$) and Strouhal numbers ($St \equiv fL/U$), where $\pm \Delta f / 2$ denotes the discrete Fourier bin resolution width.*
 
 | Phase-Space Attractor ($Re = 10,000$, $N=513$) | Phase-Space Attractor ($Re = 15,000$, $N=513$) |
 | :---: | :---: |
@@ -154,7 +155,7 @@ lid-driven-cavity-cfd/
 ├── README.md                    # Project documentation
 ├── paper/                       # Publication-grade preprint manuscript
 │   ├── manuscript.tex           # LaTeX source
-│   ├── manuscript.pdf           # Compiled 13-page research paper (15.5 MB)
+│   ├── manuscript.pdf           # Compiled 20-page research paper (21.9 MB)
 │   └── references.bib           # BibTeX bibliography
 ├── data/                        # 28 precomputed flow fields (.npz) up to Re=100,000
 │   ├── flow_fields_Re100_N129.npz ... flow_fields_Re30000_N257.npz

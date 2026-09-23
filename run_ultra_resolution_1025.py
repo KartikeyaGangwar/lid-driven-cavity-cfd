@@ -121,10 +121,13 @@ def solve_ultra_steady(Re, N=1025, source_file=None, max_iter=25000, tol=1e-6,
     print(f"ULTRA-RESOLUTION STEADY CONTINUATION: Re = {Re:,} on Mesh {N}x{N} ({N*N:,} nodes)")
     print("=" * 80)
 
-    # Initialize solver
+    # Initialize solver: hybrid differencing for Re >= 100,000, pure central for Re < 100,000
+    conv_scheme = 'hybrid' if Re >= 100000 else 'central'
+    beta = 0.75 if Re >= 100000 else (0.85 if Re >= 50000 else 1.0)
     solver = LidDrivenCavitySolver(
         N=N, Re=Re, lid_velocity=1.0, L=1.0, lid_profile='constant',
-        poisson_solver='dst', convection_scheme='central', wall_bc='thom'
+        poisson_solver='dst', convection_scheme=conv_scheme, wall_bc='thom',
+        wall_beta=beta
     )
 
     # Warm-start prolongation
@@ -248,11 +251,13 @@ def run_ultra_unsteady(Re, N=1025, base_npz=None, dt=0.0005, total_steps=20000,
     print(f"ULTRA-RESOLUTION UNSTEADY MARCHING: Re = {Re:,} on Mesh {N}x{N} ({N*N:,} nodes)")
     print("=" * 80)
 
-    # Initialize solver with robust wall relaxation (0.50 for high Re stability)
+    # Initialize solver: hybrid differencing for Re >= 100,000, pure central for Re < 100,000
+    conv_scheme = 'hybrid' if Re >= 100000 else 'central'
+    beta = 0.75 if Re >= 100000 else (0.85 if Re >= 50000 else 1.0)
     solver = LidDrivenCavitySolver(
         N=N, Re=Re, lid_velocity=1.0, L=1.0, lid_profile='constant',
-        poisson_solver='dst', convection_scheme='central', wall_bc='thom',
-        wall_beta=0.50 if Re >= 5000 else 0.60
+        poisson_solver='dst', convection_scheme=conv_scheme, wall_bc='thom',
+        wall_beta=beta
     )
     # Ensure dt strictly respects the viscous and convective CFL bounds
     if dt is not None and dt < solver.dt:

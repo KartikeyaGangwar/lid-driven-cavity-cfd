@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath,amssymb}
 \usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
 
 \title{\textbf{Research Highlights}}
 \author{\textbf{Computers \& Fluids} Submission}
@@ -20,10 +21,10 @@
 
 \begin{itemize}
     \item Exact $\mathcal{O}(N^2 \log N)$ DST-I Poisson solver eliminates iterative residual drift.
-    \item Pure central differencing achieves zero artificial viscosity up to $Re = 50,000$.
-    \item Localized hybrid scheme regularizes corner shocks at $Re = 100,000$ on $1025 \times 1025$.
-    \item Symmetric core convergence confirms Batchelor's asymptotic theorem at high $Re$.
-    \item Time-accurate $513 \times 513$ marching maps Hopf bifurcation cascades to $Re = 100,000$.
+    \item Pure central differencing retains zero numerical viscosity for $Re \le 50{,}000$.
+    \item Interior hybrid scheme stabilizes corner singularity at $Re = 100{,}000$.
+    \item Core vorticity profiles show qualitative alignment with Batchelor theorem.
+    \item Unsteady marching on $513 \times 513$ grids resolves shedding limit-cycle dynamics.
 \end{itemize}
 
 \end{document}

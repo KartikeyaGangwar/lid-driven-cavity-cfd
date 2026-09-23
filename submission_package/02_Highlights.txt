@@ -1,5 +1,5 @@
 - Exact O(N^2 log N) DST-I Poisson solver eliminates iterative residual drift.
-- Pure central differencing achieves zero numerical viscosity up to Re = 50,000.
-- Interior hybrid scheme regularizes corner singularity at Re = 100,000 on 1025x1025.
-- Asymptotic core vorticity plateau confirms Batchelor's theorem at high Re.
-- Time-accurate 513x513 marching resolves limit cycles and unsteady dynamics.
+- Pure central differencing retains zero numerical viscosity for Re <= 50,000.
+- Interior hybrid scheme stabilizes corner singularity at Re = 100,000.
+- Core vorticity profiles show qualitative alignment with Batchelor theorem.
+- Unsteady marching on 513x513 grids resolves shedding limit-cycle dynamics.
