@@ -158,11 +158,10 @@ def prolong_fields(psi_old, omega_old, old_x, old_y, new_x, new_y):
 def _apply_latex_style():
     """Apply publication-grade LaTeX Computer Modern typography and clean grid styling."""
     plt.rcParams.update({
-        'text.usetex': False,
+        'text.usetex': True,
         'font.family': 'serif',
-        'font.serif': ['Computer Modern Roman', 'DejaVu Serif', 'Times New Roman', 'serif'],
-        'mathtext.fontset': 'cm',
-        'mathtext.rm': 'serif',
+        'font.serif': ['Computer Modern Roman', 'cmr10'],
+        'text.latex.preamble': r'\usepackage{amsmath}\usepackage{amssymb}',
         'axes.formatter.use_mathtext': True,
         'font.size': 11,
         'axes.labelsize': 13,

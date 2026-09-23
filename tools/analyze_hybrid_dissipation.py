@@ -11,19 +11,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
-# Apply clean publication style
-plt.rcParams.update({
-    'font.size': 10,
-    'axes.labelsize': 11,
-    'axes.titlesize': 11,
-    'xtick.labelsize': 9,
-    'ytick.labelsize': 9,
-    'legend.fontsize': 9,
-    'figure.titlesize': 12,
-    'lines.linewidth': 1.5,
-    'font.family': 'serif',
-    'font.serif': ['Times New Roman', 'DejaVu Serif'],
-})
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from lid_driven_cavity_fdm import _apply_latex_style
 
 
 def analyze_hybrid_scheme(npz_path):
@@ -106,9 +96,9 @@ def generate_figures():
     from lid_driven_cavity_fdm import _apply_latex_style
     _apply_latex_style()
 
-    # 3-Panel Publication Figure
-    fig, axes = plt.subplots(1, 3, figsize=(16, 5.0), dpi=300)
-    plt.subplots_adjust(wspace=0.35, bottom=0.24, top=0.88)
+    # 3-Panel Publication Figure with perfectly aligned subplots
+    fig, axes = plt.subplots(1, 3, figsize=(15.8, 5.0), dpi=300)
+    plt.subplots_adjust(wspace=0.34, bottom=0.22, top=0.88, left=0.06, right=0.96)
 
     X513, Y513 = np.meshgrid(stats_513['x'], stats_513['y'])
 
@@ -116,11 +106,10 @@ def generate_figures():
     ax0 = axes[0]
     levels_pe = np.linspace(0, 100, 21)
     cf0 = ax0.contourf(X513, Y513, np.clip(stats_513['Pemax'], 0, 100), levels=levels_pe, cmap='viridis')
-    cs0 = ax0.contour(X513, Y513, stats_513['Pemax'], levels=[2.0], colors='red', linewidths=1.8, linestyles='--')
-    ax0.clabel(cs0, fmt={2.0: r'$Pe=2$ (Switch)'}, fontsize=9, colors='red')
-    cb0 = fig.colorbar(cf0, ax=ax0, shrink=0.85)
+    cs0 = ax0.contour(X513, Y513, stats_513['Pemax'], levels=[2.0], colors='red', linewidths=1.6, linestyles='--')
+    cb0 = fig.colorbar(cf0, ax=ax0, shrink=0.82, pad=0.04)
     cb0.set_label(r'$\max(Pe_x, Pe_y)$', fontsize=11)
-    ax0.set_title(r'(a) Cell P\'eclet Number $Pe_{h}$ ($513^2$)', fontsize=12, pad=8)
+    ax0.set_title(r'Cell P\'eclet Number $Pe_{h}$ ($513 \times 513$)', fontsize=12, pad=10)
     ax0.set_xlabel(r'$x / L$', fontsize=11)
     ax0.set_ylabel(r'$y / L$', fontsize=11)
     ax0.set_aspect('equal')
@@ -130,10 +119,10 @@ def generate_figures():
     levels_nu = np.linspace(0, 50, 21)
     cf1 = ax1.contourf(X513, Y513, np.clip(stats_513['nu_ratio'], 0, 50), levels=levels_nu, cmap='inferno')
     cs1 = ax1.contour(X513, Y513, stats_513['nu_ratio'], levels=[1.0, 5.0, 20.0], colors='white', linewidths=1.0, alpha=0.8)
-    ax1.clabel(cs1, fmt='%1.0fx', fontsize=8, colors='white')
-    cb1 = fig.colorbar(cf1, ax=ax1, shrink=0.85)
+    ax1.clabel(cs1, fmt=r'%1.0f$\times$', fontsize=8, colors='white')
+    cb1 = fig.colorbar(cf1, ax=ax1, shrink=0.82, pad=0.04)
     cb1.set_label(r'$\nu_{\mathrm{num}} / \nu$', fontsize=11)
-    ax1.set_title(r'(b) Numerical Dissipation Ratio $\nu_{\mathrm{num}}/\nu$', fontsize=12, pad=8)
+    ax1.set_title(r'Numerical Dissipation $\nu_{\mathrm{num}}/\nu$ ($513 \times 513$)', fontsize=12, pad=10)
     ax1.set_xlabel(r'$x / L$', fontsize=11)
     ax1.set_ylabel(r'$y / L$', fontsize=11)
     ax1.set_aspect('equal')
@@ -150,28 +139,35 @@ def generate_figures():
     nu_cut_513 = stats_513['nu_ratio'][:, mid_j_513]
     nu_cut_1025 = stats_1025['nu_ratio'][:, mid_j_1025]
 
-    ax2.plot(pe_cut_513, y513, 'b-', linewidth=1.5, label=r'$Pe$ ($513\times 513$)')
-    ax2.plot(pe_cut_1025, y1025, 'b--', linewidth=1.5, label=r'$Pe$ ($1025\times 1025$)')
-    ax2.axvline(2.0, color='red', linestyle=':', linewidth=1.3, label=r'Switch ($Pe=2$)')
-    ax2.set_xlabel(r'Cell P\'eclet Number $Pe_x(0.5, y)$', color='blue', fontsize=11)
-    ax2.tick_params(axis='x', labelcolor='blue')
-    ax2.set_ylabel(r'Vertical Station $y / L$', fontsize=11)
-    ax2.set_xlim(-1, 55)
+    # Full range from 0 to 105 so curves are not clipped at boundaries
+    l_pe1, = ax2.plot(pe_cut_513, y513, color='#1f77b4', linestyle='-', linewidth=1.6, label=r'$Pe$ ($513 \times 513$)')
+    l_pe2, = ax2.plot(pe_cut_1025, y1025, color='#1f77b4', linestyle='--', linewidth=1.6, label=r'$Pe$ ($1025 \times 1025$)')
+    l_sw = ax2.axvline(2.0, color='red', linestyle=':', linewidth=1.3, label=r'Threshold ($Pe=2$)')
+    ax2.set_xlabel(r'Cell P\'eclet Number $Pe_x(0.5, y)$', fontsize=11)
+    ax2.set_ylabel(r'$y / L$', fontsize=11)
+    ax2.set_xlim(0, 105)
+    ax2.set_ylim(0, 1.0)
     ax2.grid(True, linestyle=':', alpha=0.5)
 
     ax2_twin = ax2.twiny()
-    ax2_twin.plot(nu_cut_513, y513, color='purple', linestyle='-', linewidth=1.5, label=r'$\nu_{\mathrm{num}}/\nu$ ($513^2$)')
-    ax2_twin.plot(nu_cut_1025, y1025, color='purple', linestyle='--', linewidth=1.5, label=r'$\nu_{\mathrm{num}}/\nu$ ($1025^2$)')
-    ax2_twin.set_xlabel(r'Dissipation Ratio $\nu_{\mathrm{num}} / \nu$', color='purple', fontsize=11)
-    ax2_twin.tick_params(axis='x', labelcolor='purple')
-    ax2_twin.set_xlim(-0.5, 25)
+    l_nu1, = ax2_twin.plot(nu_cut_513, y513, color='#8c564b', linestyle='-', linewidth=1.6, label=r'$\nu_{\mathrm{num}}/\nu$ ($513 \times 513$)')
+    l_nu2, = ax2_twin.plot(nu_cut_1025, y1025, color='#8c564b', linestyle='--', linewidth=1.6, label=r'$\nu_{\mathrm{num}}/\nu$ ($1025 \times 1025$)')
+    ax2_twin.set_xlabel(r'Dissipation Ratio $\nu_{\mathrm{num}} / \nu$', fontsize=11)
+    ax2_twin.set_xlim(0, 60)
 
-    # Combined legend strictly below x-axis
-    lines1, labels1 = ax2.get_legend_handles_labels()
-    lines2, labels2 = ax2_twin.get_legend_handles_labels()
-    ax2.legend(lines1 + lines2, labels1 + labels2, loc='upper center', bbox_to_anchor=(0.5, -0.22),
+    # Combined clean legend below panel (c)
+    handles = [l_pe1, l_pe2, l_sw, l_nu1, l_nu2]
+    labels = [h.get_label() for h in handles]
+    ax2.legend(handles, labels, loc='upper center', bbox_to_anchor=(0.5, -0.20),
                ncol=2, frameon=True, fancybox=True, edgecolor='#cccccc', fontsize=8.5)
-    ax2.set_title(r'(c) Mid-Plane Profiles ($x = 0.5$)', fontsize=12, pad=8)
+    ax2.set_title(r'Mid-Plane Profiles ($x = 0.5$)', fontsize=12, pad=10)
+
+    # Match panel (c) vertical geometry to equal-aspect panels (a) and (b)
+    fig.canvas.draw()
+    pos0 = ax0.get_position()
+    pos2 = ax2.get_position()
+    ax2.set_position([pos2.x0, pos0.y0, pos2.width, pos0.height])
+    ax2_twin.set_position([pos2.x0, pos0.y0, pos2.width, pos0.height])
 
     out_path = 'figures/lid_driven_peclet_dissipation_map_Re100000.png'
     fig.savefig(out_path, dpi=300, bbox_inches='tight')
