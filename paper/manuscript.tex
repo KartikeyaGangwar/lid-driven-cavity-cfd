@@ -43,7 +43,7 @@ The 2D incompressible lid-driven cavity problem serves as a fundamental benchmar
 \vspace{1em}
 
 \section{Introduction}
-The incompressible flow inside a two-dimensional square cavity driven by a translating lid has been the canonical proving ground for numerical fluid algorithms for more than four decades~\cite{ghia1982high,erturk2005numerical,bruneau20062d}. Despite the simplicity of its rectangular geometry and boundary closures, the enclosed fluid exhibits rich, non-linear physical phenomena: a dominant central gyre, secondary counter-rotating corner eddies, viscous wall boundary layers, singular velocity discontinuities at top corners, and hydrodynamic instability leading to Hopf bifurcations and chaotic transitions~\cite{peng2003transition}.
+The incompressible flow inside a two-dimensional square cavity driven by a translating lid has been the canonical proving ground for numerical fluid algorithms for more than four decades~\cite{ghia1982high,erturk2005numerical,bruneau20062d,hou1995lattice}. Despite the simplicity of its rectangular geometry and boundary closures, the enclosed fluid exhibits rich, non-linear physical phenomena: a dominant central gyre, secondary counter-rotating corner eddies, viscous wall boundary layers, singular velocity discontinuities at top corners, and hydrodynamic instability leading to Hopf bifurcations and chaotic transitions~\cite{peng2003transition}.
 
 In computational fluid dynamics and high-order algorithm development, the lid-driven cavity problem is widely recognized as the preeminent standard for verifying spatial discretization schemes, benchmarking Poisson solvers, and investigating non-linear hydrodynamic stability. However, computational engineering researchers facing this problem frequently confront severe data limitations:
 \begin{enumerate}
@@ -54,7 +54,7 @@ In computational fluid dynamics and high-order algorithm development, the lid-dr
 
 To bridge this gap, this work develops and documents an open-source, reference-grade finite-difference solver built entirely in modern scientific Python (NumPy, SciPy). Operating with \emph{pure second-order central differencing} ($\nu_{\text{num}} = 0$) across moderate-to-high Reynolds regimes and a localized hybrid differencing formulation for extreme Reynolds numbers ($Re = 100,000$), the solver leverages a spectral Poisson solver based on the Type-I Discrete Sine Transform (DST-I), a vectorized Alternating Direction Implicit (ADI) time-marching scheme, and parameter continuation (homotopy) across Reynolds numbers. We systematically evaluate steady solutions from $Re = 100$ to $Re = 100,000$ on meshes up to $1025 \times 1025$ ($1,050,625$ nodes), provide a rigorous grid convergence verification, and perform time-accurate investigations of Hopf bifurcations and limit-cycle attractors on $513 \times 513$ grids.
 
-All computational flow fields, post-processing tools, and verification datasets are archived permanently under an open-source MIT license on GitHub\footnote{\url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}} and Zenodo\footnote{\url{https://doi.org/10.5281/zenodo.18312938}}.
+All computational flow fields, post-processing tools, and verification datasets are archived permanently under an open-source MIT license on GitHub\footnote{\url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}} and Zenodo~\cite{singh2026solver}\footnote{\url{https://doi.org/10.5281/zenodo.18312938}}.
 
 \section{Governing Equations \& Mathematical Formulation}
 
@@ -205,7 +205,7 @@ $\mathbf{100,000}$& $\mathbf{1025 \times 1025}$ & $\mathbf{(0.4990, 0.5234)}$ & 
 \end{tabular*}
 \end{table}
 
-At $Re = 100$ and $Re = 1,000$, our computed primary core coordinates match the Ghia et al. benchmark with zero discrepancy to four decimal places. At the extreme threshold of $Re = 25,000$, our computed core center on the $513 \times 513$ mesh is $(0.5195, 0.5254)$, yielding an Euclidean distance offset of only $\Delta = 0.00688$ relative to the $601 \times 601$ calculation of Erturk et al.~\cite{erturk2005numerical}. 
+At $Re = 100$ and $Re = 1,000$, our computed primary core coordinates match the Ghia et al. benchmark with zero discrepancy to four decimal places. At the extreme threshold of $Re = 25,000$, our computed core center on the $513 \times 513$ mesh is $(0.5195, 0.5254)$, yielding an Euclidean distance offset of only $\Delta = 0.00688$ relative to the $601 \times 601$ calculation of Erturk et al.~\cite{erturk2005numerical}. The computed streamline topologies and centerline velocity profiles across high Reynolds numbers are illustrated in Fig.~\ref{fig:showcase_steady}. 
 
 \begin{figure}[htbp]
 \centering
@@ -301,7 +301,7 @@ $100,000$ & $1025 \to 513 \to 257$ & $-0.12572$ & $-0.12572$ & $-0.12553$ & $-0.
 \end{tabular*}
 \end{table}
 
-As documented in Table~\ref{tab:gci}, the fine-grid numerical uncertainty is exceptionally minute: $\text{GCI}_{21} = 0.031\%$ at $Re = 10,000$, and drops below $0.001\%$ at $Re = 100,000$. The computed minimum streamfunction on the $1025 \times 1025$ grid matches the Richardson continuum extrapolation to five significant digits, confirming that our solutions are rigorously mesh-independent and asymptotically converged.
+As documented in Table~\ref{tab:gci} and demonstrated in the grid refinement comparisons of Fig.~\ref{fig:grid_convergence}, the fine-grid numerical uncertainty is exceptionally minute: $\text{GCI}_{21} = 0.031\%$ at $Re = 10,000$, and drops below $0.001\%$ at $Re = 100,000$. The computed minimum streamfunction on the $1025 \times 1025$ grid matches the Richardson continuum extrapolation to five significant digits, confirming that our solutions are rigorously mesh-independent and asymptotically converged.
 
 \begin{figure}[htbp]
 \centering
@@ -578,7 +578,7 @@ This research did not receive any specific grant from funding agencies in the pu
 During the preparation of this work, the author used AI-assisted technologies solely for editorial consistency, grammar verification, and scientific language polishing. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content and conclusions of the published article.
 
 \section*{Data Availability}
-The underlying research data, full 2D tensor fields (.npz), verification scripts, and high-resolution animation pipelines are openly available on Zenodo under permanent DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938} and hosted on GitHub at \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}.
+The underlying research data, full 2D tensor fields (.npz), verification scripts, and high-resolution animation pipelines are openly available on Zenodo under permanent DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}~\cite{singh2026solver} and hosted on GitHub at \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}.
 
 \bibliographystyle{unsrt}
 \bibliography{references}
