@@ -10,20 +10,20 @@ Target Journal: Computers & Fluids (Elsevier)
 1. MANUSCRIPT TITLE & SHORT TITLE
 ================================================================================
 Full Title:
-A High-Resolution Finite-Difference Benchmark for Steady Continuation and Hopf Bifurcation Dynamics up to Extreme Reynolds Numbers (Re = 100,000) in 2D Lid-Driven Cavity Flows
+A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to Re = 100,000 in 2D Lid-Driven Cavity Flows
 
 Short Running Title:
-Extreme-Re Cavity Flow Benchmark & Hopf Dynamics
+High-Resolution Cavity Flow Framework up to Re = 100,000
 
 ================================================================================
-2. ABSTRACT (247 words - Strictly <= 250 words limit)
+2. ABSTRACT (243 words - Strictly <= 250 words limit)
 ===============================================================================
-The 2D incompressible lid-driven cavity problem is a canonical CFD benchmark. While classical studies focus on Re <= 10,000, higher-Re regimes lack open tensor datasets and unified bifurcation records. We present a high-resolution finite-difference framework across steady continuation and unsteady regimes from Re = 100 to Re = 100,000. The numerical engine couples an O(N^2 log N) Discrete Sine Transform (DST-I) Poisson solver, eliminating iterative residuals, with vectorized Alternating Direction Implicit marching and parameter homotopy. For Re <= 50,000, pure second-order central differencing is strictly preserved (nu_art = 0). At Re = 100,000 (peak cell Peclet Pe_x ~ 195.3), an interior hybrid upwind stabilization regularizes corner singularity dispersion with added numerical viscosity ratio nu_art_bar / nu = 1/4[Pe_x 1_{Pe_x>2} + Pe_y 1_{Pe_y>2}], yielding 1.485 at the core and 48.83 at the lid on 513 x 513 (dropping to 0.74 and 24.46 on 1025 x 1025). On meshes up to 1025 x 1025, stationary continuation resolves primary and secondary corner eddies, demonstrating geometric agreement with benchmarks while documenting a consistent ~7.5% offset in psi_min. At Re = 50,000 and 100,000, core vorticity exhibits behavior qualitatively consistent with Batchelor's core homogenization hypothesis (omega_0 ~ -2.54) with mid-plane centering (x_c -> 0.50000). Physical marching on 513 x 513 grids (t = 16.0-22.0 c.t.u., St = fL/U) resolves periodic limit cycles at Re = 10,000 (St = 0.6249 +/- 0.0416), captures modulated multi-frequency dynamics at Re = 15,000 (St = 0.5364 +/- 0.0278), and characterizes nonlinear shedding at Re = 25,000 (St = 0.0953 +/- 0.0281), Re = 50,000 (St = 0.2581 +/- 0.0300), and Re = 100,000 (St = 0.1908 +/- 0.0379). Datasets, tools, and animations are openly archived.
+The two-dimensional incompressible lid-driven cavity problem is a canonical benchmark in computational fluid dynamics. While classical benchmarks focus on Re <= 10,000, higher-Re regimes lack open tensor datasets and unified dynamical descriptions. We present a high-resolution finite-difference framework across steady continuation and finite-window unsteady regimes from Re = 100 to Re = 100,000. The numerical architecture couples an O(N^2 log N) Discrete Sine Transform (DST-I) Poisson solver, eliminating iterative residuals, with vectorized Alternating Direction Implicit marching and parameter continuation. For Re <= 50,000, pure second-order central differencing is preserved (nu_art = 0). At Re = 100,000 (peak cell Peclet Pe_x ~ 195.3), an interior hybrid upwind differencing formulation regularizes corner singularity shocks, which we characterize as a hybrid-regularized numerical model with directional artificial diffusion tensor nu_art. On uniform Cartesian meshes up to 1025 x 1025, stationary continuation resolves primary and secondary corner vortices, demonstrating geometric agreement with benchmarks alongside an observed ~7.5% offset in psi_min. At Re = 50,000 and 100,000, core vorticity exhibits qualitative behavior consistent with Batchelor's core homogenization hypothesis (omega_0 ~ -2.54) with mid-plane symmetry (x_c -> 0.50000). Time-resolved simulations on 513 x 513 grids (t = 16.0-22.0 c.t.u., St = fL/U) capture periodic vortex shedding at Re = 10,000 (St = 0.6249 +/- 0.0416, 7.50 cycles), an amplitude-modulated multi-frequency response at Re = 15,000 (St = 0.5364 +/- 0.0278, 9.66 cycles), and nonlinear shedding at Re = 25,000 (St = 0.0953 +/- 0.0281, 1.70 cycles), Re = 50,000 (St = 0.2581 +/- 0.0300, 4.30 cycles), and Re = 100,000 (St = 0.1908 +/- 0.0379, 2.52 cycles). All thirty datasets, tools, and animations are openly archived.
 
 ================================================================================
 3. KEYWORDS (6 keywords)
 ================================================================================
-Lid-driven cavity; Finite difference method; Streamfunction--vorticity; Central differencing; Hopf bifurcation; Batchelor theorem
+Lid-driven cavity; Finite difference method; Streamfunction--vorticity; Central differencing; Unsteady vortex shedding; Batchelor theorem
 
 ================================================================================
 4. AUTHOR & INSTITUTIONAL AFFILIATION
@@ -45,7 +45,7 @@ Bullet 1: Exact O(N^2 log N) DST-I Poisson solver eliminates iterative residual 
 Bullet 2: Pure central differencing retains zero numerical viscosity for Re <= 50,000.
 Bullet 3: Interior hybrid scheme stabilizes corner singularity at Re = 100,000.
 Bullet 4: Core vorticity profiles show qualitative alignment with Batchelor theorem.
-Bullet 5: Unsteady marching on 513x513 grids resolves shedding limit-cycle dynamics.
+Bullet 5: Unsteady marching on 513x513 grids resolves vortex shedding dynamics.
 
 ================================================================================
 6. SUGGESTED REVIEWERS (4 Recommended World Authorities)
@@ -98,7 +98,7 @@ This research did not receive any specific grant from funding agencies in the pu
 The complete source code, numerical datasets (flow fields, benchmark profiles, verification metrics), and telemetry files are openly available under an MIT license on GitHub at https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd and archived permanently on Zenodo with DOI: 10.5281/zenodo.18312938.
 
 [E] Generative AI Usage Statement:
-During the preparation of this work, the author used generative AI / large language models solely for assisting with code refactoring, script automation, and manuscript LaTeX formatting. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content of the published article.
+During the preparation of this work, the author used generative AI / large language models solely for editorial consistency, grammar verification, and scientific language polishing. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content and conclusions of the published article.
 
 ================================================================================
 8. FILES READY TO UPLOAD IN EDITORIAL MANAGER (Under "Your Paper Your Way")

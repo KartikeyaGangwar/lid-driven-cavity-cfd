@@ -22,7 +22,7 @@
     urlcolor=magenta!80!black
 }
 
-\title{\LARGE \textbf{A High-Resolution Finite-Difference Benchmark for Steady Continuation and Hopf Bifurcation Dynamics up to Extreme Reynolds Numbers ($Re = 100,000$) in 2D Lid-Driven Cavity Flows}}
+\title{\LARGE \textbf{A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows}}
 
 \author{\textbf{Kartikey Singh}\thanks{Department of Mathematics, University of Delhi, Delhi, 110007, India. Corresponding author email: \texttt{kartikeysingh525@protonmail.com}. ORCID: \url{https://orcid.org/0009-0009-1973-7532}. Open-source repository: \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}. Permanent Archive DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}.}}
 
@@ -33,27 +33,27 @@
 \maketitle
 
 \begin{abstract}
-The 2D incompressible lid-driven cavity problem serves as a canonical benchmark in computational fluid dynamics. While classical benchmarks (such as Ghia et al., 1982) are largely restricted to $Re \le 10{,}000$, existing higher-$Re$ investigations either focus exclusively on steady solutions ($Re \le 30{,}000$) or omit open full-field tensor archives and unified time-accurate bifurcation records up to extreme Reynolds numbers ($Re = 100{,}000$). We present a high-resolution finite-difference framework in streamfunction--vorticity formulation across steady continuation and unsteady regimes from $Re = 100$ to $Re = 100{,}000$. The numerical engine integrates an $\mathcal{O}(N^2 \log N)$ Discrete Sine Transform (DST-I) Poisson solver, eliminating iterative Poisson residuals, coupled with vectorized Alternating Direction Implicit (ADI) marching and parameter homotopy continuation. Across $Re \le 50{,}000$, the spatial discretization operates strictly with pure second-order central differencing ($\nu_{\text{art}} = 0$). At $Re = 100{,}000$ (peak directional cell P\'eclet number $Pe_x \approx 195.3$), an interior hybrid upwind stabilization regularizes corner singularity dispersion with added numerical viscosity ratio $\bar{\nu}_{\text{art}}/\nu = \frac{1}{4}[Pe_x \mathbf{1}_{Pe_x > 2} + Pe_y \mathbf{1}_{Pe_y > 2}]$, yielding $1.485$ at the core and $48.83$ at the lid on $513 \times 513$ (dropping to $0.74$ and $24.46$ on $1025 \times 1025$). On uniform meshes up to $1025 \times 1025$, stationary continuation resolves primary and secondary corner eddies, demonstrating geometric agreement with reference benchmarks while documenting a consistent $\sim 7.5\%$ offset in $\psi_{\min}$. At $Re = 50{,}000$ and $Re = 100{,}000$, the core vorticity exhibits behavior qualitatively consistent with Batchelor's asymptotic homogenization hypothesis ($\omega_0 \approx -2.54$) with mid-plane centering ($x_c \to 0.50000$). Physical time marching on $513 \times 513$ grids over extended windows ($t = 16.0$--$22.0$ convective time units, with Strouhal number $St \equiv f L / U$) resolves periodic limit-cycle dynamics at $Re = 10{,}000$ ($St = 0.6249 \pm 0.0416$), captures an amplitude-modulated multi-frequency response at $Re = 15{,}000$ ($St = 0.5364 \pm 0.0278$), and characterizes nonlinear shedding at $Re = 25{,}000$ ($St = 0.0953 \pm 0.0281$), $Re = 50{,}000$ ($St = 0.2581 \pm 0.0300$), and $Re = 100{,}000$ ($St = 0.1908 \pm 0.0379$). All datasets and automated pipelines are openly archived.
+The 2D incompressible lid-driven cavity problem serves as a canonical model in fluid dynamics. While classical benchmarks ($Re \le 10{,}000$) focus on centerline data, open full-field archives spanning moderate to extreme Reynolds numbers ($Re = 100$ to $100{,}000$) remain scarce. We present a finite-difference framework solving the streamfunction--vorticity equations via an $\mathcal{O}(N^2 \log N)$ Discrete Sine Transform (DST-I) Poisson solver and vectorized Alternating Direction Implicit (ADI) pseudo-time continuation. For $Re \le 50{,}000$, spatial discretization retains pure second-order central differencing ($\nu_{\mathrm{num}} = 0$). At $Re = 100{,}000$, an interior hybrid scheme regularizes corner singularity dispersion with directional added viscosity $\nu_{\mathrm{art},x} = \frac{1}{2}|u|h \mathbf{1}_{Pe_x > 2}$ and $\nu_{\mathrm{art},y} = \frac{1}{2}|v|h \mathbf{1}_{Pe_y > 2}$, yielding average ratio $\bar{\nu}_{\mathrm{art}}/\nu = 1.485$ at the core, an active interior peak of $48.93$ at $y = 1-h$, and domain mean $16.32$ on $513 \times 513$ (reducing to $0.74$, $24.46$, and $8.12$ on $1025 \times 1025$). On uniform grids up to $1025 \times 1025$, stationary continuation resolves primary and secondary eddy topologies, showing qualitative alignment with Batchelor's core homogenization hypothesis ($\omega_0 \approx -2.54, x_c \to 0.50000$). Unsteady marching on $513 \times 513$ grids over finite convective windows ($t = 16.0$--$22.0$ c.t.u., $St \equiv f L / U$) resolves periodic shedding at $Re = 10{,}000$ ($St = 0.6249 \pm 0.0416$), an amplitude-modulated response at $Re = 15{,}000$ ($St = 0.5364 \pm 0.0278$), and characterized dynamics at $Re = 25{,}000$, $50{,}000$, and $100{,}000$, where $\pm \Delta f / 2$ denotes Fourier bin resolution width. All datasets are openly archived.
 \end{abstract}
 
 \vspace{0.5em}
-\noindent \textbf{Keywords:} Lid-driven cavity, Finite difference method, Streamfunction--vorticity, Central differencing, Hopf bifurcation, Batchelor theorem.
+\noindent \textbf{Keywords:} Lid-driven cavity, Finite difference method, Streamfunction--vorticity, Central differencing, Unsteady dynamics, Batchelor theorem.
 
 \vspace{1em}
 \hrule
 \vspace{1em}
 
 \section{Introduction}
-The incompressible flow inside a two-dimensional square cavity driven by a translating lid has been the canonical proving ground for numerical fluid algorithms for more than four decades~\cite{ghia1982high,erturk2005numerical,bruneau20062d,hou1995lattice}. Despite the simplicity of its rectangular geometry and boundary closures, the enclosed fluid exhibits rich, nonlinear physical phenomena: a dominant central gyre, secondary counter-rotating corner eddies, viscous wall boundary layers, singular velocity discontinuities at top corners, and hydrodynamic instability leading to Hopf bifurcations and chaotic transitions~\cite{peng2003transition}.
+The incompressible flow inside a two-dimensional square cavity driven by a translating lid has been the canonical proving ground for numerical fluid algorithms for more than four decades~\cite{ghia1982high,erturk2005numerical,bruneau20062d,hou1995lattice}. Despite the simplicity of its rectangular geometry and boundary closures, the enclosed fluid exhibits rich, nonlinear physical phenomena: a dominant central gyre, secondary counter-rotating corner eddies, viscous wall boundary layers, singular velocity discontinuities at top corners, and hydrodynamic instability leading to vortex shedding and complex transitions within the two-dimensional model~\cite{peng2003transition}.
 
-In computational fluid dynamics and high-order algorithm development, the lid-driven cavity problem is widely recognized as the preeminent standard for verifying spatial discretization schemes, benchmarking Poisson solvers, and investigating nonlinear hydrodynamic stability. However, computational engineering researchers facing this problem frequently confront severe data limitations:
+In computational fluid dynamics and high-order algorithm development, the lid-driven cavity problem is widely recognized as a standard for verifying spatial discretization schemes, benchmarking Poisson solvers, and investigating nonlinear hydrodynamic stability. However, computational engineering researchers facing this problem frequently confront severe data limitations:
 \begin{enumerate}
     \item \textbf{Sparsity of Benchmark Data:} The canonical benchmark of Ghia, Ghia \& Shin (1982)~\cite{ghia1982high} provides velocity data along only two 1D orthogonal lines (centerlines) sampled at 17 discrete points for $Re \le 10,000$. Full 2D coordinate fields for velocity, vorticity, and pressure are rarely tabulated or accessible in modern tensor formats.
-    \item \textbf{Artificial Numerical Dissipation:} At high Reynolds numbers ($Re \ge 3,200$), cell P\'eclet numbers ($Pe = u h / \nu$) substantially exceed the classical linear stability limit of $Pe = 2$. To prevent unphysical spatial oscillations (wiggles) and catastrophic divergence, commercial packages and naive implementations routinely inject first-order upwind differencing or flux limiters, which introduce substantial numerical viscosity ($\nu_{\text{num}} \sim \mathcal{O}(h)$), artificially damping corner eddies and distorting core vortex dynamics.
+    \item \textbf{Artificial Numerical Dissipation:} At high Reynolds numbers ($Re \ge 3,200$), cell P\'eclet numbers ($Pe_x = |u| h / \nu, Pe_y = |v| h / \nu$) substantially exceed the classical monotonicity threshold of $Pe = 2$ for standard 1D linear central differencing. To prevent non-physical spatial oscillations and divergence, commercial packages and naive implementations routinely inject first-order upwind differencing or flux limiters, introducing substantial artificial numerical dissipation ($\nu_{\text{art}} \sim \mathcal{O}(h)$), artificially damping corner eddies and distorting core vortex dynamics.
     \item \textbf{Setup Friction and Closed Access:} Existing high-$Re$ benchmarks (e.g., Erturk et al., 2005~\cite{erturk2005numerical}; Erturk, 2009~\cite{erturk2009discussions}) were implemented in proprietary or legacy Fortran codes without standardized open-source distribution. Consequently, reproducing solutions requires significant manual re-implementation.
 \end{enumerate}
 
-To bridge this gap, this work develops and documents an open-source finite-difference solver built entirely in modern scientific Python (NumPy, SciPy). Operating with \emph{pure second-order central differencing} ($\nu_{\text{num}} = 0$) across moderate-to-high Reynolds regimes and an interior hybrid upwind stabilization for extreme Reynolds numbers ($Re = 100,000$), the solver leverages a spectral Poisson solver based on the Type-I Discrete Sine Transform (DST-I), a vectorized Alternating Direction Implicit (ADI) time-marching scheme, and parameter continuation (homotopy) across Reynolds numbers. We systematically evaluate stationary continuation solutions from $Re = 100$ to $Re = 100,000$ on meshes up to $1025 \times 1025$ ($1,050,625$ nodes), provide a grid convergence verification, and perform time-accurate investigations of vortex shedding and limit-cycle dynamics on $513 \times 513$ grids.
+To bridge this gap, this work develops and documents an open-source finite-difference solver built entirely in modern scientific Python (NumPy, SciPy). Operating with \emph{pure second-order central differencing} ($\nu_{\text{num}} = 0$, meaning zero added artificial dissipation $\nu_{\text{art}} = 0$) across moderate-to-high Reynolds regimes and an interior hybrid upwind scheme for the regularized model at $Re = 100{,}000$, the solver leverages a spectral Poisson solver based on the Type-I Discrete Sine Transform (DST-I), a vectorized Alternating Direction Implicit (ADI) pseudo-time marching scheme, and parameter continuation across Reynolds numbers. We systematically evaluate stationary continuation solutions from $Re = 100$ to $Re = 100{,}000$ on uniform meshes up to $1025 \times 1025$ ($1{,}050{,}625$ nodes), provide a grid convergence verification, and perform time-resolved investigations of vortex shedding over finite convective windows on $513 \times 513$ grids.
 
 All computational flow fields, post-processing tools, and verification datasets are archived permanently under an open-source MIT license on GitHub\footnote{\url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}} and Zenodo~\cite{singh2026solver}\footnote{\url{https://doi.org/10.5281/zenodo.18312938}}.
 
@@ -80,6 +80,7 @@ incompressibility is satisfied identically ($\nabla \cdot \mathbf{u} = \psi_{yx}
 \end{align}
 
 \subsection{Boundary Closures \& Wall Vorticity}
+\label{sec:boundary_conditions}
 The physical boundary conditions for the unit square cavity are:
 \begin{itemize}
     \item \textbf{Bottom wall ($y = 0$):} $u = 0, \quad v = 0 \implies \psi = 0$
@@ -96,13 +97,26 @@ Because the physical walls are non-porous and impermeable, the streamfunction is
     \omega_{\text{right}}(y)  &= -\frac{2 \psi(1-h, y)}{h^2}, \\
     \omega_{\text{top}}(x)    &= -\frac{2 \psi(x, 1-h)}{h^2} - \frac{2 U_{\text{lid}}(x)}{h}.
 \end{align}
-It should be noted that while the interior discretization is formally second-order $\mathcal{O}(h^2)$, Thom's boundary formulation has a local truncation error of $\mathcal{O}(h)$ for boundary vorticity, which represents an established and robust closure in streamfunction--vorticity solvers~\cite{thom1933flow,roache1998verification}. At the singular top lid corners $(0, 1)$ and $(1, 1)$, where the horizontal velocity abruptly transitions from $u_{\text{lid}} = 1$ to the stationary sidewall $u = 0$, velocity is assigned to zero on the stationary boundary, and corner vorticity values are evaluated from the adjacent boundary closures. 
+While the interior central differencing stencil is formally second-order $\mathcal{O}(h^2)$, Thom's boundary closure introduces a local truncation error of $\mathcal{O}(h)$ for boundary vorticity, which governs the global spatial accuracy of the streamfunction--vorticity system~\cite{thom1933flow,roache1998verification}. 
 
-To guarantee numerical stability during high-$Re$ iterative coupling, under-relaxation is applied to the wall vorticity updates:
+At the singular top lid corners $(0, 1)$ and $(1, 1)$, where the horizontal velocity abruptly jumps from the moving lid $u_{\text{lid}} = 1$ to the stationary sidewall $u = 0$, velocity is assigned to zero on the stationary boundary, and the four corner vorticity values are evaluated by taking the arithmetic average of the two adjacent boundary points:
+\begin{align}
+    \omega_{0, 0} &= \frac{1}{2}(\omega_{1, 0} + \omega_{0, 1}) \quad \text{(bottom-left)}, \\
+    \omega_{0, N-1} &= \frac{1}{2}(\omega_{1, N-1} + \omega_{0, N-2}) \quad \text{(bottom-right)}, \\
+    \omega_{N-1, 0} &= \frac{1}{2}(\omega_{N-2, 0} + \omega_{N-1, 1}) \quad \text{(top-left)}, \\
+    \omega_{N-1, N-1} &= \frac{1}{2}(\omega_{N-2, N-1} + \omega_{N-1, N-2}) \quad \text{(top-right)},
+\end{align}
+where top-lid boundary points $\omega_{N-1, 1}$ and $\omega_{N-1, N-2}$ incorporate the lid driving term $-2 U_{\text{lid}} / h$ via Thom's condition, whereas sidewall boundary points do not.
+
+To stabilize iterative coupling during high-$Re$ continuation and filter dispersive waves, under-relaxation is applied to the wall vorticity updates:
 \begin{equation}
     \omega_{\text{wall}}^{(k+1)} = (1 - \beta_{\text{wall}}) \omega_{\text{wall}}^{(k)} + \beta_{\text{wall}} \omega_{\text{Thom}}^{(k+1)}, \quad 0 < \beta_{\text{wall}} \le 1.
 \end{equation}
-In all time-accurate physical marching and steady continuation at moderate Reynolds numbers ($Re \le 25{,}000$), unrelaxed updates are employed ($\beta_{\text{wall}} = 1.0$), ensuring that the discrete boundary condition is satisfied directly without temporal filtering. At extreme Reynolds numbers ($Re = 50{,}000$ and $Re = 100{,}000$), under-relaxation ($\beta_{\text{wall}} = 0.85$ and $0.75$, respectively) is applied as a numerical boundary regularization to prevent high-wavenumber dispersion generated by corner velocity discontinuities on uniform Cartesian meshes; this regularized boundary condition acts as a localized boundary filter over the reported convective windows.
+For physical time marching and steady continuation at moderate Reynolds numbers ($Re \le 25{,}000$), unrelaxed updates are employed ($\beta_{\text{wall}} = 1.0$), satisfying the discrete Thom condition directly without temporal filtering. At extreme Reynolds numbers ($Re = 50{,}000$ and $Re = 100{,}000$), under-relaxation ($\beta_{\text{wall}} = 0.85$ and $0.75$, respectively) acts as a discrete temporal low-pass filter on the boundary vorticity:
+\begin{equation}
+    \omega_{\text{wall}}^{n+1} = (1 - \beta_{\text{wall}}) \omega_{\text{wall}}^n + \beta_{\text{wall}} \omega_{\text{Thom}}^{n+1}.
+\end{equation}
+This filters high-wavenumber dispersive transients generated by corner velocity discontinuities on uniform Cartesian meshes. Unsteady solutions obtained under $\beta_{\text{wall}} < 1.0$ are therefore characterized as solutions of a \emph{filtered-boundary model}, and their observed dynamical frequencies are subject to this boundary regularization.
 
 \section{Numerical Architecture \& High-Performance Algorithms}
 
@@ -111,11 +125,11 @@ The discrete 2D streamfunction Poisson equation (\ref{eq:poisson_psi}) on a unif
 \begin{equation}
     \phi_{j, m} = \sin\left(\frac{j m \pi}{N-1}\right), \quad j, m = 1, \dots, N-2,
 \end{equation}
-the system can be diagonalized exactly using the Type-I Discrete Sine Transform (DST-I)~\cite{swarztrauber1977methods}. Applying the 2D DST-I to both sides of $\nabla_h^2 \psi = -\omega$:
+the discrete system can be diagonalized exactly using the Type-I Discrete Sine Transform (DST-I)~\cite{swarztrauber1977methods}. Applying the 2D DST-I to both sides of $\nabla_h^2 \psi = -\omega$:
 \begin{equation}
     \hat{\psi}_{k_x, k_y} = \frac{\hat{\omega}_{k_x, k_y}}{\lambda_{k_x} + \lambda_{k_y}}, \quad \lambda_k = \frac{4}{h^2} \sin^2\left(\frac{k \pi}{2(N-1)}\right).
 \end{equation}
-Computing the 2D inverse DST-I yields $\psi_{i, j}$ exact to machine precision ($\sim 10^{-16}$) in $\mathcal{O}(N^2 \log N)$ operations via fast FFT algorithms (\texttt{scipy.fft.dst}). In benchmark timings on workstation hardware (Intel Core i7-12700H, 16 threads, SciPy FFTW backend), this spectral solve executes in approximately $0.8\,\text{ms}$ on $257 \times 257$ and $2.1\,\text{ms}$ on $513 \times 513$, completely removing Poisson convergence tolerance as an iterative bottleneck.
+Computing the 2D inverse DST-I yields $\psi_{i, j}$ exact to machine precision ($\sim 10^{-16}$) for the discrete 5-point linear Laplacian system in $\mathcal{O}(N^2 \log N)$ operations via fast algorithms (\texttt{scipy.fft.dstn}). In benchmark timings (Python 3.11, SciPy 1.11 single-threaded PocketFFT backend on Intel Core i7-12700H, timed over 100 iterations after warm-up), this spectral solve executes in approximately $0.8\,\text{ms}$ on $257 \times 257$ and $2.1\,\text{ms}$ on $513 \times 513$, eliminating iterative Poisson residual drift.
 
 \subsection{Vectorized Alternating Direction Implicit (ADI) Marching}
 The vorticity transport equation (\ref{eq:vorticity_transport}) is advanced in pseudo- or physical-time using an operator-split Alternating Direction Implicit (ADI) scheme based on the Peaceman--Rachford structure. To decouple the spatial coordinates while enabling high-performance vectorized tridiagonal solves across entire grid tensors, the convective flux $\mathcal{C}(\mathbf{u}^n, \omega^n) = u^n \delta_x \omega^n + v^n \delta_y \omega^n$ is evaluated explicitly at time level $n$, while viscous diffusion is split implicitly along alternating coordinate axes across two half-steps of size $\Delta t / 2$:
@@ -123,37 +137,40 @@ The vorticity transport equation (\ref{eq:vorticity_transport}) is advanced in p
     \frac{\omega^* - \omega^n}{\Delta t / 2} - \frac{1}{Re}\delta_x^2 \omega^* &= \frac{1}{Re}\delta_y^2 \omega^n - \left( u^n \delta_x \omega^n + v^n \delta_y \omega^n \right), \label{eq:adi_step1} \\
     \frac{\omega^{n+1} - \omega^*}{\Delta t / 2} - \frac{1}{Re}\delta_y^2 \omega^{n+1} &= \frac{1}{Re}\delta_x^2 \omega^* - \left( u^n \delta_x \omega^n + v^n \delta_y \omega^n \right), \label{eq:adi_step2}
 \end{align}
-where $\delta_x^2$ and $\delta_y^2$ denote standard second-order central difference Laplacian operators. Because the convective flux $\mathcal{C}(\mathbf{u}^n, \omega^n)$ is evaluated explicitly at time level $n$ while viscous diffusion is split implicitly across the two half-steps, the resulting operator-split ADI scheme possesses a formal temporal splitting accuracy of $\mathcal{O}(\Delta t) + \mathcal{O}(h^2)$ for frozen advective fields, with unconditional linear stability for the diffusive operator. Because viscous diffusion alone is inverted implicitly in each coordinate direction, the resulting tridiagonal linear systems possess spatially invariant scalar coefficients along each grid line:
+where $\delta_x^2$ and $\delta_y^2$ denote standard second-order central difference Laplacian operators. For frozen advective fields in the interior, this directional splitting possesses a formal temporal accuracy of $\mathcal{O}(\Delta t) + \mathcal{O}(h^2)$, with unconditional linear stability for the diffusive operator. The overall global spatial accuracy is $\mathcal{O}(h)$ due to Thom's wall closure and, at $Re = 100{,}000$, the first-order upwind differencing.
+
+Because viscous diffusion alone is inverted implicitly in each coordinate direction, the resulting tridiagonal linear systems possess spatially invariant scalar coefficients along each grid line:
 \begin{equation}
     A = -\frac{\alpha_{\text{ADI}}}{2}, \quad B = 1 + \alpha_{\text{ADI}}, \quad C = -\frac{\alpha_{\text{ADI}}}{2}, \quad \text{with} \quad \alpha_{\text{ADI}} = \frac{\Delta t}{Re \cdot h^2}.
 \end{equation}
-This allows precomputation of the Thomas factorization arrays $(P, \text{denom})$ and admits complete vectorized forward and backward sweeps across all $M = N-2$ rows (in Step 1) and columns (in Step 2) simultaneously via NumPy vectorization, bypassing per-node iterative loops.
+This allows precomputation of the Thomas factorization arrays $(P, \text{denom})$ and admits complete vectorized sweeps across all $M = N-2$ rows (in Step 1) and columns (in Step 2) simultaneously via NumPy vectorization, bypassing per-node iterative loops.
 
 Crucially, for all $Re \le 50,000$, all convective derivatives are discretized using \emph{pure second-order central differences}:
 \begin{equation}
     (u \delta_x \omega)_{i, j} = u_{i, j} \frac{\omega_{i+1, j} - \omega_{i-1, j}}{2 h}, \quad (v \delta_y \omega)_{i, j} = v_{i, j} \frac{\omega_{i, j+1} - \omega_{i, j-1}}{2 h}.
 \end{equation}
-In this regime, the leading truncation error of the spatial convective stencil introduces zero artificial numerical viscosity ($\nu_{\text{num}} = 0$ in the spatial modified equation).
+In this regime, the leading truncation error introduces zero added artificial viscosity ($\nu_{\text{num}} = 0, \nu_{\text{art}} = 0$).
 
-\subsection{\texorpdfstring{Cell P\'eclet Number Transition, Boundary Layer Scaling, and Interior Hybrid Stabilization ($Re \ge 100,000$)}{Cell Peclet Number Transition, Boundary Layer Scaling, and Interior Hybrid Stabilization (Re >= 100000)}}
-In finite-difference formulations of convection-diffusion systems, the local cell P\'eclet number governs the monotonicity and spectral stability of central differences. We define the signed cell P\'eclet components:
-\begin{equation}
-    \widetilde{Pe}_{x, i, j} = \frac{u_{i, j} h}{\nu} = Re \cdot u_{i, j} \cdot h, \quad \widetilde{Pe}_{y, i, j} = \frac{v_{i, j} h}{\nu} = Re \cdot v_{i, j} \cdot h,
-\end{equation}
-with magnitudes $Pe_{x, i, j} = |\widetilde{Pe}_{x, i, j}|$, $Pe_{y, i, j} = |\widetilde{Pe}_{y, i, j}|$, and maximum local directional magnitude $Pe_{h, i, j} = \max(Pe_x, Pe_y)$.
-
-The classical linear stability limit requires $Pe_h \le 2$ to prevent spurious, high-wavenumber spatial dispersion (odd-even node decoupling). On a uniform $513 \times 513$ mesh ($h = 1/512 \approx 1.953 \times 10^{-3}$) with lid velocity $U = 1.0$, the maximum cell P\'eclet number scales linearly with Reynolds number:
+\subsection{\texorpdfstring{Cell P\'eclet Number Scaling and Hybrid Regularization Model ($Re = 100,000$)}{Cell Peclet Number Scaling and Hybrid Regularization Model (Re = 100000)}}
+In finite-difference discretizations of convection--diffusion equations, the local cell P\'eclet number governs the spatial monotonicity of central differences. We define the signed cell P\'eclet components and their absolute magnitudes:
 \begin{align}
-    Re = 1,000  &\implies Pe \approx 1.95 < 2 \quad \text{(unconditionally monotonic)}, \notag \\
+    \widetilde{Pe}_{x, i, j} &= \frac{u_{i, j} h}{\nu} = Re \cdot u_{i, j} \cdot h, \quad Pe_{x, i, j} = |\widetilde{Pe}_{x, i, j}|, \\
+    \widetilde{Pe}_{y, i, j} &= \frac{v_{i, j} h}{\nu} = Re \cdot v_{i, j} \cdot h, \quad Pe_{y, i, j} = |\widetilde{Pe}_{y, i, j}|,
+\end{align}
+with directional maximum $Pe_{h, i, j} = \max(Pe_{x, i, j}, Pe_{y, i, j})$.
+
+The threshold $Pe_h \le 2$ represents the monotonicity condition for the standard 1D linear steady central convection--diffusion stencil, below which spurious node-to-node oscillations (wiggles) are absent. On a uniform $513 \times 513$ mesh ($h = 1/512 \approx 1.953 \times 10^{-3}$) with lid velocity $U = 1.0$, the peak cell P\'eclet number scales linearly with Reynolds number:
+\begin{align}
+    Re = 1,000  &\implies Pe \approx 1.95 < 2 \quad \text{(monotonic central stencil)}, \notag \\
     Re = 10,000 &\implies Pe \approx 19.53, \notag \\
     Re = 50,000 &\implies Pe \approx 97.66, \notag \\
     Re = 100,000 &\implies Pe \approx 195.31 \gg 2.
 \end{align}
-Simultaneously, the physical laminar boundary layer thickness scales asymptotically as $\delta \sim L / \sqrt{Re}$. At $Re = 100,000$, the nominal boundary layer thickness contracts to $\delta \approx 1/\sqrt{100,000} \approx 3.16 \times 10^{-3}$, meaning that a $513 \times 513$ grid possesses only $\delta / h \approx 1.62$ grid intervals across the wall shear layer (omitting an $\mathcal{O}(1)$ laminar constant).
+Simultaneously, the physical laminar boundary layer thickness scales asymptotically as $\delta \sim L / \sqrt{Re}$. At $Re = 100,000$, $\delta \approx 1/\sqrt{100,000} \approx 3.16 \times 10^{-3}$, providing only $\delta / h \approx 1.62$ grid intervals across the wall shear layer on the $513 \times 513$ grid.
 
-At the discontinuous driving lid corners $(x, y) = (0, 1)$ and $(1, 1)$, where the velocity abruptly jumps from $u_{\text{lid}} = 1$ to $u_{\text{wall}} = 0$, the mathematical singularity produces unbounded local vorticity gradients $\partial \omega / \partial x \to \infty$. When $Pe_h \approx 195.3 \gg 2$, pure central differencing excites unphysical high-frequency dispersive waves that propagate inward along the sidewalls, eventually inducing nonlinear numerical divergence.
+At the discontinuous driving lid corners $(x, y) = (0, 1)$ and $(1, 1)$, where velocity abruptly jumps from $u_{\text{lid}} = 1$ to $u_{\text{wall}} = 0$, the mathematical singularity produces unbounded local vorticity gradients $\partial \omega / \partial x \to \infty$. When $Pe_h \approx 195.3 \gg 2$, pure central differencing excites high-frequency dispersive waves along the walls, eventually inducing numerical divergence on uniform Cartesian meshes.
 
-To overcome this singularity shock while maintaining stability on uniform grids, we incorporate an interior hybrid differencing formulation based on local directional cell P\'eclet numbers for extreme Reynolds numbers ($Re \ge 100{,}000$). Using the signed cell P\'eclet numbers, the convective derivatives are evaluated piecewise with reachable directional branches:
+To regularize this singularity dispersion on uniform grids, we incorporate an interior hybrid differencing formulation based on local directional cell P\'eclet numbers for $Re = 100{,}000$. Using the signed cell P\'eclet numbers, convective derivatives are evaluated piecewise:
 \begin{equation}
     (u \delta_x \omega)_{i, j} = \begin{cases}
         u_{i, j} \frac{\omega_{i+1, j} - \omega_{i-1, j}}{2 h}, & |\widetilde{Pe}_{x, i, j}| \le 2, \\
@@ -163,30 +180,32 @@ To overcome this singularity shock while maintaining stability on uniform grids,
 \end{equation}
 with an identical directional formulation along the $y$-axis based on $\widetilde{Pe}_{y, i, j}$.
 
-In our operator-split ADI implementation, the implicit tridiagonal operators retain the full physical diffusion $(1/Re)\nabla^2 \omega$ in both half-steps; molecular diffusion is not dropped when upwinding activates. From modified equation analysis, first-order directional upwinding of $u \partial \omega / \partial x$ introduces a leading truncation error of $\frac{|u| h}{2} \frac{\partial^2 \omega}{\partial x^2}$. Because the implicit ADI half-steps invert the complete molecular diffusion operator $\nu \nabla^2 \omega$, the effective total diffusion in an activated coordinate direction is $\nu_{\text{eff}, x} = \nu + \nu_{\text{art}, x}$, where the added artificial numerical diffusion is:
+In our operator-split ADI implementation, the implicit tridiagonal operators retain full physical molecular diffusion $(1/Re)\nabla^2 \omega$ in both half-steps. Directional upwinding introduces a leading truncation diffusion tensor $\boldsymbol{\nu}_{\text{art}} = \text{diag}(\nu_{\text{art}, x}, \nu_{\text{art}, y})$, where:
 \begin{equation}
     \nu_{\text{art}, x} = \frac{|u_{i, j}| h}{2} \mathbf{1}_{Pe_x > 2}, \quad \nu_{\text{art}, y} = \frac{|v_{i, j}| h}{2} \mathbf{1}_{Pe_y > 2}.
 \end{equation}
-The non-dimensional artificial-to-molecular viscosity ratio is therefore $\nu_{\text{art}, x}/\nu = \frac{1}{2} Pe_x \mathbf{1}_{Pe_x > 2}$. Defining the isotropic scalar added numerical viscosity metric as the directional average:
+The total effective diffusion in an activated coordinate direction is $\nu_{\text{eff}, x} = \nu + \nu_{\text{art}, x}$ and $\nu_{\text{eff}, y} = \nu + \nu_{\text{art}, y}$. This artificial dissipation is anisotropic: at the cavity geometric center $(0.5, 0.5)$ for $Re = 100{,}000$ on $513 \times 513$, velocities are $u \approx -0.0304, v \approx -0.0036$, giving $Pe_x \approx 5.94$ and $Pe_y \approx 0.70 < 2$. Thus, only the $x$-direction is upwinded ($\nu_{\text{art}, x} / \nu = 2.97$, while $\nu_{\text{art}, y} = 0$). Defining the directional average artificial viscosity ratio:
 \begin{equation}
     \frac{\bar{\nu}_{\text{art}}}{\nu} = \frac{1}{2}\left( \frac{\nu_{\text{art}, x}}{\nu} + \frac{\nu_{\text{art}, y}}{\nu} \right) = \frac{1}{4} \left[ Pe_x \mathbf{1}_{Pe_x > 2} + Pe_y \mathbf{1}_{Pe_y > 2} \right]. \label{eq:excess_visc}
 \end{equation}
-Evaluating Eq.~(\ref{eq:excess_visc}) at $Re = 100{,}000$ on the $513 \times 513$ mesh: at the cavity geometric center $(0.5, 0.5)$, velocities are small ($u \approx -0.0304, v \approx -0.0036$), yielding directional P\'eclet numbers $Pe_x \approx 5.94$ and $Pe_y \approx 0.70$ ($Pe_y \le 2$). Because only the $x$-direction activates upwinding, the added numerical viscosity ratio is $\bar{\nu}_{\text{art}} / \nu = \frac{1}{4}(5.94) = 1.485 \approx 1.49$. Along the driving lid ($|u| = 1.0, v = 0$), $Pe_x = 195.31$, yielding an added ratio of $\bar{\nu}_{\text{art}} / \nu = \frac{1}{4}(195.31) = 48.83$ (with maximum discrete grid value $48.93$).
+At the core center, $\bar{\nu}_{\text{art}} / \nu = \frac{1}{4}(5.94) = 1.485$. Across the active interior nodes (excluding boundary nodes where Thom closures replace transport), the discrete maximum artificial dissipation occurs at $y = 1-h = 0.99805$, reaching $\bar{\nu}_{\text{art}} / \nu = 48.93$ (with nominal lid boundary limit $48.83$). The domain-averaged added viscosity is $\langle \bar{\nu}_{\text{art}} / \nu \rangle = 16.32$.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/lid_driven_peclet_dissipation_map_Re100000.png}
-\caption{Spatial characterization and quantification of the hybrid differencing scheme at $Re = 100,000$: (a) Local cell P\'eclet number field $Pe_{h}(x, y) = \max(Pe_x, Pe_y)$ on the $513 \times 513$ mesh with the $Pe = 2$ switch contour (red dashed) delineating central differencing ($1.79\%$ domain area) from upwinding; (b) Spatial distribution of the added numerical-to-molecular viscosity ratio $\bar{\nu}_{\text{art}} / \nu$ on the $513 \times 513$ grid; (c) Centerline mid-plane profiles ($x = 0.5$) of cell P\'eclet number $Pe_x$ and numerical dissipation ratio $\bar{\nu}_{\text{art}}/\nu$ comparing the $513 \times 513$ mesh against the $1025 \times 1025$ mesh, demonstrating grid convergence and rapid decay of numerical diffusion toward the cavity core.}
+\caption{Spatial characterization and quantification of the hybrid regularized model at $Re = 100,000$: (a) Local cell P\'eclet number field $Pe_{h}(x, y) = \max(Pe_x, Pe_y)$ on the $513 \times 513$ mesh with the $Pe = 2$ switch contour (red dashed) delineating central differencing ($1.79\%$ domain area) from upwinding; (b) Spatial distribution of the added numerical-to-molecular viscosity ratio $\bar{\nu}_{\text{art}} / \nu$ on the $513 \times 513$ grid; (c) Centerline mid-plane profiles ($x = 0.5$) of cell P\'eclet number $Pe_x$ and numerical dissipation ratio $\bar{\nu}_{\text{art}}/\nu$ comparing the $513 \times 513$ mesh against the $1025 \times 1025$ mesh, demonstrating grid convergence and rapid decay of numerical diffusion toward the cavity core.}
 \label{fig:peclet_dissipation_map}
 \end{figure}
 
-Figure~\ref{fig:peclet_dissipation_map} provides a spatial audit of the hybrid differencing regime and numerical dissipation at $Re = 100,000$. Pure central differencing ($Pe \le 2, \bar{\nu}_{\text{art}} = 0$) is active across $1.79\%$ of the domain area, concentrated along lines of zero velocity and near stagnation points. Across the remaining $98.21\%$ of the interior domain, the hybrid formulation activates directional upwinding, providing domain-wide interior numerical stabilization that suppresses high-wavenumber dispersive corner shock waves. 
+Figure~\ref{fig:peclet_dissipation_map} provides a spatial audit of the hybrid differencing regime and numerical dissipation at $Re = 100,000$. Pure central differencing ($Pe \le 2, \bar{\nu}_{\text{art}} = 0$) is active across $1.79\%$ of the domain area, concentrated along lines of zero velocity and near stagnation points. Across the remaining $98.21\%$ of the interior domain, the hybrid formulation activates directional upwinding, providing interior numerical stabilization that suppresses high-wavenumber dispersive corner shock waves. 
 
-Importantly, as depicted in Figure~\ref{fig:peclet_dissipation_map}(c), the magnitude of numerical dissipation is strongly non-uniform. In the cavity geometric core $(0.5, 0.5)$, the added viscosity ratio is $\bar{\nu}_{\text{art}} / \nu = 1.485$ ($\bar{\nu}_{\text{art}} \approx 1.49\nu$). The peak numerical viscosity ratio $\bar{\nu}_{\text{art}} / \nu = 48.83$ (discrete maximum $48.93$) is confined strictly to the high-speed near-lid shear layer ($Pe_{\max} = 195.31$). 
+Importantly, as depicted in Figure~\ref{fig:peclet_dissipation_map}(c), the magnitude of numerical dissipation is strongly non-uniform. In the cavity geometric core $(0.5, 0.5)$, the added viscosity ratio is $\bar{\nu}_{\text{art}} / \nu = 1.485$ ($\bar{\nu}_{\text{art}} \approx 1.49\nu$). The peak numerical viscosity ratio $\bar{\nu}_{\text{art}} / \nu = 48.83$ (discrete active interior maximum $48.93$) is confined strictly to the high-speed near-lid shear layer ($Pe_{\max} = 195.31$). 
 
-Upon grid refinement to $1025 \times 1025$ ($h = 1/1024$), the cell spacing is halved, which directly suppresses numerical dissipation: the pure central differencing area expands to $3.09\%$, the peak P\'eclet number drops by half to $Pe_{\max} = 97.66$ ($\bar{\nu}_{\text{art}} / \nu \le 24.46$), the center added dissipation drops to $\bar{\nu}_{\text{art}} / \nu = 0.74$ (less than three-quarters of physical molecular viscosity), and the mean added viscosity over the cavity drops from $16.32\nu$ to $8.12\nu$.
+On the $513 \times 513$ grid, directional upwinding is active across $98.21\%$ of the interior domain (pure central differencing operates on $1.79\%$, near stagnation regions). Consequently, the computation at $Re = 100{,}000$ represents a hybrid-regularized numerical model rather than an unstabilized discretization of the original Navier--Stokes equations. 
 
-We emphasize that for all moderate and high Reynolds numbers up to $Re = 50,000$, our solver executes with \emph{pure second-order central differencing everywhere} ($\nu_{\text{art}} = 0$ identically across $100\%$ of the domain). The hybrid formulation is invoked selectively at $Re = 100,000$ to provide a stable continuation benchmark and suppress corner singularity dispersion.
+Upon grid refinement to $1025 \times 1025$ ($h = 1/1024$), cell spacing is halved, which directly reduces artificial dissipation: the central differencing area expands to $3.09\%$, the peak active interior dissipation drops to $\bar{\nu}_{\text{art}} / \nu \le 24.46$, the core center dissipation drops to $\bar{\nu}_{\text{art}} / \nu = 0.74$, and the domain-mean added viscosity drops to $8.12\nu$. 
+
+We emphasize that for all moderate and high Reynolds numbers up to $Re = 50,000$, our solver executes with \emph{pure second-order central differencing everywhere} ($\nu_{\text{art}} = 0$ identically across $100\%$ of the domain). The hybrid formulation is invoked selectively at $Re = 100,000$ as a regularized model to enable stable computation and suppress corner singularity dispersion.
 
 \subsection{Reynolds Number Homotopy Continuation Ladder}
 At extreme Reynolds numbers ($Re \ge 5,000$), impulsive starts from quiescent initial conditions ($\mathbf{u} = 0, \psi = 0$) generate catastrophic corner boundary layer detachments that destabilize central difference operators. To overcome this startup shock, we implement a parameter homotopy continuation ladder:
@@ -195,12 +214,12 @@ At extreme Reynolds numbers ($Re \ge 5,000$), impulsive starts from quiescent in
     &\longrightarrow 15,000 \longrightarrow 20,000 \longrightarrow 25,000 \longrightarrow 30,000 \longrightarrow 35,000 \notag \\
     &\longrightarrow 40,000 \longrightarrow 45,000 \longrightarrow 50,000 \longrightarrow 100,000.
 \end{align}
-The converged velocity and vorticity fields of stage $Re_m$ serve as the warm-start initial condition for stage $Re_{m+1}$. For inter-grid transitions, a smooth bicubic spline interpolation operator prolongs coarse-mesh flow fields to ultra-fine meshes with boundary re-normalization.
+The converged velocity and vorticity fields of stage $Re_m$ serve as the warm-start initial condition for stage $Re_{m+1}$. For inter-grid transitions, a smooth bicubic spline interpolation operator prolongs coarse-mesh flow fields to finer meshes with boundary re-normalization.
 
-\section{Stationary Continuation Benchmark Results (\texorpdfstring{$Re = 100 \to 100,000$}{Re = 100 to 100000})}
+\section{Stationary Continuation Solutions and Benchmark Comparisons (\texorpdfstring{$Re = 100 \to 100{,}000$}{Re = 100 to 100000})}
 
 \subsection{Primary and Secondary Eddy Benchmark Comparison}
-We systematically compare the solver against the canonical benchmark data of Ghia et al. (1982)~\cite{ghia1982high} and the high Reynolds number numerical study of Erturk et al. (2005, 2009)~\cite{erturk2005numerical,erturk2009discussions}. For Reynolds numbers above the primary instability threshold ($Re > Re_{\text{cr}} \approx 8,000$), steady states of the physical Navier--Stokes system lose temporal stability to oscillatory perturbations. In this regime, the solutions obtained via pseudo-transient continuation represent stationary continuation branches (unstable fixed points of the continuous dynamical system), rather than stable physical attractors. Continuation convergence is monitored until the maximum per-step vorticity change satisfies $\|\omega^{k+1} - \omega^k\|_\infty < 10^{-5}$. Table~\ref{tab:benchmarks} presents the primary vortex center coordinates $(x_c, y_c)$ and minimum streamfunction $\psi_{\min}$ across all Reynolds numbers up to $Re = 100,000$.
+We systematically compare the solver against the canonical benchmark data of Ghia et al. (1982)~\cite{ghia1982high} and the high Reynolds number numerical study of Erturk et al. (2005, 2009)~\cite{erturk2005numerical,erturk2009discussions}. For Reynolds numbers above the primary instability threshold ($Re > Re_{\text{cr}} \approx 8,000$), physical steady states of the 2D Navier--Stokes equations lose temporal stability to oscillatory perturbations. In physical time-accurate marching, perturbations naturally grow along unstable eigenmodes. In our continuation framework, convergence to stationary solutions is achieved using a coupled false-transient ADI marching scheme with Reynolds parameter homotopy continuation: each stage begins with the converged solution of the preceding Reynolds number as a warm-start. Under-relaxation of the wall vorticity updates ($\beta_{\text{wall}}$) and the directional operator splitting act as a numerical continuation filter that damps physical temporal oscillations, guiding the iterations toward the symmetric stationary fixed point of the discrete steady operator (the stationary continuation branch). Iterative convergence is monitored using the pseudo-time increment criterion $\|\omega^{k+1} - \omega^k\|_\infty < 10^{-5}$ across all interior nodes. Table~\ref{tab:benchmarks} presents the primary vortex center coordinates $(x_c, y_c)$ and minimum streamfunction $\psi_{\min}$ across all Reynolds numbers up to $Re = 100,000$.
 
 \begin{table}[htbp]
 \centering
@@ -234,7 +253,7 @@ $\mathbf{100,000}$& $\mathbf{1025 \times 1025}$ & $\mathbf{(0.4990, 0.5234)}$ & 
 \end{tabular*}
 \end{table}
 
-At $Re = 100$ and $Re = 1,000$, our computed primary core coordinates match the benchmark of Ghia et al.~\cite{ghia1982high} to four decimal places. For spectral reference at $Re = 1,000$, the benchmark of Botella \& Peyret (1998)~\cite{botella1998benchmark} established $\psi_{\min} = -0.11894$, in exact agreement with our computed value $-0.11894$ on the $129 \times 129$ grid. Across all Reynolds numbers up to $Re = 25,000$, primary vortex centers $(x_c, y_c)$ demonstrate close geometric agreement with reference literature; for instance, at $Re = 25,000$, our computed center on the $513 \times 513$ mesh is $(0.5195, 0.5254)$, yielding a Euclidean offset of only $\Delta = 0.00688$ relative to the $601 \times 601$ fine-grid calculation of Erturk~\cite{erturk2009discussions}. Concurrently, we observe an offset in the minimum streamfunction magnitude: at $Re = 10,000$, $\psi_{\min} = -0.12868$ compared to $-0.11970$ in Ghia et al. ($\approx 7.5\%$ offset), and at $Re = 25,000$, $\psi_{\min} = -0.12631$ compared to $-0.11780$ in Erturk ($\approx 7.2\%$ offset). As documented in subsequent high-resolution investigations (e.g., Bruneau \& Saad 2006~\cite{bruneau20062d}), fully resolving thin secondary and tertiary boundary-layer recirculations on dense meshes shifts the interior streamfunction extremum to more negative levels than earlier coarse-grid or line-relaxed solutions. The computed streamline topologies and centerline velocity profiles across high Reynolds numbers are illustrated in Figure~\ref{fig:showcase_steady}. 
+At $Re = 100$ and $Re = 1,000$, our computed primary core coordinates match the benchmark of Ghia et al.~\cite{ghia1982high} to four decimal places. For spectral reference at $Re = 1,000$, the benchmark of Botella \& Peyret (1998)~\cite{botella1998benchmark} established $\psi_{\min} = -0.11894$, in exact agreement with our computed value $-0.11894$ on the $129 \times 129$ grid. Across all Reynolds numbers up to $Re = 25,000$, primary vortex centers $(x_c, y_c)$ demonstrate close geometric agreement with reference literature; for instance, at $Re = 25,000$, our computed center on the $513 \times 513$ mesh is $(0.5195, 0.5254)$, yielding a Euclidean offset of only $\Delta = 0.00688$ relative to the $601 \times 601$ fine-grid calculation of Erturk~\cite{erturk2009discussions}. Concurrently, we observe an offset in the minimum streamfunction magnitude: at $Re = 10,000$, $\psi_{\min} = -0.12868$ compared to $-0.11970$ in Ghia et al. ($\approx 7.5\%$ offset), and at $Re = 25,000$, $\psi_{\min} = -0.12631$ compared to $-0.11780$ in Erturk ($\approx 7.2\%$ offset). While earlier high-resolution investigations noted that resolving thin corner recirculations shifts interior streamfunction extrema to more negative values (e.g., Bruneau \& Saad 2006~\cite{bruneau20062d}), this systematic offset also reflects structural differences in boundary closures, corner singularity regularizations, and grid topologies across distinct numerical implementations. The computed streamline topologies and centerline velocity profiles across high Reynolds numbers are illustrated in Figure~\ref{fig:showcase_steady}. 
 
 \begin{figure}[htbp]
 \centering
@@ -257,7 +276,7 @@ At $Re = 100$ and $Re = 1,000$, our computed primary core coordinates match the 
     \includegraphics[width=\textwidth]{figures/lid_driven_cavity_showcase_Re50000_N513.png}
     \caption{$Re = 50,000$ ($513 \times 513$)}
 \end{subfigure}
-\caption{Stationary continuation streamline topologies ($\psi$) and centerline velocity profiles $u(y)$ on the $513 \times 513$ ultra-fine grid ($263,169$ nodes) across high Reynolds numbers from $Re = 10,000$ to $Re = 50,000$.}
+\caption{Stationary continuation streamline topologies ($\psi$) and centerline velocity profiles $u(y)$ on the $513 \times 513$ grid ($263,169$ nodes) across high Reynolds numbers from $Re = 10,000$ to $Re = 50,000$.}
 \label{fig:showcase_steady}
 \end{figure}
 
@@ -292,7 +311,11 @@ A prominent physical feature of two-dimensional recirculating flows at high Reyn
 \begin{equation}
     \lim_{Re \to \infty} \nabla \omega(x, y) = 0 \quad \text{for } (x, y) \in \Omega_{\text{core}}.
 \end{equation}
-Batchelor's theorem establishes spatial uniformity of the core vorticity rather than prescribing a specific numerical value $\omega_0$. For an idealized square cavity with regularized boundary layers and uniform perimeter dissipation, Burggraf (1966)~\cite{burggraf1966analytical} derived an asymptotic theoretical limit of $\omega_0 \approx -1.886$ (under the present clockwise sign convention). In finite-difference simulations at finite Reynolds numbers ($Re = 10,000$--$100,000$), our computed vorticity across the central core span ($y \in [0.35, 0.65]$ along $x = 0.5$) exhibits a flat plateau with a standard deviation of approximately $0.10$, settling at $\omega_0 = -2.5418$ at $Re = 100,000$ (and $-2.5719$ at $Re = 10,000$, $-2.5453$ at $Re = 50,000$). These profiles are qualitatively consistent with Batchelor's core homogenization hypothesis. The offset from Burggraf's $-1.886$ inviscid limit is a consequence of the singular top-corner velocity discontinuities ($u = 1 \to 0$), the displacement effect of large corner recirculation eddies (which constrict the primary core perimeter), and interior hybrid upwind stabilization at extreme $Re$.
+Batchelor's theorem establishes spatial uniformity of the core vorticity rather than prescribing a specific numerical value $\omega_0$. For an idealized square cavity with regularized boundary layers and uniform perimeter dissipation, Burggraf (1966)~\cite{burggraf1966analytical} derived an asymptotic theoretical limit of $\omega_0 \approx -1.886$ (under the present clockwise sign convention). We define the core vorticity $\omega_0$ as the spatial mean over $y \in [0.35, 0.65]$ along the vertical centerline $x = 0.5$:
+\begin{equation}
+    \omega_0 = \frac{1}{0.30} \int_{0.35}^{0.65} \omega(0.5, y) \, dy.
+\end{equation}
+In our numerical continuation solutions across $Re = 10{,}000$--$100{,}000$, the computed core vorticity settles at $\omega_0 = -2.5719$ at $Re = 10{,}000$, $-2.5453$ at $Re = 50{,}000$, and $-2.5418$ at $Re = 100{,}000$ (with standard deviation $\approx 0.10$ across the span). These profiles exhibit qualitative homogenization ($\nabla \omega \approx 0$), consistent with Batchelor's core hypothesis. However, we emphasize that Batchelor's theorem addresses steady solutions of the original Navier--Stokes equations with closed streamlines as $Re \to \infty$. Because our solutions at $Re \ge 50{,}000$ incorporate numerical boundary filtering ($\beta_{\text{wall}} < 1.0$) and, at $Re = 100{,}000$, directional hybrid upwinding, these computations represent an investigation of the regularized numerical model rather than a direct physical confirmation of the inviscid Navier--Stokes limit. The numerical offset from Burggraf's $-1.886$ limit reflects the singular top-corner velocity discontinuities, the displacement effect of large corner recirculation eddies, and the introduced numerical regularization.
 
 Concurrently, high-Reynolds numerical continuation solutions exhibit an accompanying geometric restructuring: as viscous wall boundary layers contract and secondary eddy systems reach topological balance, the primary recirculating core center migrates horizontally from $(0.5117, 0.5215)$ at $Re = 10,000$ toward the geometric mid-plane ($x_c \to 0.50000$ at $Re = 50,000$, and $0.4990$ on $1025 \times 1025$), while the core minimum streamfunction stabilizes at $\psi_{\min} \approx -0.12572$.
 
@@ -312,21 +335,21 @@ For each triplet, the observed order of convergence $p$, Richardson extrapolated
 
 \begin{table}[htbp]
 \centering
-\caption{Discretization uncertainty analysis using Richardson extrapolation and ASME V\&V 20-2009 / Roache Grid Convergence Index (GCI) for minimum streamfunction $\psi_{\min}$ with refinement ratio $r = 2.0$ and safety factor $F_s = 1.25$, reporting full-precision metrics, observed order $p$, and relative uncertainties.}
+\caption{Discretization verification using Richardson extrapolation and ASME V\&V 20-2009 / Roache Grid Convergence Index (GCI) for minimum streamfunction $\psi_{\min}$ with refinement ratio $r = 2.0$ and safety factor $F_s = 1.25$. Metrics are evaluated using full double-precision values ($|f_2 - f_1| = 1.573 \times 10^{-7}$ at $Re = 100{,}000$).}
 \label{tab:gci}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccccc}
 \toprule
 $Re$ & Triplet & $f_1$ (Fine) & $f_2$ (Med) & $f_3$ (Coarse) & Order $p$ & Extrap. $f_{h=0}$ & $\text{GCI}_{21}$ & $\text{GCI}_{32}$ \\
 \midrule
-$10,000$  & $513 \to 257 \to 129$ & $-0.12868264$ & $-0.12820530$ & $-0.11575114$ & $4.7055$ & $-0.12870166$ & $\mathbf{0.0185\%}$ & $12.63\%$ \\
-$100,000$ & $1025 \to 513 \to 257$ & $-0.12571558$ & $-0.12571543$ & $-0.12553188$ & $10.1882$ & $-0.12571558$ & $\mathbf{< 10^{-6}\%}$ & $0.1827\%$ \\
+$10,000$  & $513 \to 257 \to 129$ & $-0.1286826385$ & $-0.1282053016$ & $-0.1157511408$ & $4.7055$ & $-0.12870166$ & $\mathbf{0.0185\%}$ & $12.63\%$ \\
+$100,000$ & $1025 \to 513 \to 257$ & $-0.1257155846$ & $-0.1257154273$ & $-0.1255318754$ & $10.1882$ & $-0.12571558$ & $\mathbf{< 10^{-6}\%}$ & $0.1827\%$ \\
 \bottomrule
 \end{tabular}%
 }
 \end{table}
 
-As documented in Table~\ref{tab:gci}, the apparent order of convergence for $Re = 10,000$ across the $513 \to 257 \to 129$ triplet is $p = 4.7055$, and at $Re = 100,000$ across $1025 \to 513 \to 257$ is $p = 10.1882$. These elevated apparent orders exceed the formal second-order accuracy of the interior stencil. Rather than demonstrating an asymptotic continuum regime, verification theory~\cite{roache1998verification,asme2009standard} indicates that such elevated apparent orders are characteristic of pre-asymptotic behavior where grid refinement rapidly resolves thin boundary layers ($\delta \sim Re^{-1/2}$) and, at $Re = 100,000$, where the spatial extent of hybrid upwinding changes between grids ($1.79\%$ vs $3.09\%$). Consequently, these apparent orders indicate rapid pre-asymptotic capture of shear layers rather than formal asymptotic convergence. The fine-grid discretization uncertainty $\text{GCI}_{21} = 0.0185\%$ at $Re = 10,000$ indicates that $\psi_{\min}$ is numerically tight on the $513 \times 513$ grid. At $Re = 100,000$, where $|f_1 - f_2| = 1.57 \times 10^{-7}$, the fine-grid uncertainty $\text{GCI}_{21} < 10^{-6}\%$ reflects close agreement between the $513 \times 513$ and $1025 \times 1025$ solutions under the hybrid scheme, while the coarse-grid metric $\text{GCI}_{32} = 0.1827\%$ bounds intermediate-grid variations below $0.2\%$.
+As documented in Table~\ref{tab:gci}, the apparent orders of convergence for $Re = 10,000$ across $513 \to 257 \to 129$ ($p = 4.7055$) and at $Re = 100,000$ across $1025 \to 513 \to 257$ ($p = 10.1882$) exceed the formal second-order accuracy of the interior stencil. Rather than demonstrating an asymptotic continuum regime, verification theory~\cite{roache1998verification,asme2009standard} indicates that such elevated apparent orders are characteristic of pre-asymptotic behavior where grid refinement rapidly resolves thin boundary layers ($\delta \sim Re^{-1/2}$) and, at $Re = 100,000$, where the spatial extent of hybrid upwinding changes between grids ($1.79\%$ vs $3.09\%$). Consequently, these apparent orders indicate rapid pre-asymptotic capture of shear layers rather than formal asymptotic continuum convergence. The fine-grid metric $\text{GCI}_{21} = 0.0185\%$ at $Re = 10,000$ indicates that $\psi_{\min}$ has tightly stabilized on the $513 \times 513$ grid. At $Re = 100,000$, where $|f_1 - f_2| = 1.573 \times 10^{-7}$, the fine-grid metric $\text{GCI}_{21} < 10^{-6}\%$ reflects close agreement between the $513 \times 513$ and $1025 \times 1025$ solutions under the hybrid scheme, while the coarse-grid metric $\text{GCI}_{32} = 0.1827\%$ bounds intermediate-grid variations below $0.2\%$.
 
 \begin{figure}[htbp]
 \centering
@@ -337,6 +360,12 @@ As documented in Table~\ref{tab:gci}, the apparent order of convergence for $Re 
 
 \subsection{Near-Lid Shear Layer Benchmark: Vorticity Comparison at \texorpdfstring{$y = 0.95$}{y = 0.95} with Erturk (2009)}
 To evaluate convective discretization in the high-gradient shear layer adjacent to the driving lid, we benchmark computed vorticity profiles against the numerical dataset of Erturk (2009)~\cite{erturk2009discussions,erturk2009benchmarks} (Table 3: $\omega(x, y=0.95)$ across 26 stations for $x \in [0.0, 1.0]$). The comparison is conducted across seven Reynolds numbers ($Re = 1,000$ to $Re = 30,000$) utilizing the finest available grid solutions ($N = 513$ for $Re \ge 10,000$, $N = 257$ for $Re = 5,000$ and $7,500$, and $N = 129$ for $Re = 1,000$). High-order bicubic splines ($k_x = 3, k_y = 3$) interpolate the 2D field tensors onto the benchmark coordinate stations.
+
+Quantitative differences across the $M = 24$ interior stations ($0 < x < 1$) are evaluated using the Mean Absolute Error (MAE) and root-mean-square error ($L_2$):
+\begin{align}
+    \text{MAE} &= \frac{1}{M} \sum_{m=1}^M \left|\omega(x_m, 0.95) - \omega_{\text{ref}}(x_m, 0.95)\right|, \\
+    L_2 &= \sqrt{\frac{1}{M} \sum_{m=1}^M \left(\omega(x_m, 0.95) - \omega_{\text{ref}}(x_m, 0.95)\right)^2}.
+\end{align}
 
 \begin{table}[htbp]
 \centering
@@ -364,24 +393,24 @@ As detailed in Table~\ref{tab:erturk_vorticity_benchmark} and visually demonstra
 \begin{enumerate}
     \item \textbf{Interior Agreement ($0.01 \le x \le 0.99$):} Across moderate Reynolds numbers ($Re = 1,000, 5,000,$ and $10,000$), the interior mean absolute error remains below $1.0$ ($\text{MAE} = 0.7726$ at $Re = 10,000$). At $Re = 10,000$ on the $513 \times 513$ mesh, the computed peak vorticity at $x = 0.1563$ is $\omega = 4.9536$, closely matching Erturk's reference value of $5.1252$ ($\Delta = 0.1715$).
     \item \textbf{Corner Singularity Behavior and High-$Re$ Discrepancies ($x \to 1.0$):} At higher Reynolds numbers ($Re = 25,000$ and $30,000$), the interior MAE rises to $\approx 1.8$--$2.0$. Noticeable discrepancies emerge at interior stations, such as $x = 0.1563$ ($\omega = 4.1694$ vs $2.2803$ at $Re = 25,000$, and $5.4027$ vs $2.1243$ at $Re = 30,000$) and at the mid-plane $x = 0.5000$ ($-0.0085$ vs $-1.9814$ at $Re = 25,000$). These interior differences reflect the differing numerical formulations: Erturk employed a strongly non-uniform clustered grid ($601 \times 601$) with compact differences, concentrating nodes near the singular corners, whereas our solution uses a uniform Cartesian grid ($513 \times 513$) with Thom's first-order wall closure. As noted in computational discussions of high-Re cavity benchmarks~\cite{erturk2009discussions}, solutions at $Re \ge 25,000$ are highly sensitive to mesh distribution and corner singularity regularization, underscoring the importance of transparent comparisons across distinct numerical frameworks.
-    \item \textbf{Preservation of Shear Inflections:} High-Reynolds shear layer gradients are notoriously susceptible to numerical damping under low-order artificial diffusion. The persistence of steep positive and negative vorticity peaks across $Re = 10,000$--$30,000$ confirms that pure central differencing preserves convective inflection structures without artificial diffusion.
+    \item \textbf{Preservation of Shear Inflections:} High-Reynolds shear layer gradients are notoriously susceptible to numerical damping under low-order artificial diffusion. The persistence of steep positive and negative vorticity peaks across $Re = 10,000\text{--}30,000$ confirms that pure central differencing preserves convective inflection gradients without the severe damping of first-order upwinding, though localized quantitative discrepancies at high $Re$ reflect differences between uniform Cartesian stencils with Thom closures and non-uniform clustered compact formulations.
 \end{enumerate}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.98\textwidth]{figures/lid_driven_erturk_vorticity_y095_benchmark.png}
-\caption{Benchmark validation against Erturk (2009)~\cite{erturk2009benchmarks} (Table 3): Vorticity $\omega(x, y=0.95)$ along the near-lid horizontal cut for moderate ($Re \le 7,500$) and high ($Re = 10,000 - 30,000$ on $513 \times 513$) Reynolds numbers. Solid lines represent present solver results; discrete markers denote benchmark data.}
+\caption{Benchmark comparison against Erturk (2009)~\cite{erturk2009benchmarks} (Table 3): Vorticity $\omega(x, y=0.95)$ along the near-lid horizontal cut for moderate ($Re \le 7{,}500$) and high ($Re = 10{,}000\text{--}30{,}000$ on $513 \times 513$) Reynolds numbers. Solid lines represent present solver results; discrete markers denote benchmark data.}
 \label{fig:erturk_vorticity}
 \end{figure}
 
 \subsection{Tabulated 17-Point Centerline Velocity Benchmark Profiles}
-To provide an open, standardized numerical reference for algorithm verification, Table~\ref{tab:ghia_u_benchmark} tabulates horizontal centerline velocity profiles $u(0.5, y)$ at the classical 17 vertical stations established by Ghia et al.~\cite{ghia1982high} across six Reynolds numbers ($Re = 1,000$ to $Re = 100,000$). The corresponding vertical velocity profiles $v(x, 0.5)$ and full field tensors are serialized in the open repository.
+To provide an open, standardized numerical reference for algorithm verification, Table~\ref{tab:ghia_u_benchmark} tabulates horizontal-velocity profiles along the vertical centerline, $u(0.5, y)$, at the classical 17 vertical stations established by Ghia et al.~\cite{ghia1982high} across six Reynolds numbers ($Re = 1,000$ to $Re = 100,000$). The corresponding vertical-velocity profiles along the horizontal centerline, $v(x, 0.5)$, and full field tensors are serialized in the open repository.
 
 \begin{table}[htbp]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3.5pt}
-\caption{Benchmark horizontal centerline velocity $u(0.5, y)$ tabulated across the 17 standard Ghia stations from moderate ($Re = 1,000$) to extreme frontier ($Re = 100,000$) Reynolds numbers.}
+\caption{Benchmark horizontal-velocity profiles along the vertical centerline, $u(0.5, y)$, tabulated across the 17 standard Ghia stations from moderate ($Re = 1,000$) to high ($Re = 100,000$) Reynolds numbers.}
 \label{tab:ghia_u_benchmark}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcccccc@{}}
 \toprule
@@ -408,12 +437,12 @@ $0.0000$ & $+0.00000$ & $+0.00000$ & $+0.00000$ & $+0.00000$ & $+0.00000$ & $+0.
 \end{tabular*}
 \end{table}
 
-\section{Unsteady Dynamics, Vortex Shedding \& Limit-Cycle Analysis}
+\section{Finite-Window Unsteady Dynamics and Vortex Shedding}
 
 \subsection{Unsteady Vortex Shedding on \texorpdfstring{$513 \times 513$}{513x513} (\texorpdfstring{$Re = 10,000$}{Re = 10000})}
-In physical fluid flow, the steady state of the lid-driven cavity undergoes a supercritical Hopf bifurcation. While spectral collocation investigations using smooth, regularized lid velocities (e.g., Peng, Shiau \& Hwang 2003~\cite{peng2003transition}) identify the linear instability onset near $Re_{\text{cr}} \approx 7,400$ ($St \approx 0.59$), finite-difference formulations with discontinuous lid corners (e.g., Bruneau \& Saad 2006~\cite{bruneau20062d}) identify the primary instability threshold in the interval $8,000 \le Re_{\text{cr}} \le 8,050$ with shedding frequency near $St \approx 0.45$ at $Re = 8,100$.
+In the two-dimensional incompressible Navier--Stokes equations for the lid-driven cavity, the steady symmetric state undergoes a supercritical Hopf bifurcation as the Reynolds number is increased. While spectral collocation investigations using smooth, regularized lid velocities (e.g., Peng, Shiau \& Hwang 2003~\cite{peng2003transition}) identify the linear instability onset near $Re_{\text{cr}} \approx 7,400$ ($St \approx 0.59$), finite-difference formulations with discontinuous lid corners (e.g., Bruneau \& Saad 2006~\cite{bruneau20062d}) identify the primary instability threshold in the interval $8,000 \le Re_{\text{cr}} \le 8,050$ with shedding frequency near $St \approx 0.45$ at $Re = 8,100$.
 
-To investigate post-bifurcation limit-cycle dynamics and establish temporal accuracy, we performed physical time-accurate marching without wall relaxation ($\beta_{\text{wall}} = 1.0$) directly on the $513 \times 513$ ultra-fine mesh over $44,000$ time steps ($\Delta t = 5.0 \times 10^{-4}$ convective time units, reaching $t = 22.0$ with $CFL \approx 0.256$). A localized spatial perturbation $\delta \omega = 0.05 \exp(-[(x-0.8)^2 + (y-0.8)^2]/0.05^2)$ was seeded into the upper shear layer to trigger the unstable linear mode. Velocity telemetry was logged continuously every $10$ time steps ($\Delta t_{\text{sample}} = 0.005$) at the bottom-left secondary eddy detachment zone $(x=0.08, y=0.15)$.
+To investigate post-bifurcation periodic dynamics in the 2D model, we performed time-accurate marching without wall relaxation ($\beta_{\text{wall}} = 1.0$) directly on the $513 \times 513$ mesh over $44,000$ time steps ($\Delta t = 5.0 \times 10^{-4}$ convective time units, reaching $t = 22.0$ with $CFL \approx 0.256$). A localized spatial perturbation $\delta \omega = 0.05 \exp(-[(x-0.8)^2 + (y-0.8)^2]/0.05^2)$ was seeded into the upper shear layer to trigger the unstable linear mode. Velocity telemetry was logged continuously every $10$ time steps ($\Delta t_{\text{sample}} = 0.005$) at the bottom-left secondary eddy detachment zone $(x=0.08, y=0.15)$.
 
 \begin{figure}[htbp]
 \centering
@@ -424,16 +453,16 @@ To investigate post-bifurcation limit-cycle dynamics and establish temporal accu
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_phase_portrait_Re10000_N513.png}
-    \caption{Phase-Space Limit Cycle \& Power Spectrum}
+    \caption{Phase Trajectory \& Power Spectrum}
 \end{subfigure}
-\caption{Dynamic unsteady vortex shedding on $513 \times 513$ grid at $Re = 10,000$ over extended convective marching ($t = 22.0$): (a) Multi-probe velocity signals exhibiting sustained oscillations; (b) Reconstructed phase portrait $(u_{\text{BL}} \text{ vs. } v_{\text{BL}})$ identifying dominant shedding frequency $St = 0.6249 \pm 0.0416$ (raw bin $f_{\text{bin}} = 0.6664$).}
+\caption{Dynamic unsteady vortex shedding on $513 \times 513$ grid at $Re = 10,000$ over extended convective marching ($t = 22.0$): (a) Multi-probe velocity signals exhibiting sustained oscillations; (b) Reconstructed phase trajectory $(u_{\text{BL}} \text{ vs. } v_{\text{BL}})$ identifying dominant shedding frequency $St = 0.6249 \pm 0.0416$ (raw bin $f_{\text{bin}} = 0.6664$).}
 \label{fig:unsteady_re10000}
 \end{figure}
 
-Following the initial convective adjustment ($t \le 10.0$), the flow settles into sustained, bounded nonlinear oscillations spanning $t \in [10.0, 22.0]$ ($12.0$ convective time units). Discrete Fourier decomposition across this stationary window ($T_{\text{win}} = 12.00$ c.t.u., bin resolution $\Delta f = 0.0833$) locates dominant energy in bin $k = 8$ ($f_{\text{bin}} = 0.6664$). Applying 3-point parabolic peak interpolation on the log-PSD yields a refined frequency of $St = 0.6249$, with Fourier bin resolution uncertainty $\pm \Delta f / 2 = \pm 0.0416$, corresponding to fundamental period $T \approx 1.6002$ c.t.u. (consistent with the time-domain peak-to-peak estimate $T_{\text{TD}} = 1.68 \pm 0.18$ c.t.u.), resolving $7.50$ complete cycles within the window. As shown in Figure~\ref{fig:unsteady_re10000}(a), the velocity signals exhibit regular periodic shedding with a mild amplitude modulation envelope. In the $(u_{\text{BL}}, v_{\text{BL}})$ phase portrait (Figure~\ref{fig:unsteady_re10000}(b)), the trajectory settles into a bounded orbital band where consecutive cycles overlap closely, characteristic of a periodic limit cycle.
+Following the initial convective adjustment ($t \le 10.0$), the flow settles into sustained, bounded nonlinear oscillations spanning $t \in [10.0, 22.0]$ ($12.0$ convective time units). Discrete Fourier decomposition across this stationary window ($T_{\text{win}} = 12.00$ c.t.u., bin resolution $\Delta f = 0.0833$) locates dominant energy in bin $k = 8$ ($f_{\text{bin}} = 0.6664$). Applying 3-point parabolic peak interpolation on the log-PSD yields a refined frequency of $St = 0.6249$, with Fourier bin resolution uncertainty $\pm \Delta f / 2 = \pm 0.0416$, corresponding to fundamental period $T \approx 1.6002$ c.t.u. (consistent with the time-domain peak-to-peak estimate $T_{\text{TD}} = 1.68 \pm 0.18$ c.t.u.), resolving $7.50$ complete shedding cycles within the window. As shown in Figure~\ref{fig:unsteady_re10000}(a), the velocity signals exhibit regular periodic shedding with a mild amplitude modulation envelope. In the $(u_{\text{BL}}, v_{\text{BL}})$ phase portrait (Figure~\ref{fig:unsteady_re10000}(b)), the trajectory settles into a bounded orbital band where consecutive cycles overlap closely, characteristic of periodic vortex shedding.
 
 \subsection{Multi-Frequency and Modulated Unsteady Dynamics on \texorpdfstring{$513 \times 513$}{513x513} (\texorpdfstring{$Re = 15,000$}{Re = 15000})}
-At $Re = 15,000$, physical cavity flow undergoes secondary transitions~\cite{bruneau20062d}, evolving away from simple monoharmonic periodicity toward an amplitude-modulated, multi-frequency regime. Advancing the time-accurate solver directly on the $513 \times 513$ grid over $50,000$ time steps ($\Delta t = 4.0 \times 10^{-4}$ convective time units, $t_{\text{end}} = 20.0$, with $\beta_{\text{wall}} = 1.0$), the velocity signals display prominent low-frequency envelope beats.
+At $Re = 15,000$, the 2D cavity flow undergoes secondary transitions~\cite{bruneau20062d}, evolving away from simple monoharmonic periodicity toward an amplitude-modulated, multi-frequency regime. Advancing the time-accurate solver directly on the $513 \times 513$ grid over $50,000$ time steps ($\Delta t = 4.0 \times 10^{-4}$ convective time units, $t_{\text{end}} = 20.0$, with $\beta_{\text{wall}} = 1.0$), the velocity signals display prominent low-frequency envelope beats.
 
 \begin{figure}[htbp]
 \centering
@@ -444,7 +473,7 @@ At $Re = 15,000$, physical cavity flow undergoes secondary transitions~\cite{bru
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_phase_portrait_Re15000_N513.png}
-    \caption{Phase Portrait \& Power Spectrum}
+    \caption{Phase Trajectory \& Power Spectrum}
 \end{subfigure}
 \caption{Nonlinear multi-frequency unsteady dynamics on $513 \times 513$ grid at $Re = 15,000$: (a) Multi-probe velocity signals showing envelope modulation over $t = 20.0$; (b) Reconstructed phase portrait revealing an inflected multi-loop orbital trajectory and FFT spectrum with sideband modal interactions ($St = 0.5364 \pm 0.0278$).}
 \label{fig:unsteady_re15000}
@@ -466,7 +495,7 @@ At $Re = 25,000$, advancing extended time-accurate marching with $\Delta t = 3.0
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_phase_portrait_Re25000_N513.png}
-    \caption{Phase Attractor \& Power Spectrum}
+    \caption{Phase Trajectory \& Power Spectrum}
 \end{subfigure}
 \par\vspace{0.5em}
 \begin{subfigure}[b]{\textwidth}
@@ -474,11 +503,11 @@ At $Re = 25,000$, advancing extended time-accurate marching with $\Delta t = 3.0
     \includegraphics[width=0.98\textwidth]{figures/lid_driven_unsteady_cycle_snapshots_Re25000_N513.png}
     \caption{Instantaneous 4-Phase Vorticity and Streamline Fields Over Shedding Cycle}
 \end{subfigure}
-\caption{Nonlinear unsteady flow dynamics on the $513 \times 513$ ultra-fine grid at $Re = 25,000$: (a) Velocity telemetry exhibiting large-scale nonsinusoidal oscillations over $t = 22.0$ ($73,333$ steps); (b) Reconstructed phase portrait revealing an inflected multi-frequency trajectory with fundamental frequency $St = 0.0953 \pm 0.0281$ (raw bin $f_{\text{bin}} = 0.1124$); (c) 4-phase field decomposition highlighting floor and sidewall secondary vortex detachment.}
+\caption{Nonlinear unsteady flow dynamics on the $513 \times 513$ grid at $Re = 25,000$: (a) Velocity telemetry exhibiting large-scale nonsinusoidal oscillations over $t = 22.0$ ($73,333$ steps); (b) Reconstructed phase trajectory revealing an inflected multi-frequency trajectory with fundamental frequency $St = 0.0953 \pm 0.0281$ (raw bin $f_{\text{bin}} = 0.1124$); (c) 4-phase field decomposition highlighting floor and sidewall secondary vortex detachment.}
 \label{fig:unsteady_re25000}
 \end{figure}
 
-At $Re = 50,000$, where the molecular kinematic viscosity is $\nu = 2.0 \times 10^{-5}$, physical marching was executed on the $513 \times 513$ grid over $90,000$ time steps ($\Delta t = 2.0 \times 10^{-4}$, $t_{\text{end}} = 18.0$, $CFL \approx 0.102$) utilizing boundary under-relaxation $\beta_{\text{wall}} = 0.85$ to regularize corner dispersion on the uniform Cartesian mesh. In the stationary window following transient development ($t \in [1.33, 18.0]$, $T_{\text{win}} = 16.67$ c.t.u., $\Delta f = 0.0600$), discrete Fourier analysis identifies dominant energy in bin $k = 4$ ($f_{\text{bin}} = 0.2399$). Parabolic peak interpolation refines the shedding frequency to $St = 0.2581 \pm 0.0300$ and fundamental period $T \approx 3.8751$ c.t.u. (time-domain period $T_{\text{TD}} = 3.23 \pm 0.73$ c.t.u.), capturing $4.30$ complete periodic oscillations. As depicted in Figure~\ref{fig:unsteady_re50000}, the phase portrait exhibits a multi-loop orbit. The 4-phase field decomposition confirms that micro-vortex structures continuously shed from the lower corners and convect along the boundary layers.
+At $Re = 50,000$, where the kinematic viscosity is $\nu = 2.0 \times 10^{-5}$, physical marching was executed on the $513 \times 513$ grid over $90,000$ time steps ($\Delta t = 2.0 \times 10^{-4}$, $t_{\text{end}} = 18.0$, $CFL \approx 0.102$) utilizing boundary under-relaxation $\beta_{\text{wall}} = 0.85$ to regularize corner dispersion on the uniform Cartesian mesh. As formulated in Section~\ref{sec:boundary_conditions}, for $\beta_{\text{wall}} < 1.0$ the discrete wall update represents a temporal low-pass filter on the boundary vorticity. Consequently, this simulation is designated as a filtered-boundary unsteady model rather than an unregularized Navier--Stokes integration. In the stationary window following transient development ($t \in [1.33, 18.0]$, $T_{\text{win}} = 16.67$ c.t.u., $\Delta f = 0.0600$), discrete Fourier analysis identifies dominant energy in bin $k = 4$ ($f_{\text{bin}} = 0.2399$). Parabolic peak interpolation refines the shedding frequency to $St = 0.2581 \pm 0.0300$ and fundamental period $T \approx 3.8751$ c.t.u. (time-domain period $T_{\text{TD}} = 3.23 \pm 0.73$ c.t.u.), capturing $4.30$ complete periodic oscillations. As depicted in Figure~\ref{fig:unsteady_re50000}, the phase portrait exhibits a multi-loop orbit. The 4-phase field decomposition confirms that micro-vortex structures continuously shed from the lower corners and convect along the boundary layers.
 
 \begin{figure}[htbp]
 \centering
@@ -489,7 +518,7 @@ At $Re = 50,000$, where the molecular kinematic viscosity is $\nu = 2.0 \times 1
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_phase_portrait_Re50000_N513.png}
-    \caption{Phase Attractor \& Power Spectrum}
+    \caption{Phase Trajectory \& Power Spectrum}
 \end{subfigure}
 \par\vspace{0.5em}
 \begin{subfigure}[b]{\textwidth}
@@ -497,14 +526,14 @@ At $Re = 50,000$, where the molecular kinematic viscosity is $\nu = 2.0 \times 1
     \includegraphics[width=0.98\textwidth]{figures/lid_driven_unsteady_cycle_snapshots_Re50000_N513.png}
     \caption{Instantaneous 4-Phase Vorticity and Streamline Fields Over Shedding Cycle}
 \end{subfigure}
-\caption{Unsteady dynamics on the $513 \times 513$ ultra-fine grid at $Re = 50,000$: (a) Velocity telemetry over $90,000$ steps ($t = 18.0$); (b) Multi-loop phase trajectory and power spectrum showing dominant frequency $St = 0.2581 \pm 0.0300$ (raw bin $f_{\text{bin}} = 0.2399$) capturing $4.30$ periodic shedding cycles; (c) 4-phase field decomposition revealing multiple boundary-layer vortex detachments and thin shear layers.}
+\caption{Unsteady dynamics on the $513 \times 513$ grid at $Re = 50,000$: (a) Velocity telemetry over $90,000$ steps ($t = 18.0$); (b) Multi-loop phase trajectory and power spectrum showing dominant frequency $St = 0.2581 \pm 0.0300$ (raw bin $f_{\text{bin}} = 0.2399$) capturing $4.30$ periodic shedding cycles; (c) 4-phase field decomposition revealing multiple boundary-layer vortex detachments and thin shear layers.}
 \label{fig:unsteady_re50000}
 \end{figure}
 
 \subsection{Unsteady Marching and High-Reynolds Dynamics at \texorpdfstring{$Re = 100,000$}{Re = 100000}}
-At $Re = 100,000$, resolving unsteady dynamics pushes the computational frontier of finite-difference solvers: the molecular kinematic viscosity is $\nu = 1.0 \times 10^{-5}$, the asymptotic boundary layer thickness is $\delta \approx 0.00316$, and the cell P\'eclet number in the near-wall layers reaches $Pe \approx 195.3$. 
+At $Re = 100,000$, resolving unsteady dynamics in the 2D cavity model involves steep shear layers: the kinematic viscosity is $\nu = 1.0 \times 10^{-5}$, the nominal boundary-layer thickness is $\delta \sim Re^{-1/2} \approx 0.00316$, and the local cell P\'eclet number in the near-wall layers reaches $Pe \approx 195.3$ on the $513 \times 513$ mesh ($h = 1/512 \approx 1.953 \times 10^{-3}$). To prevent non-physical grid-scale oscillations while enabling extended temporal marching, the numerical model employs the interior hybrid differencing formulation (introducing directional artificial diffusion $\boldsymbol{\nu}_{\text{art}}$ where $Pe > 2$) alongside wall vorticity relaxation $\beta_{\text{wall}} = 0.75$. This computation is therefore formally classified as a hybrid-regularized, filtered-boundary unsteady model.
 
-During the initial transient interval ($t \lesssim 2.8$), boundary layers and corner recirculations undergo an impulsive adjustment characterized by non-stationary velocity drift and enstrophy development. Physical marching was advanced directly on the $513 \times 513$ grid over $80,000$ time steps ($\Delta t = 2.0 \times 10^{-4}$, $t_{\text{end}} = 16.00$, $CFL \approx 0.102$) utilizing the interior hybrid differencing formulation with wall relaxation $\beta_{\text{wall}} = 0.75$.
+During the initial transient interval ($t \lesssim 2.8$), boundary layers and corner recirculations undergo an impulsive adjustment characterized by non-stationary velocity drift and enstrophy development. Physical marching was advanced directly on the $513 \times 513$ grid over $80,000$ time steps ($\Delta t = 2.0 \times 10^{-4}$, $t_{\text{end}} = 16.00$, $CFL \approx 0.102$).
 
 \begin{figure}[htbp]
 \centering
@@ -515,7 +544,7 @@ During the initial transient interval ($t \lesssim 2.8$), boundary layers and co
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
     \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_phase_portrait_Re100000_N513.png}
-    \caption{Phase Attractor \& Power Spectrum}
+    \caption{Phase Trajectory \& Power Spectrum}
 \end{subfigure}
 \par\vspace{0.5em}
 \begin{subfigure}[b]{\textwidth}
@@ -523,7 +552,7 @@ During the initial transient interval ($t \lesssim 2.8$), boundary layers and co
     \includegraphics[width=0.98\textwidth]{figures/lid_driven_unsteady_cycle_snapshots_Re100000_N513.png}
     \caption{Instantaneous 4-Phase Vorticity and Streamline Fields Over Shedding Cycle}
 \end{subfigure}
-\caption{High-Reynolds unsteady dynamics on the $513 \times 513$ grid at $Re = 100,000$: (a) Velocity telemetry and global energy/enstrophy over $80,000$ steps ($t = 16.0$); (b) Phase portrait and FFT power spectrum showing fundamental frequency $St = 0.1908 \pm 0.0379$ (raw bin $f_{\text{bin}} = 0.2272$) capturing $2.52$ cycles; (c) 4-phase field decomposition highlighting multi-vortex pulsation, wall-bubble translation, and shear-layer shedding.}
+\caption{High-Reynolds unsteady dynamics on the $513 \times 513$ grid at $Re = 100,000$: (a) Velocity telemetry and global energy/enstrophy over $80,000$ steps ($t = 16.0$); (b) Phase trajectory and FFT power spectrum showing fundamental frequency $St = 0.1908 \pm 0.0379$ (raw bin $f_{\text{bin}} = 0.2272$) capturing $2.52$ cycles; (c) 4-phase field decomposition highlighting multi-vortex pulsation, wall-bubble translation, and shear-layer shedding.}
 \label{fig:unsteady_re100000}
 \end{figure}
 
@@ -537,22 +566,22 @@ The dynamic 4-phase cycle decomposition in Figure~\ref{fig:unsteady_re100000}(c)
 \end{enumerate}
 
 \subsection{Summary of Unsteady Regimes across Reynolds Numbers}
-Table~\ref{tab:unsteady_summary} summarizes the simulation parameters, analysis windows, spectral bin resolutions, refined Strouhal frequencies, and dynamical regimes across all five unsteady flow cases on $513 \times 513$ meshes.
+Table~\ref{tab:unsteady_summary} summarizes the simulation parameters, analysis windows, spectral bin resolutions, refined Strouhal frequencies, cycle counts, boundary filter parameters, and dynamical regimes across all five unsteady flow cases on $513 \times 513$ meshes.
 
 \begin{table}[htbp]
 \centering
-\caption{Comprehensive summary of unsteady vortex shedding dynamics on the $513 \times 513$ ultra-fine grid from $Re = 10,000$ to $Re = 100,000$, reporting analysis windows, spectral bin widths, raw and parabolic refined frequencies with Fourier bin uncertainty bounds ($\pm \Delta f / 2$), and time-domain verification. Time and periods are non-dimensional convective time units (c.t.u.).}
+\caption{Summary of finite-window unsteady dynamics on the $513 \times 513$ grid from $Re = 10,000$ to $Re = 100,000$, reporting sampling windows, spectral bin widths, raw and parabolic refined frequencies with Fourier bin resolution uncertainty ($\pm \Delta f / 2$), cycle counts, boundary filter parameter $\beta_{\text{wall}}$, and time-domain verification. Non-dimensional time and periods are in convective time units (c.t.u.). For $Re \ge 50,000$, calculations represent the filtered-boundary model ($\beta_{\text{wall}} < 1.0$).}
 \label{tab:unsteady_summary}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{lccccccccccl}
+\begin{tabular}{lcccccccccccl}
 \toprule
-$Re$ & $\Delta t$ & $t_{\text{end}}$ & Window & $\Delta f$ & Bin $k$ & $f_{\text{bin}}$ & $f_{\text{refined}}$ & Strouhal ($St \pm \frac{\Delta f}{2}$) & $T$ (c.t.u.) & $T_{\text{TD}}$ (c.t.u.) & Dynamical Regime \\
+$Re$ & $\Delta t$ & $t_{\text{end}}$ & Window & $\beta_{\text{wall}}$ & Cycles & $\Delta f$ & Bin $k$ & $f_{\text{bin}}$ & Strouhal ($St \pm \frac{\Delta f}{2}$) & $T$ (c.t.u.) & $T_{\text{TD}}$ (c.t.u.) & Dynamical Regime \\
 \midrule
-$10,000$  & $5.0 \times 10^{-4}$ & $22.0$ & $[10.0, 22.0]$ & $0.0833$ & $8$  & $0.6664$ & $0.6249$ & $\mathbf{0.6249 \pm 0.0416}$ & $1.6002$ & $1.68 \pm 0.18$ & Periodic limit cycle \\
-$15,000$  & $4.0 \times 10^{-4}$ & $20.0$ & $[2.0, 20.0]$  & $0.0555$ & $10$ & $0.5554$ & $0.5364$ & $\mathbf{0.5364 \pm 0.0278}$ & $1.8643$ & $1.74 \pm 0.39$ & Modulated multi-frequency response \\
-$25,000$  & $3.0 \times 10^{-4}$ & $22.0$ & $[4.2, 22.0]$  & $0.0562$ & $2$  & $0.1124$ & $0.0953$ & $\mathbf{0.0953 \pm 0.0281}$ & $10.490$ & $10.23$         & Folded multi-frequency orbit \\
-$50,000$  & $2.0 \times 10^{-4}$ & $18.0$ & $[1.33, 18.0]$ & $0.0600$ & $4$  & $0.2399$ & $0.2581$ & $\mathbf{0.2581 \pm 0.0300}$ & $3.8751$ & $3.23 \pm 0.73$ & Multi-frequency boundary shedding \\
-$100,000$ & $2.0 \times 10^{-4}$ & $16.0$ & $[2.8, 16.0]$  & $0.0757$ & $3$  & $0.2272$ & $0.1908$ & $\mathbf{0.1908 \pm 0.0379}$ & $5.2402$ & $4.85$         & High-$Re$ boundary shedding (hybrid) \\
+$10,000$  & $5.0 \times 10^{-4}$ & $22.0$ & $[10.0, 22.0]$ & $1.00$ & $7.50$ & $0.0833$ & $8$  & $0.6664$ & $\mathbf{0.6249 \pm 0.0416}$ & $1.6002$ & $1.68 \pm 0.18$ & Periodic vortex shedding \\
+$15,000$  & $4.0 \times 10^{-4}$ & $20.0$ & $[2.0, 20.0]$  & $1.00$ & $9.66$ & $0.0555$ & $10$ & $0.5554$ & $\mathbf{0.5364 \pm 0.0278}$ & $1.8643$ & $1.74 \pm 0.39$ & Modulated multi-frequency \\
+$25,000$  & $3.0 \times 10^{-4}$ & $22.0$ & $[4.2, 22.0]$  & $1.00$ & $1.70$ & $0.0562$ & $2$  & $0.1124$ & $\mathbf{0.0953 \pm 0.0281}$ & $10.490$ & $10.23$         & Folded multi-frequency orbit \\
+$50,000$  & $2.0 \times 10^{-4}$ & $18.0$ & $[1.33, 18.0]$ & $0.85$ & $4.30$ & $0.0600$ & $4$  & $0.2399$ & $\mathbf{0.2581 \pm 0.0300}$ & $3.8751$ & $3.23 \pm 0.73$ & Filtered-boundary shedding \\
+$100,000$ & $2.0 \times 10^{-4}$ & $16.0$ & $[2.8, 16.0]$  & $0.75$ & $2.52$ & $0.0757$ & $3$  & $0.2272$ & $\mathbf{0.1908 \pm 0.0379}$ & $5.2402$ & $4.85$         & Hybrid filtered-boundary shedding \\
 \bottomrule
 \end{tabular}%
 }
@@ -568,20 +597,102 @@ Figure~\ref{fig:snapshots} visualizes the instantaneous vorticity field ($\omega
 \label{fig:snapshots}
 \end{figure}
 
-\section{Open Benchmark Datasets \& Scientific Reproducibility}
-To empower future research in computational fluid dynamics, turbulence modeling, and algorithm verification, all converged solutions are serialized directly into open NumPy archive formats (\texttt{.npz}) containing full 2D coordinate matrices $(X, Y)$, velocities $(u, v)$, streamfunction $(\psi)$, vorticity $(\omega)$, and reconstructed Poisson pressure fields $(p)$. The pressure field $p(x, y)$ is reconstructed in post-processing by solving the diagnostic Poisson equation $\nabla^2 p = 2 [ (\partial u/\partial x)(\partial v/\partial y) - (\partial u/\partial y)(\partial v/\partial x) ]$ with homogeneous Neumann conditions $\partial p / \partial n = 0$ on all walls as a diagnostic surrogate. Users requiring primitive-variable momentum-consistent wall pressure distributions should note this diagnostic boundary treatment.
+\section[Diagnostic Pressure Reconstruction and Benchmark Datasets]{Diagnostic Pressure Poisson Reconstruction and Datasets}
 
-The complete package includes:
+\subsection{Diagnostic Pressure Poisson Formulation and Discrete Solver}
+\label{sec:pressure_reconstruction}
+To reconstruct the scalar pressure field $p(x, y)$ from the streamfunction--vorticity solution in post-processing, we formulate the pressure Poisson equation derived from the divergence of the 2D incompressible Navier--Stokes momentum equations:
+\begin{equation}
+    \nabla^2 p = 2 \left[ \left(\frac{\partial u}{\partial x}\right)\left(\frac{\partial v}{\partial y}\right) - \left(\frac{\partial u}{\partial y}\right)\left(\frac{\partial v}{\partial x}\right) \right] = - \left[ \left(\frac{\partial u}{\partial x}\right)^2 + 2\frac{\partial u}{\partial y}\frac{\partial v}{\partial x} + \left(\frac{\partial v}{\partial y}\right)^2 \right], \label{eq:pressure_poisson}
+\end{equation}
+under the assumption of incompressibility $\nabla \cdot \mathbf{u} = 0$. In our implementation (\path{lid_driven_cavity_fdm.py}), equation~(\ref{eq:pressure_poisson}) is discretized on the uniform Cartesian mesh ($h = \Delta x = \Delta y$) using the standard discrete 5-point Laplacian stencil for interior nodes ($1 \le i, j \le N-2$):
+\begin{equation}
+    \nabla_h^2 p_{i, j} \equiv \frac{p_{i+1, j} + p_{i-1, j} + p_{i, j+1} + p_{i, j-1} - 4 p_{i, j}}{h^2} = S_{i, j},
+\end{equation}
+where the discrete source term $S_{i, j}$ is evaluated using second-order central differences applied to the reconstructed velocity components:
+\begin{equation}
+    S_{i, j} = - \left[ \left(\delta_x u_{i, j}\right)^2 + 2 (\delta_y u_{i, j}) (\delta_x v_{i, j}) + \left(\delta_y v_{i, j}\right)^2 \right],
+\end{equation}
+with $\delta_x \phi_{i, j} = (\phi_{i+1, j} - \phi_{i-1, j})/(2h)$ and $\delta_y \phi_{i, j} = (\phi_{i, j+1} - \phi_{i, j-1})/(2h)$.
+
+Because velocity boundary conditions are enforced on the cavity walls, momentum-consistent wall pressure boundary conditions would require evaluating normal viscous stress projections $\partial p / \partial n = \frac{1}{Re}\nabla^2 u_n$. As a simplified diagnostic surrogate, the solver applies discrete homogeneous Neumann boundary conditions via first-order ghost-node copying:
+\begin{equation}
+    p_{0, j} = p_{1, j}, \quad p_{N-1, j} = p_{N-2, j}, \quad p_{i, 0} = p_{i, 1}, \quad p_{i, N-1} = p_{i, N-2}.
+\end{equation}
+The discrete system is advanced via Jacobi relaxation:
+\begin{equation}
+    p_{i, j}^{(k+1)} = \frac{1}{4} \left( p_{i+1, j}^{(k)} + p_{i-1, j}^{(k)} + p_{i, j+1}^{(k)} + p_{i, j-1}^{(k)} - h^2 S_{i, j} \right),
+\end{equation}
+until the maximum step increment satisfies $\max_{1 \le i, j \le N-2} |p_{i, j}^{(k+1)} - p_{i, j}^{(k)}| < 10^{-5}$ (or a maximum of $2500$ iterations). To fix the arbitrary additive pressure constant resulting from the pure Neumann boundary condition, a zero-mean gauge is projected across the interior domain nodes:
+\begin{equation}
+    p_{i, j} \leftarrow p_{i, j} - \frac{1}{(N-2)^2} \sum_{k=1}^{N-2} \sum_{m=1}^{N-2} p_{k, m}.
+\end{equation}
+We emphasize that this diagnostic pressure field serves for qualitative flow topology visualization; users requiring momentum-consistent wall pressure distributions should note that the diagnostic Neumann boundary condition neglects boundary-normal viscous diffusion terms.
+
+\subsection{Open Benchmark Datasets and Inventory Manifest}
+All computed flow fields are serialized into open, platform-independent NumPy archive files (\texttt{.npz}). To provide complete transparency and auditability, Table~\ref{tab:dataset_manifest} presents the comprehensive manifest of all thirty (30) verified benchmark datasets generated in this study (23 stationary continuation solutions and 7 finite-window unsteady telemetry records), including Reynolds number, grid resolution, numerical discretization, boundary filtering, time step, archive file size, and SHA-256 checksums. All datasets are openly released under the MIT license.
+
+\begin{table}[htbp]
+\centering
+\caption{Comprehensive auditable manifest of all thirty (30) verified benchmark datasets generated in this study and released in the open repository (\texttt{data/}). File format is NumPy binary archive (\texttt{.npz}) under the MIT license. SHA-256 hashes report the leading 10 hexadecimal characters for integrity verification.}
+\label{tab:dataset_manifest}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccl}
+\toprule
+Archive Filename & $Re$ & Grid & Type & Scheme & $\beta_{\text{wall}}$ & $\Delta t$ & Size (MB) & SHA-256 Prefix \\
+\midrule
+\multicolumn{9}{l}{\textbf{Stationary Continuation Flow Fields (23 Datasets)}} \\
+\midrule
+\texttt{flow\_fields\_Re100\_N129.npz}     & $100$     & $129 \times 129$   & Steady & Central & $1.00$ & $1.0 \times 10^{-3}$ & $0.62$  & \texttt{E034461528} \\
+\texttt{flow\_fields\_Re1000\_N129.npz}    & $1,000$   & $129 \times 129$   & Steady & Central & $1.00$ & $1.0 \times 10^{-3}$ & $0.62$  & \texttt{40CE95C3F9} \\
+\texttt{flow\_fields\_Re3200\_N257.npz}    & $3,200$   & $257 \times 257$   & Steady & Central & $1.00$ & $8.0 \times 10^{-4}$ & $2.45$  & \texttt{3FBC23EE84} \\
+\texttt{flow\_fields\_Re5000\_N257.npz}    & $5,000$   & $257 \times 257$   & Steady & Central & $1.00$ & $8.0 \times 10^{-4}$ & $2.45$  & \texttt{B407882FB8} \\
+\texttt{flow\_fields\_Re7500\_N257.npz}    & $7,500$   & $257 \times 257$   & Steady & Central & $1.00$ & $6.0 \times 10^{-4}$ & $2.45$  & \texttt{5B007A504C} \\
+\texttt{flow\_fields\_Re10000\_N129.npz}   & $10,000$  & $129 \times 129$   & Steady & Central & $1.00$ & $5.0 \times 10^{-4}$ & $0.62$  & \texttt{D895FDE1A1} \\
+\texttt{flow\_fields\_Re10000\_N257.npz}   & $10,000$  & $257 \times 257$   & Steady & Central & $1.00$ & $5.0 \times 10^{-4}$ & $2.45$  & \texttt{674832609F} \\
+\texttt{flow\_fields\_Re10000\_N513.npz}   & $10,000$  & $513 \times 513$   & Steady & Central & $1.00$ & $5.0 \times 10^{-4}$ & $9.67$  & \texttt{4BB6A53BF2} \\
+\texttt{flow\_fields\_Re15000\_N257.npz}   & $15,000$  & $257 \times 257$   & Steady & Central & $1.00$ & $4.0 \times 10^{-4}$ & $2.45$  & \texttt{20EA8B69D1} \\
+\texttt{flow\_fields\_Re15000\_N513.npz}   & $15,000$  & $513 \times 513$   & Steady & Central & $1.00$ & $4.0 \times 10^{-4}$ & $9.67$  & \texttt{6C264A4376} \\
+\texttt{flow\_fields\_Re20000\_N257.npz}   & $20,000$  & $257 \times 257$   & Steady & Central & $1.00$ & $3.5 \times 10^{-4}$ & $2.45$  & \texttt{D35FD280E7} \\
+\texttt{flow\_fields\_Re20000\_N513.npz}   & $20,000$  & $513 \times 513$   & Steady & Central & $1.00$ & $3.5 \times 10^{-4}$ & $9.67$  & \texttt{474A790C7B} \\
+\texttt{flow\_fields\_Re25000\_N257.npz}   & $25,000$  & $257 \times 257$   & Steady & Central & $1.00$ & $3.0 \times 10^{-4}$ & $2.45$  & \texttt{F4AD8CCCBB} \\
+\texttt{flow\_fields\_Re25000\_N513.npz}   & $25,000$  & $513 \times 513$   & Steady & Central & $1.00$ & $3.0 \times 10^{-4}$ & $9.67$  & \texttt{07490BA0CE} \\
+\texttt{flow\_fields\_Re30000\_N257.npz}   & $30,000$  & $257 \times 257$   & Steady & Central & $1.00$ & $2.5 \times 10^{-4}$ & $2.45$  & \texttt{CD93AD3490} \\
+\texttt{flow\_fields\_Re30000\_N513.npz}   & $30,000$  & $513 \times 513$   & Steady & Central & $1.00$ & $2.5 \times 10^{-4}$ & $9.67$  & \texttt{A37EE6FC57} \\
+\texttt{flow\_fields\_Re35000\_N513.npz}   & $35,000$  & $513 \times 513$   & Steady & Central & $1.00$ & $2.5 \times 10^{-4}$ & $9.67$  & \texttt{CE77063DC6} \\
+\texttt{flow\_fields\_Re40000\_N513.npz}   & $40,000$  & $513 \times 513$   & Steady & Central & $1.00$ & $2.0 \times 10^{-4}$ & $9.67$  & \texttt{188862EBF8} \\
+\texttt{flow\_fields\_Re45000\_N513.npz}   & $45,000$  & $513 \times 513$   & Steady & Central & $1.00$ & $2.0 \times 10^{-4}$ & $9.68$  & \texttt{E7E83A241B} \\
+\texttt{flow\_fields\_Re50000\_N513.npz}   & $50,000$  & $513 \times 513$   & Steady & Central & $0.85$ & $2.0 \times 10^{-4}$ & $9.68$  & \texttt{0023A6CDBE} \\
+\texttt{flow\_fields\_Re100000\_N257.npz}  & $100,000$ & $257 \times 257$   & Steady & Hybrid  & $0.75$ & $2.0 \times 10^{-4}$ & $2.44$  & \texttt{7F34080389} \\
+\texttt{flow\_fields\_Re100000\_N513.npz}  & $100,000$ & $513 \times 513$   & Steady & Hybrid  & $0.75$ & $2.0 \times 10^{-4}$ & $7.58$  & \texttt{37270E3B72} \\
+\texttt{flow\_fields\_Re100000\_N1025.npz} & $100,000$ & $1025 \times 1025$ & Steady & Hybrid  & $0.75$ & $1.0 \times 10^{-4}$ & $30.10$ & \texttt{6AF9C5AEBB} \\
+\midrule
+\multicolumn{9}{l}{\textbf{Finite-Window Unsteady Telemetry Records (7 Datasets)}} \\
+\midrule
+\texttt{unsteady\_Re10000\_N257.npz}       & $10,000$  & $257 \times 257$   & Unsteady & Central & $1.00$ & $5.0 \times 10^{-4}$ & $4.05$  & \texttt{E21FA33162} \\
+\texttt{unsteady\_Re10000\_N513.npz}       & $10,000$  & $513 \times 513$   & Unsteady & Central & $1.00$ & $5.0 \times 10^{-4}$ & $20.02$ & \texttt{2B9654BEE7} \\
+\texttt{unsteady\_Re15000\_N257.npz}       & $15,000$  & $257 \times 257$   & Unsteady & Central & $1.00$ & $4.0 \times 10^{-4}$ & $4.12$  & \texttt{2B99B77CCE} \\
+\texttt{unsteady\_Re15000\_N513.npz}       & $15,000$  & $513 \times 513$   & Unsteady & Central & $1.00$ & $4.0 \times 10^{-4}$ & $20.08$ & \texttt{1026C3DDD6} \\
+\texttt{unsteady\_Re25000\_N513.npz}       & $25,000$  & $513 \times 513$   & Unsteady & Central & $1.00$ & $3.0 \times 10^{-4}$ & $20.29$ & \texttt{288882ABF8} \\
+\texttt{unsteady\_Re50000\_N513.npz}       & $50,000$  & $513 \times 513$   & Unsteady & Central & $0.85$ & $2.0 \times 10^{-4}$ & $20.39$ & \texttt{85E7CFA90B} \\
+\texttt{unsteady\_Re100000\_N513.npz}      & $100,000$ & $513 \times 513$   & Unsteady & Hybrid  & $0.75$ & $2.0 \times 10^{-4}$ & $20.38$ & \texttt{1DEA9015A6} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+The software ecosystem provides full reproducibility across the pipeline:
 \begin{itemize}
-    \item \textbf{Twenty-Eight (28) Verified Datasets:} Full steady flow fields spanning fifteen Reynolds numbers from $Re = 100$ to $Re = 100,000$, with comprehensive $513 \times 513$ ultra-fine grids for $Re \in \{10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 100000\}$, a $1025 \times 1025$ high-resolution benchmark for $Re = 100,000$, and time-resolved unsteady telemetry for $Re \in \{10000, 15000, 25000, 50000, 100000\}$ strictly on $513 \times 513$ meshes.
-    \item \textbf{High-Resolution $513 \times 513$ Animated Visualizations:} Synchronized limit-cycle and multi-frequency vortex shedding animations with embedded real-time probe telemetry across all unsteady regimes up to $Re = 100,000$.
-    \item \textbf{Automated CLI Tooling:} Single-command utilities for steady continuation (\path{lid_driven_cavity_fdm.py}), unsteady bifurcation analysis (\path{unsteady_cavity_solver.py}), publication figure reproduction (\path{plot_from_npz.py}), and animated GIF generation.
+    \item \textbf{High-Resolution Visualizations:} Synchronized vortex shedding animations with embedded real-time probe telemetry across all unsteady regimes up to $Re = 100,000$.
+    \item \textbf{Automated CLI Utilities:} Single-command utilities for stationary continuation (\path{lid_driven_cavity_fdm.py}), unsteady dynamics analysis (\path{unsteady_cavity_solver.py}), publication figure reproduction (\path{plot_from_npz.py}), and animated GIF generation.
 \end{itemize}
 
 \section{Conclusion}
-This paper presented a high-resolution finite-difference framework for the 2D lid-driven cavity problem, solving stationary continuation up to extreme Reynolds numbers ($Re = 100,000$) on meshes up to $1025 \times 1025$ ($1,050,625$ nodes) and capturing time-accurate unsteady dynamics on $513 \times 513$ grids ($263,169$ nodes). By combining an exact $\mathcal{O}(N^2 \log N)$ Discrete Sine Transform (DST-I) Poisson solver with pure second-order central differencing and homotopy continuation, the solver operates without artificial numerical viscosity across moderate-to-high Reynolds numbers ($Re \le 50,000$). At $Re = 100,000$, an interior hybrid upwind stabilization regularizes high-frequency corner singularity shocks ($Pe_x = 195.3$) with added numerical viscosity ratio $\bar{\nu}_{\text{art}}/\nu = \frac{1}{4}[Pe_x \mathbf{1}_{Pe_x > 2} + Pe_y \mathbf{1}_{Pe_y > 2}]$, yielding $1.485$ in the recirculating core and $48.83$ at the lid on $513 \times 513$ (dropping to $0.74$ and $24.46$ on $1025 \times 1025$). Systematic geometric comparisons against Ghia et al. (1982) and Erturk et al. (2005, 2009) demonstrate primary and secondary vortex center agreement ($\Delta = 0.00688$ at $Re = 25,000$), alongside a consistent $\sim 7.5\%$ streamfunction extremum shift attributable to fine-grid secondary eddy resolution. At $Re = 50,000$ and $Re = 100,000$, the primary core center converges toward mid-plane symmetry ($x_c = 0.50000$ on $513 \times 513$ and $x_c = 0.4990$ on $1025 \times 1025$) with $\psi_{\min} = -0.12572$, showing behavior qualitatively consistent with Batchelor's core vorticity homogenization hypothesis ($\omega_0 \approx -2.54$). Unsteady physical simulations on $513 \times 513$ meshes resolve periodic limit-cycle dynamics ($St = 0.6249 \pm 0.0416$ at $Re = 10,000$, $T \approx 1.6002$ c.t.u.), capture amplitude-modulated multi-frequency dynamics at $Re = 15,000$ ($St = 0.5364 \pm 0.0278$), and trace nonlinear vortex shedding across extended horizons: $Re = 25,000$ ($St = 0.0953 \pm 0.0281$, $T = 10.49$ c.t.u.), $Re = 50,000$ ($St = 0.2581 \pm 0.0300$, $T = 3.88$ c.t.u.), and extreme $Re = 100,000$ ($St = 0.1908 \pm 0.0379$, $T = 5.24$ c.t.u.).
+This study presented a high-resolution finite-difference framework for 2D lid-driven cavity flows, computing stationary continuation solutions up to $Re = 100,000$ on uniform Cartesian meshes up to $1025 \times 1025$ ($1,050,625$ nodes) and observing finite-window unsteady dynamics on $513 \times 513$ meshes ($263,169$ nodes). Combining a direct $\mathcal{O}(N^2 \log N)$ Discrete Sine Transform (DST-I) Poisson solver with second-order central differencing and continuation warm-starts, the solver operates with zero artificial numerical diffusion ($\nu_{\text{art}} = 0$) across moderate-to-high Reynolds numbers ($Re \le 50,000$). At $Re = 100,000$, where cell P\'eclet numbers exceed $195$, an interior hybrid upwind stabilization is introduced, which we formally classify as a hybrid-regularized numerical model with directional artificial diffusion tensor $\boldsymbol{\nu}_{\text{art}}$. 
 
-By releasing all source codes, benchmark datasets, and animation pipelines openly and permanently under the MIT license, this work provides a reliable, reproducible, and accessible CFD reference for researchers, students, and practitioners worldwide.
+Geometric comparison against Ghia et al. (1982) and Erturk et al. (2005, 2009) demonstrates close primary vortex center agreement ($\Delta = 0.00688$ at $Re = 25,000$), alongside a consistent $\sim 7.5\%$ streamfunction extremum shift relative to Erturk's non-uniform compact formulation. At $Re = 50,000$ and $Re = 100,000$, the primary vortex core center approaches mid-plane symmetry ($x_c = 0.50000$ on $513 \times 513$ and $x_c = 0.4990$ on $1025 \times 1025$) with $\psi_{\min} = -0.12572$, exhibiting qualitative behavior consistent with Batchelor's core homogenization hypothesis within the regularized model ($\bar{\omega}_0 \approx -2.54$). Time-resolved simulations in the 2D model capture periodic vortex shedding ($St = 0.6249 \pm 0.0416$ at $Re = 10,000$, $7.50$ cycles), an amplitude-modulated multi-frequency response at $Re = 15,000$ ($St = 0.5364 \pm 0.0278$, $9.66$ cycles), and nonlinear wall shedding across extended horizons: $Re = 25,000$ ($St = 0.0953 \pm 0.0281$, $1.70$ cycles), $Re = 50,000$ ($St = 0.2581 \pm 0.0300$, $4.30$ cycles), and $Re = 100,000$ ($St = 0.1908 \pm 0.0379$, $2.52$ cycles). For $Re \ge 50,000$, wall relaxation ($\beta_{\text{wall}} < 1.0$) acts as a temporal boundary filter, scoping the results to a filtered-boundary model.
+
+By openly releasing all 30 verified datasets, source code, and reproduction pipelines under the MIT license, this work provides a transparent, auditable reference for numerical method development in two-dimensional cavity flows.
 
 \section*{CRediT Authorship Contribution Statement}
 \textbf{Kartikey Singh:} Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing -- original draft, Writing -- review \& editing, Visualization.
@@ -596,7 +707,7 @@ This research did not receive any specific grant from funding agencies in the pu
 During the preparation of this work, the author used AI-assisted technologies solely for editorial consistency, grammar verification, and scientific language polishing. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content and conclusions of the published article.
 
 \section*{Data Availability}
-The underlying research data, full 2D tensor fields (.npz), verification scripts, and high-resolution animation pipelines are openly available on Zenodo under permanent DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}~\cite{singh2026solver} and hosted on GitHub at \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}.
+The underlying research data, full 2D tensor fields (\texttt{.npz}), verification scripts, and high-resolution animation pipelines are openly available on Zenodo under permanent DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}~\cite{singh2026solver} and hosted on GitHub at \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}.
 
 \bibliographystyle{unsrt}
 \bibliography{references}

@@ -2,4 +2,4 @@
 - Pure central differencing retains zero numerical viscosity for Re <= 50,000.
 - Interior hybrid scheme stabilizes corner singularity at Re = 100,000.
 - Core vorticity profiles show qualitative alignment with Batchelor theorem.
-- Unsteady marching on 513x513 grids resolves shedding limit-cycle dynamics.
+- Unsteady marching on 513x513 grids resolves vortex shedding dynamics.

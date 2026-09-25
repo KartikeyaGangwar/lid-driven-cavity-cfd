@@ -13,35 +13,35 @@ A high-performance, publication-grade finite-difference computational fluid dyna
 
 ---
 
-## Real-Time Dynamic Vortex Shedding ($513 \times 513$ Ultra-Fine Resolution)
+## Real-Time Dynamic Vortex Shedding ($513 \times 513$ Resolution)
 
-| $Re = 10,000$ ($513 \times 513$ Ultra-Fine Mesh) | $Re = 15,000$ ($513 \times 513$ Ultra-Fine Mesh) |
+| $Re = 10,000$ ($513 \times 513$ Mesh) | $Re = 15,000$ ($513 \times 513$ Mesh) |
 | :---: | :---: |
 | ![Lid-Driven Cavity Vortex Shedding Re=10000 N513](figures/lid_driven_vortex_shedding_Re10000_N513.gif) | ![Lid-Driven Cavity Vortex Shedding Re=15000 N513](figures/lid_driven_vortex_shedding_Re15000_N513.gif) |
-| **Primary Hopf Limit Cycle** ($St = 0.6249 \pm 0.0416, T = 1.6002\,\text{c.t.u.}$) | **Modulated Multi-Frequency Response** ($St = 0.5364 \pm 0.0278, T = 1.8643\,\text{c.t.u.}$) |
-| **$Re = 25,000$ ($513 \times 513$ Ultra-Fine Mesh)** | **$Re = 50,000$ ($513 \times 513$ Extreme Frontier)** |
+| **Periodic Vortex Shedding** ($St = 0.6249 \pm 0.0416, T = 1.6002\,\text{c.t.u.}$) | **Modulated Multi-Frequency Response** ($St = 0.5364 \pm 0.0278, T = 1.8643\,\text{c.t.u.}$) |
+| **$Re = 25,000$ ($513 \times 513$ Mesh)** | **$Re = 50,000$ ($513 \times 513$ Filtered-Boundary)** |
 | ![Lid-Driven Cavity Vortex Shedding Re=25000 N513](figures/lid_driven_vortex_shedding_Re25000_N513.gif) | ![Lid-Driven Cavity Vortex Shedding Re=50000 N513](figures/lid_driven_vortex_shedding_Re50000_N513.gif) |
-| **Folded Multi-Frequency Orbit** ($St = 0.0953 \pm 0.0281, T = 10.490\,\text{c.t.u.}$) | **Multi-Frequency Boundary Shedding** ($St = 0.2581 \pm 0.0300, T = 3.8751\,\text{c.t.u.}$) |
-| **$Re = 100,000$ ($513 \times 513$ Extreme Frontier)** | |
+| **Folded Multi-Frequency Orbit** ($St = 0.0953 \pm 0.0281, T = 10.490\,\text{c.t.u.}$) | **Filtered-Boundary Shedding** ($St = 0.2581 \pm 0.0300, T = 3.8751\,\text{c.t.u.}$) |
+| **$Re = 100,000$ ($513 \times 513$ Hybrid Model)** | |
 | ![Lid-Driven Cavity Vortex Shedding Re=100000 N513](figures/lid_driven_vortex_shedding_Re100000_N513.gif) | |
-| **Frontier High-$Re$ Shedding (Hybrid)** ($St = 0.1908 \pm 0.0379, T = 5.2402\,\text{c.t.u.}$) | |
+| **High-$Re$ Shedding (Hybrid Model)** ($St = 0.1908 \pm 0.0379, T = 5.2402\,\text{c.t.u.}$) | |
 
-*Real-time synchronized physical time-accurate vortex shedding across fundamental cycles with continuous probe telemetry tracked along the bottom-left boundary eddy detachment zone ($x=0.08, y=0.15$), simulated strictly on $513 \times 513$ grid ($263,169$ nodes).*
+*Real-time synchronized vortex shedding across fundamental cycles with continuous probe telemetry tracked along the bottom-left boundary eddy detachment zone ($x=0.08, y=0.15$), simulated on $513 \times 513$ grid ($263,169$ nodes).*
 
 ---
 
 ## Key Highlights & Capabilities
 
-- **Zero Artificial Viscosity ($\nu_{\text{art}} = 0$)**: Pure second-order central differencing for all convective and diffusive terms on meshes up to $513 \times 513$ for $Re \le 50,000$, and an interior Spalding--Patankar hybrid differencing scheme at $Re = 100,000$ stabilizing the corner singularity while maintaining well-bounded numerical dissipation in the core ($\bar{\nu}_{\text{art}}/\nu = 1.485$ at the core on $513 \times 513$, reducing to $0.74$ on $1025 \times 1025$).
-- **Ultra-Fast Discrete Sine Transform (DST) Poisson Engine**: Direct spectral Poisson solver with exact machine-precision Dirichlet enforcement scaling at $O(N^2 \log N)$ (sub-millisecond per Poisson solve). Precomputed sparse direct LU decomposition (`splu`) and vectorized Red–Black SOR also supported.
+- **Zero Artificial Viscosity ($\nu_{\text{art}} = 0$)**: Pure second-order central differencing for all convective and diffusive terms on meshes up to $513 \times 513$ for $Re \le 50,000$, and an interior hybrid differencing scheme at $Re = 100,000$ stabilizing the corner singularity while maintaining well-bounded numerical dissipation in the core ($\bar{\nu}_{\text{art}}/\nu = 1.485$ at the core on $513 \times 513$, reducing to $0.74$ on $1025 \times 1025$).
+- **Direct Discrete Sine Transform (DST) Poisson Engine**: Direct spectral Poisson solver with exact machine-precision Dirichlet enforcement scaling at $O(N^2 \log N)$ (sub-millisecond per Poisson solve). Precomputed sparse direct LU decomposition (`splu`) and vectorized Red–Black SOR also supported.
 - **Vectorized Alternating Direction Implicit (ADI) Marching**: Vectorized Thomas algorithm marching across all rows and columns simultaneously with exact tridiagonal boundary closures.
-- **Reynolds Number Continuation Ladder (Homotopy)**: Automated parameter continuation transitioning smoothly across Reynolds stages ($100 \to 100,000$), accelerating convergence by $3\times-5\times$ and eliminating startup shock.
-- **Bicubic Spline Mesh Prolongation**: Smooth transfer of flow fields from coarse meshes ($129 \times 129$) to ultra-fine meshes ($257 \times 257 \to 513 \times 513 \to 1025 \times 1025$) with boundary re-enforcement.
-- **Time-Accurate Unsteady & Bifurcation Analysis**:
-  - **Supercritical Hopf Bifurcation ($Re \approx 8,000 \sim 10,000$)**: Stable limit-cycle attractor capturing refined vortex shedding frequency $St = 0.6249 \pm 0.0416$.
+- **Reynolds Number Continuation Ladder (Homotopy)**: Automated parameter continuation transitioning smoothly across Reynolds stages ($100 \to 100,000$), accelerating convergence and eliminating startup shock.
+- **Bicubic Spline Mesh Prolongation**: Smooth transfer of flow fields from coarse meshes ($129 \times 129$) to finer meshes ($257 \times 257 \to 513 \times 513 \to 1025 \times 1025$) with boundary re-enforcement.
+- **Time-Accurate Unsteady Dynamics**:
+  - **Supercritical Hopf Instability ($Re \approx 8,000 \sim 10,000$)**: Periodic shedding capturing refined Strouhal frequency $St = 0.6249 \pm 0.0416$.
   - **Modulated Multi-Frequency Dynamics ($Re = 15,000$)**: Multi-frequency response with low-frequency envelope modulation ($St = 0.5364 \pm 0.0278$).
-  - **Nonlinear Wall Shedding & High-$Re$ Transitions ($Re = 25,000 \to 100,000$)**: Folded multi-frequency orbit at $Re = 25,000$ ($St = 0.0953 \pm 0.0281$), multi-frequency boundary-layer vortex shedding at $Re = 50,000$ ($St = 0.2581 \pm 0.0300$), and high-$Re$ shedding at $Re = 100,000$ ($St = 0.1908 \pm 0.0379$).
-- **Publication-Grade Visualizations**: Beautiful LaTeX typography (`Computer Modern`), zero legend-data obstruction, streamline contours, vorticity fields, centerline velocity profiles, pressure recovery, FFT power spectra, and phase-space attractors.
+  - **Nonlinear Wall Shedding & High-$Re$ Transitions ($Re = 25,000 \to 100,000$)**: Folded multi-frequency orbit at $Re = 25,000$ ($St = 0.0953 \pm 0.0281$), filtered-boundary shedding at $Re = 50,000$ ($St = 0.2581 \pm 0.0300$), and hybrid-model shedding at $Re = 100,000$ ($St = 0.1908 \pm 0.0379$).
+- **Publication-Grade Visualizations**: High-quality typography, streamline contours, vorticity fields, centerline velocity profiles, pressure recovery, FFT power spectra, and phase trajectories.
 
 ---
 

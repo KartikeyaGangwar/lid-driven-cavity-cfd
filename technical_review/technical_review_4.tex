@@ -1,0 +1,198 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
+
+\setlist{nosep,leftmargin=*}
+\newcommand{\Rey}{\mathit{Re}}
+
+\title{Technical Review of\\
+\emph{A High-Resolution Finite-Difference Benchmark for Steady Continuation and Hopf Bifurcation Dynamics up to Extreme Reynolds Numbers}}
+\author{}
+\date{25 September 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Overall assessment}
+
+The manuscript contains a substantial numerical implementation and a useful collection of diagnostics, but it is not yet justified as a verified benchmark at the highest Reynolds numbers. The main problems are methodological rather than editorial. At $\Rey=100{,}000$, upwinding is active over $98.21\%$ of the interior and the reported mean added viscosity is $16.32\nu$ on the $513\times513$ grid; the resulting computation is therefore a strongly regularized, anisotropically diffusive model, not a demonstrated approximation of the unstabilized $\Rey=100{,}000$ equations. In addition, the unsteady records are too short and visibly non-stationary in several cases, the claimed unstable steady branches are not supported by a suitable continuation method or residual test, and the GCI analysis is interpreted despite being explicitly outside the asymptotic range. Major revision is required before the datasets should be described as verified benchmarks.
+
+The governing equations, Poisson sign convention, dimensional scaling, ADI coefficients, and stated modified-equation coefficient for first-order upwinding were checked. No inverse-trigonometric expressions occur, so there is no inverse-trig branch or quadrant issue to resolve. The concrete sign, boundary, convergence, and implementation ambiguities are listed below.
+
+\section*{Major technical findings}
+
+\subsection*{1. The $\Rey=100{,}000$ result is a different, strongly diffusive numerical model}
+
+\textbf{Location.} Abstract; Section 3.3; Figure 1; Batchelor discussion; Conclusion.
+
+\textbf{Classification.} Definite interpretive error and unsupported benchmark claim.
+
+\textbf{Problem.} The manuscript reports that directional upwinding is active over $98.21\%$ of the interior on the $513\times513$ grid, with mean added viscosity $16.32\nu$, and still calls the result an ``extreme Reynolds number benchmark.'' The added diffusion is anisotropic: at the geometric center only the $x$ direction is upwinded, so replacing the diffusion tensor by the scalar average $\bar\nu_{\mathrm{art}}$ does not make it an isotropic viscosity. Moreover, the quoted ``lid'' value is evaluated at a boundary where the interior transport stencil is not advanced and should be distinguished from the maximum over active interior nodes. Even on $1025\times1025$, the reported mean added viscosity remains $8.12\nu$ and the center value remains non-negligible.
+
+\textbf{Why it matters.} The steady topology, $\psi_{\min}$, core vorticity, and unsteady frequencies may be properties of the grid-dependent regularized equations rather than of the original two-dimensional Navier--Stokes problem at $\Rey=100{,}000$. In particular, the hybrid solution cannot be used as direct evidence for the $\Rey\to\infty$ Batchelor limit without showing that the artificial diffusion is asymptotically negligible in the reported observables.
+
+\textbf{Suggested fix.} Reframe these cases as results of a specified hybrid regularized model. Report the directional diffusion tensor, the active-interior maximum, domain distributions, and sensitivity of every principal observable to grid spacing and switch threshold. A benchmark claim requires refinement until the solution and the artificial-diffusion measures are jointly converged toward the unstabilized equations. Otherwise remove ``benchmark,'' ``physical,'' and inviscid-limit language from the $\Rey=100{,}000$ claims.
+
+\subsection*{2. The unsteady windows do not establish stationary attractors or reliable frequencies}
+
+\textbf{Location.} Sections 5.1--5.5; Figures 5--9; Table 6; Abstract and Conclusion.
+
+\textbf{Classification.} Unsupported claim.
+
+\textbf{Problem.} The global diagnostics plotted in Figures 5--9 retain pronounced trends over portions of the stated ``stationary'' windows. The $\Rey=25{,}000$ record contains only $1.70$ cycles, the $\Rey=50{,}000$ record $4.30$ cycles, and the $\Rey=100{,}000$ record $2.52$ cycles. A half-bin width, $\pm\Delta f/2$, is a frequency-resolution convention, not a statistical uncertainty or confidence interval. Three-point interpolation cannot turn a drifting, two-cycle record into a precise frequency estimate. The phase traces are therefore not sufficient to identify limit cycles, multi-frequency attractors, or nonlinear mechanisms. No same-case time-step or spatial-refinement study is supplied, and the two highest-$\Rey$ cases also alter the wall update and, at $\Rey=100{,}000$, the spatial operator.
+
+\textbf{Why it matters.} The paper's principal ``Hopf bifurcation dynamics'' claims depend on distinguishing transients, periodic orbits, quasiperiodicity, and numerically filtered motion. The current records do not support those distinctions. The manuscript also does not locate a bifurcation; it samples several postulated regimes.
+
+\textbf{Suggested fix.} Run each case until kinetic energy, enstrophy, probe means, and amplitudes are stationary over many periods; use substantially longer analysis windows, especially at $\Rey=25{,}000$ and $100{,}000$; repeat selected cases with at least two smaller time steps and a finer grid; test window and detrending sensitivity; and report peak width or a statistically defined interval separately from FFT bin spacing. Until then, use wording such as ``dominant spectral peak over the observed transient window'' and remove ``limit cycle,'' ``attractor,'' and mechanistic phase-decomposition claims where they are not demonstrated. The title should also be changed unless an actual stability or bifurcation analysis is added.
+
+\subsection*{3. The stated pseudo-time method does not justify unstable steady branches}
+
+\textbf{Location.} Section 3.4 and the opening of Section 4.
+
+\textbf{Classification.} Likely methodological error / implementation ambiguity.
+
+\textbf{Problem.} Above the Hopf threshold, the manuscript calls the results unstable fixed points obtained by pseudo-transient continuation. Ordinary time marching of the physical equations does not generically converge to a temporally unstable fixed point; it departs along the unstable mode. No Newton, bordered continuation, selective-frequency damping, or other steady-state stabilization is described. The stopping test
+\[
+\lVert\omega^{k+1}-\omega^k\rVert_\infty<10^{-5}
+\]
+is also time-step dependent and is not a discrete steady residual. A slowly evolving transient can satisfy it if $\Delta t$ is sufficiently small.
+
+\textbf{Why it matters.} The steady tables and the comparison between ``stationary continuation'' and unsteady dynamics may be based on numerically damped transients rather than solutions of the discrete steady equations.
+
+\textbf{Suggested fix.} State the exact continuation algorithm and demonstrate convergence of the full steady transport residual, Poisson residual, wall-condition residual, and global balances. If unstable branches are intended, use and document a solver capable of converging to unstable fixed points, and verify selected solutions independently. Report tolerances normalized by appropriate field and operator scales.
+
+\subsection*{4. The GCI/Richardson analysis is outside its valid interpretation range}
+
+\textbf{Location.} Section 4.4, Equation (25), and Table 3.
+
+\textbf{Classification.} Definite internal inconsistency and unsupported uncertainty claim.
+
+\textbf{Problem.} The manuscript correctly says that $p=4.7055$ and $p=10.1882$ are pre-asymptotic, but then interprets $\mathrm{GCI}_{21}=0.0185\%$ and $<10^{-6}\%$ as fine-grid discretization uncertainties. Richardson extrapolation and GCI error-band interpretations require an asymptotic sequence governed by a common leading error term. At $\Rey=100{,}000$, the active hybrid region and artificial viscosity also change substantially with grid spacing. For $\Rey=10{,}000$, the medium--coarse change is about twenty-six times the fine--medium change, which is evidence against using the fine-pair coincidence as a robust uncertainty estimate.
+
+There is also a numerical inconsistency in the printed table: the displayed values
+\[
+f_1=-0.12571558,\quad f_2=-0.12571543,\quad f_3=-0.12553188
+\]
+give $p\approx10.2570$, not $10.1882$. If unrounded values give the reported order, the caption's claim of ``full-precision metrics'' is false and the values used in the calculation must be printed.
+
+\textbf{Why it matters.} The very small GCI numbers are used to certify the most consequential benchmark claims, but they presently measure cancellation in one scalar rather than demonstrated full-field convergence.
+
+\textbf{Suggested fix.} Do not present these values as uncertainty bounds. Add grids that show an asymptotic trend, document the GCI asymptotic-range check, retain the same numerical model across the sequence, and evaluate multiple sensitive quantities and field norms (velocity, vorticity, wall shear, energy, and frequency), not only $\psi_{\min}$. Correct the printed arithmetic/precision mismatch.
+
+\subsection*{5. The singular top-corner vorticity rule is not defined}
+
+\textbf{Location.} Section 2.2.
+
+\textbf{Classification.} Definite implementation ambiguity.
+
+\textbf{Problem.} At a top corner, the top-wall Thom formula and sidewall Thom formula give incompatible values. With $\psi=0$ on both adjacent walls, the top formula contributes the lid term $-2/h$, whereas the side formula does not. The statement that corner values are ``evaluated from the adjacent boundary closures'' does not say whether the code selects one formula, averages them, overwrites them in a particular order, or excludes the corner from transport. The imposed corner velocity is likewise described only verbally.
+
+\textbf{Why it matters.} This $\mathcal{O}(1/h)$ discrepancy is located exactly where the manuscript attributes high-$\Rey$ dispersion, wall filtering, and much of the flow sensitivity. Reproducibility and all corner-vortex conclusions depend on the rule.
+
+\textbf{Suggested fix.} Give the exact indexed update, assignment order, corner value, and treatment in velocity reconstruction for all four corners. Add a sensitivity test using at least one alternative corner regularization or a smooth lid profile.
+
+\subsection*{6. Wall relaxation changes the unsteady boundary-value problem}
+
+\textbf{Location.} Section 2.2 and the $\Rey=50{,}000$ and $100{,}000$ unsteady cases.
+
+\textbf{Classification.} Likely issue.
+
+\textbf{Problem.} For $\beta_{\mathrm{wall}}<1$, the Thom condition is not satisfied directly at each physical time step; instead, wall vorticity follows a discrete temporal filter. Calling this only a numerical regularization does not establish that the measured frequency and phase dynamics are insensitive to it. Its effect can also depend on $\Delta t$.
+
+\textbf{Why it matters.} The two cases with the strongest physical claims use $\beta_{\mathrm{wall}}=0.85$ and $0.75$. Their spectra cannot be attributed solely to the stated Navier--Stokes problem without a filter-sensitivity study.
+
+\textbf{Suggested fix.} Quantify the wall residual and repeat the analyses for several $\beta_{\mathrm{wall}}$ values approaching $1$, with fixed $\Delta t$ and with time-step refinement. If stable $\beta=1$ solutions cannot be obtained, describe the results as filtered-boundary model solutions rather than physical time-accurate simulations.
+
+\subsection*{7. Validation discrepancies are explained away rather than resolved}
+
+\textbf{Location.} Sections 4.1 and 4.5; Tables 1 and 4; Figure 4; Conclusion.
+
+\textbf{Classification.} Unsupported causal claim.
+
+\textbf{Problem.} The manuscript attributes the approximately $7.5\%$ shift in $\psi_{\min}$ to finer resolution of secondary eddies, but it supplies no controlled evidence for that mechanism. The cited high-resolution literature does not by itself establish this explanation. The near-lid comparison also contains large interior discrepancies: for example, at $\Rey=25{,}000$ and $x=0.5$, the manuscript reports $-0.0085$ versus $-1.9814$. The persistence of steep peaks under a nondissipative central stencil does not prove that they are physical; it can also indicate dispersive error. The $L_2$ metric is not defined (normalization and station weights are missing), while the prose calls results with large absolute errors ``agreement.''
+
+\textbf{Why it matters.} These are the principal external validation data. Large disagreements cannot support a benchmark unless their numerical origin is isolated by controlled tests.
+
+\textbf{Suggested fix.} Define every error norm, include relative and pointwise errors, compare like-for-like grid and boundary treatments where possible, and perform grid/corner-closure studies targeted at the discrepant locations. Replace the current causal explanation with a neutral discrepancy statement until demonstrated. Remove the claim that peak preservation confirms accuracy.
+
+\subsection*{8. Accuracy and stability statements need narrower, correct wording}
+
+\textbf{Location.} Sections 3.1--3.3 and throughout the conclusions.
+
+\textbf{Classification.} Definite terminology problem and missing verification.
+
+\textbf{Problem.} The $Pe=2$ condition is presented as a universal ``linear stability limit'' and the $\Rey=1{,}000$ case as ``unconditionally monotonic.'' It is more specifically the boundedness/monotonicity threshold for the standard one-dimensional steady central convection--diffusion stencil; it is not a general stability theorem for the nonlinear split time integrator. The stated $\mathcal{O}(\Delta t)+\mathcal{O}(h^2)$ accuracy also concerns the interior frozen-advection update, whereas the paper uses a first-order wall-vorticity closure and, at $\Rey=100{,}000$, first-order upwinding over most of the domain. No temporal convergence test supports the repeated phrase ``time-accurate.'' The Poisson solver is exact only for the discrete linear system up to roundoff, not for the continuous Poisson equation.
+
+\textbf{Why it matters.} The current wording conflates stencil properties, solver stability, and global solution accuracy.
+
+\textbf{Suggested fix.} Restrict each order/stability statement to the operator and assumptions for which it holds. Provide a manufactured-solution or equivalent verification study for spatial order, a same-case temporal refinement study, and measured discrete Poisson residuals. State the explicit-advection stability restriction actually used.
+
+\subsection*{9. The diagnostic pressure reconstruction is under-specified}
+
+\textbf{Location.} Section 6.
+
+\textbf{Classification.} Definite implementation ambiguity.
+
+\textbf{Problem.} A Poisson problem with homogeneous Neumann conditions is singular and requires both a compatibility treatment for the right-hand side and a pressure gauge. Neither is stated. The discretization of the velocity derivatives and treatment of corner data are also omitted.
+
+\textbf{Why it matters.} Pressure is advertised as part of every full-field dataset. Different gauge and compatibility choices can yield different fields or an inconsistent solve.
+
+\textbf{Suggested fix.} Specify the discrete operator, derivative stencils, right-hand-side mean correction or compatibility enforcement, pressure normalization (for example, zero mean), and residual. Keep the existing warning that the wall pressure is not momentum-consistent.
+
+\section*{Notation, terminology, and reproducibility}
+
+\begin{itemize}
+    \item \textbf{Notation drift:} the abstract and conclusion use $\nu_{\mathrm{art}}$, while the introduction defines the central scheme with $\nu_{\mathrm{num}}=0$. Define whether these are the same quantity or reserve $\nu_{\mathrm{num}}$ for total truncation-induced diffusion and $\nu_{\mathrm{art}}$ for the added upwind term.
+    \item \textbf{P\'eclet notation:} distinguish consistently among signed components $\widetilde{Pe}_x,\widetilde{Pe}_y$, magnitudes $Pe_x,Pe_y$, and the maximum $Pe_h$. Phrases such as ``the cell P\'eclet number is 195.3'' currently switch among these meanings.
+    \item \textbf{Core vorticity:} define $\omega_0$ as a point value, spatial mean, fitted plateau, or another estimator. A standard deviation over $y\in[0.35,0.65]$ is not sufficient to identify which reported value is used.
+    \item \textbf{Coordinate terminology:} $u(0.5,y)$ is the horizontal velocity component along the \emph{vertical} centerline, not a ``horizontal centerline velocity profile.'' Similarly, $v(x,0.5)$ is the vertical velocity component along the horizontal centerline.
+    \item \textbf{Dataset inventory:} the prose does not provide an auditable enumeration that sums to the claimed twenty-eight datasets. Add a manifest with filename, $\Rey$, grid, steady/unsteady status, numerical scheme, $\Delta t$, $\beta_{\mathrm{wall}}$, checksum, and license.
+\end{itemize}
+
+\section*{Meaningful editorial issues}
+
+\begin{itemize}
+    \item The title and abstract overstate the scope: the work does not compute a Hopf point or continue a bifurcation branch. A more accurate title would emphasize steady pseudo-continuation and finite-window unsteady observations.
+    \item Replace ``physical cavity flow'' and ``physical simulations'' with ``the two-dimensional model'' unless three-dimensional instability and experimental relevance are explicitly delimited.
+    \item Replace marketing terms such as ``ultra-fine,'' ``extreme frontier,'' and ``preeminent'' with mesh sizes and objective verification statements.
+    \item The sentence attributing the $\psi_{\min}$ offset to fine-grid secondary-eddy resolution should be removed or supported by a dedicated numerical experiment.
+\end{itemize}
+
+\section*{Proofing sweep}
+
+The bundled mechanical scan was run on the compiled manuscript and its two hits were false positives: the spaced mathematical ellipsis ``$\ldots$'' and a semicolon before the proper name ``Erturk.'' Manual spot-checking found the following high-confidence corrections:
+
+\begin{itemize}
+    \item \textbf{Section 4.6:} change ``horizontal centerline velocity profiles $u(0.5,y)$'' to ``horizontal-velocity profiles along the vertical centerline, $u(0.5,y)$.''
+    \item \textbf{Figure 4 caption:} write the range as ``$\Rey=10{,}000$--$30{,}000$'' rather than using a mathematical minus sign.
+    \item \textbf{Section 6 and Data Availability:} typeset the file extension consistently as \texttt{.npz}; avoid switching between plain text and \verb|\texttt| formatting.
+\end{itemize}
+
+The reference list showed no duplicated punctuation, malformed quotation punctuation, or obvious product-name capitalization error.
+
+\section*{Items requiring external verification}
+
+\begin{itemize}
+    \item Verify that the Zenodo DOI resolves publicly to the stated version, contains the claimed twenty-eight datasets and scripts, and carries the stated MIT license; also verify that the GitHub repository and permanent archive contain identical release content.
+    \item Verify the normalization and sign conversion behind the stated Burggraf value $\omega_0\approx-1.886$ and do not assign the observed offset to corner singularities, displaced eddies, and hybrid stabilization without separate evidence for those contributions.
+    \item Document the software versions, FFT backend, thread settings, transform normalization, warm-up, repetition count, and timing statistic behind the quoted $0.8\,\mathrm{ms}$ and $2.1\,\mathrm{ms}$ Poisson timings. ``SciPy FFTW backend'' is not reproducible without naming the separately configured backend.
+    \item Check every reported reference value against the cited source, especially vortex centers and $\psi_{\min}$ at high $\Rey$, and state when values are digitized, interpolated, or use a different lid regularization or sign convention.
+\end{itemize}
+
+\section*{Highest-priority revisions}
+
+\begin{enumerate}
+    \item Reframe or recompute the $\Rey=100{,}000$ results so that the effect of hybrid diffusion and wall filtering is explicit and quantitatively converged.
+    \item Extend and refine the unsteady calculations until stationarity, time-step convergence, grid convergence, and robust spectral estimates are demonstrated.
+    \item Use a valid steady-branch solver and residual-based convergence tests above the Hopf threshold.
+    \item Replace the current pre-asymptotic GCI claims with a valid convergence study and correct the Table 3 precision inconsistency.
+    \item Specify the corner-vorticity, filtered-wall, and pressure-Poisson implementations exactly, then update the archive manifest and validation claims.
+\end{enumerate}
+
+\end{document}
