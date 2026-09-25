@@ -26,10 +26,10 @@ The incompressible 2D lid-driven cavity flow remains the canonical proving groun
 5. **Scientific Reproducibility & Open Benchmarks:** We openly release thirty (30) verified benchmark full 2D coordinate/flow field datasets (23 steady continuation and 7 unsteady records), phase portrait scripts, and automated visualization tools under the MIT License with permanent Zenodo DOIs.
 
 ### Suggested Potential Reviewers:
-1. **Prof. Ercan Erturk** (Kocaeli University / Istanbul Technical University, Turkey) — `erturke@itu.edu.tr`
+1. **Prof. Ercan Erturk** (Bahçeşehir University, Istanbul, Turkey) — `ercan.erturk@bau.edu.tr`
 2. **Prof. Olivier Botella** (Université de Lorraine, LEMTA, France) — `olivier.botella@univ-lorraine.fr`
 3. **Prof. Chang Shu** (National University of Singapore, Singapore) — `mpeshuc@nus.edu.sg`
-4. **Prof. Charles-Henri Bruneau** (Université de Bordeaux, France) — `charles-henri.bruneau@u-bordeaux.fr`
+4. **Prof. Jie Shen** (Eastern Institute of Technology, Ningbo, China / Purdue University, USA) — `jshen@eitech.edu.cn` / `shen7@purdue.edu`
 
 ### Declarations:
 - This manuscript is original, has not been published previously, and is not under consideration for publication elsewhere.

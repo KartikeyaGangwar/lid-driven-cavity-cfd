@@ -53,9 +53,9 @@ Bullet 5: Unsteady marching on 513x513 grids resolves finite-window shedding mod
 Reviewer 1:
 - Name: Prof. Ercan Erturk
 - Title: Professor
-- Institution: Department of Mechanical Engineering, Kocaeli University / Istanbul Technical University
-- Location: Turkey
-- Email: erturke@itu.edu.tr / eerturk@kocaeli.edu.tr
+- Institution: Department of Mechanical Engineering, Bahcesehir University (BAU)
+- Location: Istanbul, Turkey
+- Email: ercan.erturk@bau.edu.tr
 - Reason for Suggestion: World-renowned authority on high-Reynolds steady lid-driven cavity flow benchmarking and Navier--Stokes streamfunction-vorticity solutions up to Re = 25,000.
 
 Reviewer 2:
@@ -76,10 +76,10 @@ Reviewer 3:
 
 Reviewer 4:
 - Name: Prof. Jie Shen
-- Title: Professor of Mathematics
-- Institution: Department of Mathematics, Purdue University / Eastern Institute for Advanced Study
-- Location: West Lafayette, IN, USA
-- Email: shen7@purdue.edu
+- Title: Chair Professor & Dean (Eastern Institute of Technology) / Distinguished Professor Emeritus (Purdue University)
+- Institution: School of Mathematical Science, Eastern Institute of Technology (EIT) / Purdue University
+- Location: Ningbo, China / West Lafayette, IN, USA
+- Email: jshen@eitech.edu.cn / shen7@purdue.edu
 - Reason for Suggestion: International authority in spectral methods, projection methods, and mathematical analysis of incompressible Navier--Stokes flow stability and bifurcations.
 
 ================================================================================
