@@ -600,10 +600,38 @@ Geometric comparisons against canonical benchmarks confirm four-decimal core pos
 
 Releasing all thirty verified datasets, solver implementations, and figure reproduction pipelines under the MIT license establishes an auditable open benchmark for fluid dynamics algorithms.
 
+\section*{CRediT Authorship Contribution Statement}
+\textbf{Kartikey Singh:} Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing -- original draft, Writing -- review \& editing, Visualization.
+
+\section*{Declaration of Competing Interest}
+The author declares that he has no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+\section*{Funding}
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+\section*{Declaration of Generative AI in the Manuscript Preparation Process}
+During the preparation of this work, the author used AI-assisted technologies solely for editorial consistency, grammar verification, and scientific language polishing. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content and conclusions of the published article.
+
+\section*{Data Availability}
+The underlying research data, full 2D tensor fields (\texttt{.npz}), verification scripts, and high-resolution animation pipelines are openly available on Zenodo under permanent DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}~\cite{singh2026solver} and hosted on GitHub at \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}.
+
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\clearpage
 \appendix
+\renewcommand{\thetable}{\Alph{section}.\arabic{table}}
+\renewcommand{\thefigure}{\Alph{section}.\arabic{figure}}
+
+\begin{center}
+    \vspace*{1em}
+    {\huge \textbf{Appendices}}
+    \vspace*{1em}
+\end{center}
 
 \section{Complete Auditable Dataset Manifest}
 \label{sec:appendix_manifest}
+\setcounter{table}{0}
 
 Table~\ref{tab:dataset_manifest} catalogs all thirty (30) verified numerical datasets produced in this study and released in the open repository (\texttt{data/}) and Zenodo archive~\cite{singh2026solver}. The inventory details simulation parameters, grid dimensions, differencing schemes, wall relaxation parameters, time steps, compressed archive sizes, and SHA-256 cryptographic hashes.
 
@@ -658,6 +686,7 @@ Archive Filename & $Re$ & Grid & Type & Scheme & $\beta_{\text{wall}}$ & $\Delta
 
 \section{Tabulated Centerline Velocity Benchmark Profiles}
 \label{sec:appendix_velocities}
+\setcounter{table}{0}
 
 Table~\ref{tab:ghia_u_benchmark} compiles the benchmark horizontal-velocity profiles along the vertical centerline, $u(0.5, y)$, evaluated at the seventeen (17) standard stations of Ghia et al.~\cite{ghia1982high} across six Reynolds numbers ($Re = 1{,}000$ to $100{,}000$). High-order bicubic spline interpolation was employed to sample continuous velocity fields onto the exact reference coordinates.
 
@@ -691,23 +720,5 @@ $0.0000$ & $+0.00000$ & $+0.00000$ & $+0.00000$ & $+0.00000$ & $+0.00000$ & $+0.
 \bottomrule
 \end{tabular*}
 \end{table}
-
-\section*{CRediT Authorship Contribution Statement}
-\textbf{Kartikey Singh:} Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing -- original draft, Writing -- review \& editing, Visualization.
-
-\section*{Declaration of Competing Interest}
-The author declares that he has no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
-
-\section*{Funding}
-This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
-
-\section*{Declaration of Generative AI in the Manuscript Preparation Process}
-During the preparation of this work, the author used AI-assisted technologies solely for editorial consistency, grammar verification, and scientific language polishing. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content and conclusions of the published article.
-
-\section*{Data Availability}
-The underlying research data, full 2D tensor fields (\texttt{.npz}), verification scripts, and high-resolution animation pipelines are openly available on Zenodo under permanent DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}~\cite{singh2026solver} and hosted on GitHub at \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}.
-
-\bibliographystyle{unsrt}
-\bibliography{references}
 
 \end{document}
