@@ -1,15 +1,27 @@
-# 2D Lid-Driven Cavity Flow Solver (Finite Difference Method)
+# 2D Lid-Driven Cavity Flow Solver & High-Resolution Benchmark Suite
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KartikeyaGangwar/lid-driven-cavity-cfd/blob/main/cavity_hpc_colab.ipynb)
+[![Preprint PDF](https://img.shields.io/badge/Preprint-PDF-red.svg)](paper/manuscript.pdf)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18312938.svg)](https://doi.org/10.5281/zenodo.18312938)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/KartikeyaGangwar/lid-driven-cavity-cfd/blob/main/cavity_hpc_colab.ipynb)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
 [![NumPy](https://img.shields.io/badge/NumPy-1.24+-013243.svg)](https://numpy.org/)
 [![SciPy](https://img.shields.io/badge/SciPy-1.9+-0054a6.svg)](https://scipy.org/)
 [![Matplotlib](https://img.shields.io/badge/Matplotlib-3.7+-11557c.svg)](https://matplotlib.org/)
-[![Pillow](https://img.shields.io/badge/Pillow-9.0+-green.svg)](https://python-pillow.org/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18312938.svg)](https://doi.org/10.5281/zenodo.18312938)
+
+Official open-source repository and benchmark suite accompanying the research article:
+> **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"**  
+> *Author:* Kartikey Singh (Department of Mathematics, University of Delhi, India)  
+> *Target Journal:* Computers & Fluids (Elsevier) | *Preprint:* [`paper/manuscript.pdf`](paper/manuscript.pdf) | *Permanent DOI:* [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938)
 
 A high-performance, publication-grade finite-difference computational fluid dynamics (CFD) suite solving the 2D incompressible Navier–Stokes equations in the streamfunction–vorticity ($\psi$–$\omega$) formulation across laminar, transitional, and extreme Reynolds number regimes ($Re = 100 \to 100,000$).
+
+### 📑 Quick Access Links
+* 📄 **Complete Research Paper (Preprint PDF):** [`paper/manuscript.pdf`](paper/manuscript.pdf) (25 pages, 32 verified references, 4 Appendices)
+* 📦 **Elsevier Submission Package:** [`submission_package/`](submission_package/) (Cover letter, highlights, manuscript, declarations, metadata)
+* 💾 **30 Verified Benchmark Datasets:** [`data/`](data/) (23 steady continuation + 7 unsteady `.npz` flow fields with SHA-256 hashes)
+* 🚀 **Interactive Cloud Colab Notebook:** [Launch in Google Colab](https://colab.research.google.com/github/KartikeyaGangwar/lid-driven-cavity-cfd/blob/main/cavity_hpc_colab.ipynb)
+* 🎬 **Vortex Shedding Animations:** [`figures/`](figures/) (Real-time synchronized GIFs)
 
 ---
 
@@ -337,12 +349,19 @@ Inversion via inverse DST yields exact streamfunction solutions in $O(N^2 \log N
 
 ## Citation
 
-If you find this code or dataset helpful in your research, please cite:
+If you use this solver, verification datasets, or methodology in your research, please cite both the paper and the dataset:
 
 ```bibtex
-@software{singh2026cavity,
+@article{singh2026lid_driven_cavity,
+  title={A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows},
+  author={Singh, Kartikey},
+  journal={arXiv preprint / Submitted to Computers \& Fluids},
+  year={2026}
+}
+
+@misc{singh2026solver,
   author       = {Singh, Kartikey},
-  title        = {A Reference Finite-Difference Solver for the 2D Lid-Driven Cavity Flow},
+  title        = {[dataset] Reference Finite-Difference Solutions and Verification Datasets for {2D} Lid-Driven Cavity Flows up to Extreme {Reynolds} Numbers},
   year         = {2026},
   publisher    = {Zenodo},
   doi          = {10.5281/zenodo.18312938},

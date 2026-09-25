@@ -1,17 +1,23 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
-title: "A Reference Finite-Difference Solver for the 2D Lid-Driven Cavity Flow"
+message: "If you use this software or benchmark dataset, please cite both the paper and the dataset as below."
+title: "A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to Re = 100,000 in 2D Lid-Driven Cavity Flows"
 authors:
   - family-names: Singh
     given-names: Kartikey
-version: 1.0.1
-date-released: 2026-01-20
+    orcid: "https://orcid.org/0009-0009-1973-7532"
+    affiliation: "Department of Mathematics, University of Delhi, Delhi, 110007, India"
+version: 1.0.0
+date-released: 2026-09-25
 doi: 10.5281/zenodo.18312938
 license: MIT
-repository-code: https://github.com/KartikeyGangwar/lid-driven-cavity-fdm
+repository-code: "https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd"
 keywords:
   - computational fluid dynamics
   - lid-driven cavity
-  - finite difference
-  - incompressible flow
-  - reference solver
+  - finite difference method
+  - streamfunction-vorticity
+  - high reynolds number
+  - spectral poisson solver
+  - benchmark datasets
+  - batchelor theorem
+  - unsteady vortex shedding
