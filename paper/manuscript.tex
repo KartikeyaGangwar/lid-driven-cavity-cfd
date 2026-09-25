@@ -129,7 +129,7 @@ Because these modes match the Type-I Discrete Sine Transform (DST-I), exact alge
 \begin{equation}
     \hat{\psi}_{k_x, k_y} = \frac{\hat{\omega}_{k_x, k_y}}{\lambda_{k_x} + \lambda_{k_y}}, \quad \lambda_k = \frac{4}{h^2} \sin^2\left(\frac{k \pi}{2(N-1)}\right).
 \end{equation}
-Inverting back to physical space via the 2D inverse DST-I recovers $\psi_{i, j}$ to machine precision ($\sim 10^{-16}$) in $\mathcal{O}(N^2 \log N)$ operations (\texttt{scipy.fft.dstn}). Iterative residual drift is bypassed entirely. On an Intel Core i7-12700H (Python 3.11, SciPy 1.11 single-threaded PocketFFT backend), one spectral inversion executes in $0.8\,\text{ms}$ on $257 \times 257$ and $2.1\,\text{ms}$ on $513 \times 513$.
+Inverting back to physical space via the 2D inverse DST-I recovers $\psi_{i, j}$ to machine precision ($\sim 10^{-16}$) in $\mathcal{O}(N^2 \log N)$ operations (\texttt{scipy.fft.dstn}). Iterative residual drift is bypassed entirely. On the benchmark workstation equipped with an Intel Core i5-9300H CPU @ 2.40GHz (Python 3.13, SciPy 1.16 single-threaded PocketFFT backend), one spectral inversion executes in $0.73\,\text{ms}$ on $257 \times 257$, $3.90\,\text{ms}$ on $513 \times 513$, and $23.72\,\text{ms}$ on $1025 \times 1025$. Complete hardware architecture specifications, memory hierarchies, and software environments are documented in Appendix~\ref{sec:appendix_hardware} (Table~\ref{tab:hardware_specs}).
 
 \subsection{Vectorized Alternating Direction Implicit (ADI) Marching}
 Vorticity transport (\ref{eq:vorticity_transport}) is marched via operator-split Alternating Direction Implicit (ADI) integration based on the classical Peaceman--Rachford structure~\cite{peaceman1955numerical}. To decouple coordinates while preserving high-throughput array operations, advective fluxes $\mathcal{C}(\mathbf{u}^n, \omega^n) = u^n \delta_x \omega^n + v^n \delta_y \omega^n$ are evaluated explicitly at time level $n$. Viscous diffusion is split implicitly across two half-steps of length $\Delta t / 2$:
@@ -719,6 +719,44 @@ $0.0547$ & $-0.16944$ & $-0.38118$ & $-0.42626$ & $-0.37140$ & $-0.35618$ & $-0.
 $0.0000$ & $+0.00000$ & $+0.00000$ & $+0.00000$ & $+0.00000$ & $+0.00000$ & $+0.00000$ \\
 \bottomrule
 \end{tabular*}
+\end{table}
+
+\section{Hardware Infrastructure and Computational Environment}
+\label{sec:appendix_hardware}
+\setcounter{table}{0}
+
+To ensure full computational transparency, benchmark reproducibility, and execution-time traceability, Table~\ref{tab:hardware_specs} catalogs the physical hardware architecture, processor specifications, memory hierarchy, operating system, and software environment of the workstation used to run all numerical simulations, figure generation pipelines, and verification protocols in this study.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Detailed architectural specifications of the host workstation, memory hierarchy, software runtime, and scientific computing packages utilized for all numerical simulations and benchmark analyses.}
+\label{tab:hardware_specs}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash\bfseries}p{4.2cm} >{\raggedright\arraybackslash}X}
+\toprule
+Subsystem / Parameter & Technical Specification \& Computational Configuration \\
+\midrule
+Host Processor (CPU) & Intel\textsuperscript{\textregistered} Core\texttrademark{} i5-9300H CPU @ 2.40\,GHz (Coffee Lake Refresh, 14\,nm) \\
+Cores \& Execution Threads & 4 Physical Cores, 8 Logical Threads (Hyper-Threading enabled) \\
+Clock Frequencies & 2.40\,GHz Base Clock, up to 4.10\,GHz Single-Core Max Turbo \\
+On-Chip Cache Memory & 256\,KB L1 (4 $\times$ 32\,KB), 1\,MB L2 (4 $\times$ 256\,KB), 8\,MB Intel Smart Cache (L3) \\
+System Memory (RAM) & 16.0\,GB DDR4-2666\,MHz SDRAM (Dual-Channel, 15.84\,GB addressable) \\
+Dedicated Graphics (GPU) & NVIDIA\textsuperscript{\textregistered} GeForce\textsuperscript{\textregistered} GTX 1650 (4\,GB VRAM, 896 CUDA cores, Driver 32.0.16.1714) \\
+Integrated Graphics & Intel\textsuperscript{\textregistered} UHD Graphics 630 (dynamic shared video memory) \\
+Storage Subsystem & High-Speed PCIe NVMe M.2 SSD (Read $\sim 2{,}200$\,MB/s, Write $\sim 1{,}600$\,MB/s) \\
+Operating System & Microsoft Windows 11 Home 64-bit (Build 10.0.26200, AMD64 kernel) \\
+Python Runtime & Python 3.13.2 (64-bit AMD64 binary release, MSC v.1942 64-bit compiler) \\
+Array Mathematics Engine & NumPy version 2.2.5 (vectorized SIMD core, OpenBLAS linear algebra) \\
+Spectral Transform Solver & SciPy version 1.16.1 (\texttt{scipy.fft.dstn} single-threaded PocketFFT C++ engine) \\
+Visualization Libraries & Matplotlib version 3.10.6, Pillow image processing library version 11.1.0 \\
+\midrule
+\multicolumn{2}{l}{\textbf{Measured DST-I Poisson Inversion Latencies (Single-Threaded PocketFFT)}} \\
+\midrule
+$257 \times 257$ Mesh ($255^2$ interior) & $0.73$\,ms per 2D Poisson inversion \\
+$513 \times 513$ Mesh ($511^2$ interior) & $3.90$\,ms per 2D Poisson inversion \\
+$1025 \times 1025$ Mesh ($1023^2$ interior) & $23.72$\,ms per 2D Poisson inversion \\
+\bottomrule
+\end{tabularx}
 \end{table}
 
 \end{document}
