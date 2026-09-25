@@ -4,6 +4,7 @@
 \usepackage[margin=2.2cm]{geometry}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
+\graphicspath{{figures/}}
 \usepackage{booktabs}
 \usepackage{cite}
 \usepackage{hyperref}
@@ -174,7 +175,7 @@ Evaluating Eq.~(\ref{eq:excess_visc}) at $Re = 100{,}000$ on the $513 \times 513
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{../figures/lid_driven_peclet_dissipation_map_Re100000.png}
+\includegraphics[width=\textwidth]{figures/lid_driven_peclet_dissipation_map_Re100000.png}
 \caption{Spatial characterization and quantification of the hybrid differencing scheme at $Re = 100,000$: (a) Local cell P\'eclet number field $Pe_{h}(x, y) = \max(Pe_x, Pe_y)$ on the $513 \times 513$ mesh with the $Pe = 2$ switch contour (red dashed) delineating central differencing ($1.79\%$ domain area) from upwinding; (b) Spatial distribution of the added numerical-to-molecular viscosity ratio $\bar{\nu}_{\text{art}} / \nu$ on the $513 \times 513$ grid; (c) Centerline mid-plane profiles ($x = 0.5$) of cell P\'eclet number $Pe_x$ and numerical dissipation ratio $\bar{\nu}_{\text{art}}/\nu$ comparing the $513 \times 513$ mesh against the $1025 \times 1025$ mesh, demonstrating grid convergence and rapid decay of numerical diffusion toward the cavity core.}
 \label{fig:peclet_dissipation_map}
 \end{figure}
@@ -238,22 +239,22 @@ At $Re = 100$ and $Re = 1,000$, our computed primary core coordinates match the 
 \begin{figure}[htbp]
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_cavity_showcase_Re10000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_cavity_showcase_Re10000_N513.png}
     \caption{$Re = 10,000$ ($513 \times 513$)}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_cavity_showcase_Re25000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_cavity_showcase_Re25000_N513.png}
     \caption{$Re = 25,000$ ($513 \times 513$)}
 \end{subfigure}
 \par\vspace{0.5em}
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_cavity_showcase_Re30000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_cavity_showcase_Re30000_N513.png}
     \caption{$Re = 30,000$ ($513 \times 513$)}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_cavity_showcase_Re50000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_cavity_showcase_Re50000_N513.png}
     \caption{$Re = 50,000$ ($513 \times 513$)}
 \end{subfigure}
 \caption{Stationary continuation streamline topologies ($\psi$) and centerline velocity profiles $u(y)$ on the $513 \times 513$ ultra-fine grid ($263,169$ nodes) across high Reynolds numbers from $Re = 10,000$ to $Re = 50,000$.}
@@ -329,7 +330,7 @@ As documented in Table~\ref{tab:gci}, the apparent order of convergence for $Re 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\textwidth]{../figures/lid_driven_mesh_refinement_Re10000_N257_vs_N513.png}
+\includegraphics[width=0.92\textwidth]{figures/lid_driven_mesh_refinement_Re10000_N257_vs_N513.png}
 \caption{Grid refinement comparison at $Re = 10,000$: $257 \times 257$ ($66,049$ nodes) vs. $513 \times 513$ ($263,169$ nodes), demonstrating convergence of centerline velocity profiles and resolving thin wall boundary layers.}
 \label{fig:grid_convergence}
 \end{figure}
@@ -368,7 +369,7 @@ As detailed in Table~\ref{tab:erturk_vorticity_benchmark} and visually demonstra
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.98\textwidth]{../figures/lid_driven_erturk_vorticity_y095_benchmark.png}
+\includegraphics[width=0.98\textwidth]{figures/lid_driven_erturk_vorticity_y095_benchmark.png}
 \caption{Benchmark validation against Erturk (2009)~\cite{erturk2009benchmarks} (Table 3): Vorticity $\omega(x, y=0.95)$ along the near-lid horizontal cut for moderate ($Re \le 7,500$) and high ($Re = 10,000 - 30,000$ on $513 \times 513$) Reynolds numbers. Solid lines represent present solver results; discrete markers denote benchmark data.}
 \label{fig:erturk_vorticity}
 \end{figure}
@@ -417,12 +418,12 @@ To investigate post-bifurcation limit-cycle dynamics and establish temporal accu
 \begin{figure}[htbp]
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_unsteady_timeseries_Re10000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_timeseries_Re10000_N513.png}
     \caption{Velocity Telemetry Time Series ($513 \times 513$)}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_unsteady_phase_portrait_Re10000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_phase_portrait_Re10000_N513.png}
     \caption{Phase-Space Limit Cycle \& Power Spectrum}
 \end{subfigure}
 \caption{Dynamic unsteady vortex shedding on $513 \times 513$ grid at $Re = 10,000$ over extended convective marching ($t = 22.0$): (a) Multi-probe velocity signals exhibiting sustained oscillations; (b) Reconstructed phase portrait $(u_{\text{BL}} \text{ vs. } v_{\text{BL}})$ identifying dominant shedding frequency $St = 0.6249 \pm 0.0416$ (raw bin $f_{\text{bin}} = 0.6664$).}
@@ -437,12 +438,12 @@ At $Re = 15,000$, physical cavity flow undergoes secondary transitions~\cite{bru
 \begin{figure}[htbp]
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_unsteady_timeseries_Re15000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_timeseries_Re15000_N513.png}
     \caption{Velocity Telemetry with Envelope Modulation}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_unsteady_phase_portrait_Re15000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_phase_portrait_Re15000_N513.png}
     \caption{Phase Portrait \& Power Spectrum}
 \end{subfigure}
 \caption{Nonlinear multi-frequency unsteady dynamics on $513 \times 513$ grid at $Re = 15,000$: (a) Multi-probe velocity signals showing envelope modulation over $t = 20.0$; (b) Reconstructed phase portrait revealing an inflected multi-loop orbital trajectory and FFT spectrum with sideband modal interactions ($St = 0.5364 \pm 0.0278$).}
@@ -459,18 +460,18 @@ At $Re = 25,000$, advancing extended time-accurate marching with $\Delta t = 3.0
 \begin{figure}[htbp]
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_unsteady_timeseries_Re25000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_timeseries_Re25000_N513.png}
     \caption{Velocity Telemetry ($Re = 25,000$, $513 \times 513$)}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_unsteady_phase_portrait_Re25000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_phase_portrait_Re25000_N513.png}
     \caption{Phase Attractor \& Power Spectrum}
 \end{subfigure}
 \par\vspace{0.5em}
 \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[width=0.98\textwidth]{../figures/lid_driven_unsteady_cycle_snapshots_Re25000_N513.png}
+    \includegraphics[width=0.98\textwidth]{figures/lid_driven_unsteady_cycle_snapshots_Re25000_N513.png}
     \caption{Instantaneous 4-Phase Vorticity and Streamline Fields Over Shedding Cycle}
 \end{subfigure}
 \caption{Nonlinear unsteady flow dynamics on the $513 \times 513$ ultra-fine grid at $Re = 25,000$: (a) Velocity telemetry exhibiting large-scale nonsinusoidal oscillations over $t = 22.0$ ($73,333$ steps); (b) Reconstructed phase portrait revealing an inflected multi-frequency trajectory with fundamental frequency $St = 0.0953 \pm 0.0281$ (raw bin $f_{\text{bin}} = 0.1124$); (c) 4-phase field decomposition highlighting floor and sidewall secondary vortex detachment.}
@@ -482,18 +483,18 @@ At $Re = 50,000$, where the molecular kinematic viscosity is $\nu = 2.0 \times 1
 \begin{figure}[htbp]
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_unsteady_timeseries_Re50000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_timeseries_Re50000_N513.png}
     \caption{Velocity Telemetry ($Re = 50,000$, $513 \times 513$)}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_unsteady_phase_portrait_Re50000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_phase_portrait_Re50000_N513.png}
     \caption{Phase Attractor \& Power Spectrum}
 \end{subfigure}
 \par\vspace{0.5em}
 \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[width=0.98\textwidth]{../figures/lid_driven_unsteady_cycle_snapshots_Re50000_N513.png}
+    \includegraphics[width=0.98\textwidth]{figures/lid_driven_unsteady_cycle_snapshots_Re50000_N513.png}
     \caption{Instantaneous 4-Phase Vorticity and Streamline Fields Over Shedding Cycle}
 \end{subfigure}
 \caption{Unsteady dynamics on the $513 \times 513$ ultra-fine grid at $Re = 50,000$: (a) Velocity telemetry over $90,000$ steps ($t = 18.0$); (b) Multi-loop phase trajectory and power spectrum showing dominant frequency $St = 0.2581 \pm 0.0300$ (raw bin $f_{\text{bin}} = 0.2399$) capturing $4.30$ periodic shedding cycles; (c) 4-phase field decomposition revealing multiple boundary-layer vortex detachments and thin shear layers.}
@@ -508,18 +509,18 @@ During the initial transient interval ($t \lesssim 2.8$), boundary layers and co
 \begin{figure}[htbp]
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_unsteady_timeseries_Re100000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_timeseries_Re100000_N513.png}
     \caption{Velocity Telemetry ($Re = 100,000$, $513 \times 513$)}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../figures/lid_driven_unsteady_phase_portrait_Re100000_N513.png}
+    \includegraphics[width=\textwidth]{figures/lid_driven_unsteady_phase_portrait_Re100000_N513.png}
     \caption{Phase Attractor \& Power Spectrum}
 \end{subfigure}
 \par\vspace{0.5em}
 \begin{subfigure}[b]{\textwidth}
     \centering
-    \includegraphics[width=0.98\textwidth]{../figures/lid_driven_unsteady_cycle_snapshots_Re100000_N513.png}
+    \includegraphics[width=0.98\textwidth]{figures/lid_driven_unsteady_cycle_snapshots_Re100000_N513.png}
     \caption{Instantaneous 4-Phase Vorticity and Streamline Fields Over Shedding Cycle}
 \end{subfigure}
 \caption{High-Reynolds unsteady dynamics on the $513 \times 513$ grid at $Re = 100,000$: (a) Velocity telemetry and global energy/enstrophy over $80,000$ steps ($t = 16.0$); (b) Phase portrait and FFT power spectrum showing fundamental frequency $St = 0.1908 \pm 0.0379$ (raw bin $f_{\text{bin}} = 0.2272$) capturing $2.52$ cycles; (c) 4-phase field decomposition highlighting multi-vortex pulsation, wall-bubble translation, and shear-layer shedding.}
@@ -562,7 +563,7 @@ Figure~\ref{fig:snapshots} visualizes the instantaneous vorticity field ($\omega
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.95\textwidth]{../figures/lid_driven_unsteady_cycle_snapshots_Re10000_N513.png}
+\includegraphics[width=0.95\textwidth]{figures/lid_driven_unsteady_cycle_snapshots_Re10000_N513.png}
 \caption{Dynamic vortex shedding cycle on $513 \times 513$ grid at $Re = 10,000$ decomposed into four distinct phase angles ($\theta = 0^\circ, 90^\circ, 180^\circ, 270^\circ$) over one complete shedding period ($T \approx 1.6002$ c.t.u.).}
 \label{fig:snapshots}
 \end{figure}

@@ -154,6 +154,7 @@ lid-driven-cavity-cfd/
 ├── LICENSE                      # MIT Open Source License
 ├── README.md                    # Project documentation
 ├── paper/                       # Publication-grade preprint manuscript
+│   ├── figures/                 # 21 publication figures referenced in manuscript
 │   ├── manuscript.tex           # LaTeX source
 │   ├── manuscript.pdf           # Compiled 20-page research paper (21.9 MB)
 │   └── references.bib           # BibTeX bibliography
