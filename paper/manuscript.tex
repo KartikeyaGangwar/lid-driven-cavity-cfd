@@ -57,6 +57,8 @@ This study presents an open-source finite-difference framework implemented in ve
 
 All flow fields, processing utilities, and verification datasets are permanently archived under the MIT license on GitHub\footnote{\url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}} and Zenodo~\cite{singh2026solver}\footnote{\url{https://doi.org/10.5281/zenodo.18312938}}.
 
+The remainder of this article is organized as follows. Section~\ref{sec:boundary_conditions} and Section~2 establish the non-dimensional governing equations and boundary closures. Section~3 details the numerical algorithms, including the fast DST-I Poisson solver, vectorized ADI time integration, and the directional hybrid regularization formulation. Section~4 presents the stationary continuation solutions, grid convergence analysis, and validation against classical benchmark literature. Section~5 investigates finite-window unsteady dynamics, vortex shedding mechanisms, and spectral energy characteristics. Section~6 summarizes the principal findings and outlines future extensions. Mathematical derivations, dataset manifests, pseudocode algorithms, and computing hardware specifications are detailed in the Appendices.
+
 \section{Governing Equations \& Mathematical Formulation}
 
 \subsection{Streamfunction--Vorticity System}
