@@ -1,6 +1,6 @@
-﻿# Release Notes — v1.0.0: Reference Benchmark Suite & Research Preprint
+# Release Notes — v2.0.0: Reference Benchmark Suite & Research Preprint
 
-**Tag:** `v1.0.0`  
+**Tag:** `v2.0.0`  
 **Title:** Reference CFD Solver, Verified Benchmark Datasets ($Re = 100 \to 100,000$) & Paper Preprint  
 **Author:** Kartikey Singh (Department of Mathematics, University of Delhi, Delhi, 110007, India)  
 **Permanent Zenodo DOI:** [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938)  
