@@ -1,0 +1,220 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+
+\title{Technical Review of\\
+\emph{A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re=100{,}000$ in 2D Lid-Driven Cavity Flows}}
+\author{}
+\date{25 September 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Overall assessment}
+
+The manuscript documents its discretization and released outputs more openly than many cavity-flow studies, and the DST-I streamfunction inversion is described clearly.  Nevertheless, major revision is required before the reported fields can be treated as verified benchmarks.  The principal problems are not stylistic: the unsteady records shown in the figures do not support the claimed stationary periodic or multi-frequency regimes; the GCI expression for the coarse pair is incorrect and the data are outside an established asymptotic range; the steady continuation criterion is not a discrete-equation residual; and the diagnostic pressure problem is generally incompatible with its imposed homogeneous Neumann boundary condition.  The $Re=100{,}000$ calculation is also modified by upwinding over almost the entire domain, so conclusions must be framed as properties of a grid-dependent regularized model rather than of the unmodified $Re=100{,}000$ Navier--Stokes problem.
+
+The continuous sign convention
+\[
+u=\psi_y,\qquad v=-\psi_x,\qquad \omega=v_x-u_y,
+\qquad \nabla^2\psi=-\omega
+\]
+is internally consistent, and the displayed artificial-viscosity ratios are dimensionally consistent.  No inverse-trigonometric or other branch-dependent formula appears in the manuscript, so no concrete branch-choice error was identified.  The discrete axis convention, however, is inconsistent as written and must be corrected.
+
+\section*{Major technical findings}
+
+\subsection*{1. The displayed unsteady records do not support the reported asymptotic regimes}
+
+\textbf{Classification: definite inconsistency in the presented evidence; unsupported dynamical claims.}
+
+\textbf{Location.} Sections 5.1--5.5, Figures 5--9, Table 5, the abstract, and the conclusion.
+
+\textbf{Problem.} The figures contradict the assertion that the selected windows are stationary realizations of limit cycles or established multi-frequency attractors.
+\begin{itemize}
+    \item At $Re=10{,}000$, kinetic energy continues to drift through a substantial part of the run, and the plotted phase trajectory over $t\in[10,22]$ does not close onto a ``tight'' orbit: successive loops have visibly different radii and the terminal point is separated from the entry point.
+    \item At $Re=15{,}000$, the probe records have an abrupt synchronized change near $t=10$, while kinetic energy rises and then falls over the stated analysis window $[2,20]$.
+    \item At $Re=25{,}000$, the signals and integral quantities contain abrupt changes, kinetic energy trends downward, and the alleged fundamental is inferred from only $1.70$ cycles.
+    \item At $Re=50{,}000$, conspicuous synchronized jumps occur near $t=5$ and $t=10$, while kinetic energy decreases across essentially the whole run.
+    \item At $Re=100{,}000$, synchronized jumps occur near $t\approx3$ and $t\approx8$, kinetic energy decreases strongly, and the frequency estimate spans only $2.52$ nominal cycles.
+\end{itemize}
+The manuscript does not explain whether these jumps are restarts, changes of initial condition, re-projections, concatenated files, or numerical events.  An FFT across a trend or discontinuity can create or displace low-frequency peaks.  Moreover, $\pm\Delta f/2$ is the half-bin spacing, not a demonstrated uncertainty interval for a parabolically interpolated peak in a nonstationary record.
+
+\textbf{Why it matters.} The reported $St$ values, regime labels, and four-phase ``cycle'' snapshots are central results.  In particular, a spectrum covering fewer than two or three cycles cannot establish a fundamental period or distinguish a persistent oscillation from transient relaxation.  The same problem invalidates causal descriptions such as cyclic detachment, multi-frequency interaction, and a bounded attractor unless they are demonstrated on a stationary, uninterrupted trajectory.
+
+\textbf{Suggested fix.} Explain every synchronized jump and do not analyze across it.  Preferably rerun each case as one uninterrupted integration.  Establish stationarity using integral quantities and split-window statistics before selecting the FFT interval.  Report the windowing and detrending procedure, compare estimates from multiple non-overlapping windows and probes, and simulate many more periods (especially for $Re=25{,}000$ and $100{,}000$).  Repeat representative cases with $\Delta t/2$ and at a second grid resolution.  Until this is done, replace ``fundamental frequency,'' ``periodic cycles,'' and attractor classifications with the narrower description ``finite-window spectral peak,'' and do not present phase-selected fields as one verified cycle.
+
+\subsection*{2. The stationary continuation states are not shown to solve the steady discrete equations}
+
+\textbf{Classification: likely methodological failure / implementation ambiguity.}
+
+\textbf{Location.} Section 4, immediately before Table \texttt{tab:benchmarks}; Section 3.4; the convergence threshold
+$\|\omega^{k+1}-\omega^k\|_\infty<10^{-5}$.
+
+\textbf{Problem.} Above the Hopf point, ordinary physical-time marching should not converge to a linearly unstable steady state.  The manuscript instead states that ADI splitting and wall relaxation damp the physical oscillation and follow a steady branch, but it reports only a step-increment criterion.  A small update is not equivalent to a small steady residual and depends directly on $\Delta t$, splitting, and relaxation.  With time steps of order $10^{-4}$, an update tolerance of $10^{-5}$ can coexist with a much larger equation residual.  No residual of the steady vorticity equation, Poisson equation, or wall closure is reported.
+
+\textbf{Why it matters.} The high-$Re$ streamline topology, core location, $\psi_{\min}$ values, Batchelor discussion, and grid study all depend on these states being actual fixed points rather than slowly evolving transients or numerically stabilized pseudo-time states.
+
+\textbf{Suggested fix.} Report at least
+\[
+R_\omega=-u\,\delta_x\omega-v\,\delta_y\omega
+             +Re^{-1}(\delta_x^2+\delta_y^2)\omega,
+\qquad
+R_\psi=\nabla_h^2\psi+\omega,
+\]
+their norms, and the wall-closure residual.  Demonstrate that these residuals are insensitive to $\Delta t$ and the stopping tolerance.  For unstable branches, use a genuine steady nonlinear solve or a documented stabilization/continuation method such as Newton--Krylov, pseudo-arclength continuation, or selective frequency damping.  If the present algorithm intentionally changes the iteration dynamics to obtain a fixed point, distinguish the steady discrete solution from the modified pseudo-time trajectory.
+
+\subsection*{3. The GCI formula is wrong, and the claimed uncertainty is not justified}
+
+\textbf{Classification: definite formula error and unsupported uncertainty claim.}
+
+\textbf{Location.} Section 4.4, the displayed GCI equation, Table \texttt{tab:gci}, and the paragraph interpreting the table.
+
+\textbf{Problem.} With the manuscript's definition
+$e_a^{32}=|(f_2-f_3)/f_2|$, the standard coarse-pair expression is
+\[
+\mathrm{GCI}_{32}=\frac{F_s e_a^{32}}{r^p-1},
+\]
+not
+\[
+\frac{F_s e_a^{32}r^p}{r^p-1}.
+\]
+Using the tabulated full-precision values gives approximately
+$\mathrm{GCI}_{32}=0.48395\%$ at $Re=10{,}000$ and
+$0.00015654\%$ at $Re=100{,}000$, rather than $12.63\%$ and
+$0.1827\%$, respectively.
+
+More importantly, the manuscript itself identifies $p=4.7055$ and $p=10.1882$ as pre-asymptotic, yet then interprets $\mathrm{GCI}_{21}$ as a fine-grid uncertainty.  Standard Richardson/GCI interpretation requires an established asymptotic convergence range.  At $Re=100{,}000$, the fine/medium difference
+$1.573\times10^{-7}$ is also far below the reported per-iteration stopping threshold $10^{-5}$, which is not a residual tolerance.  The extreme apparent order is therefore consistent with cancellation, solver stopping effects, or the use of a nearly saturated scalar quantity, not demonstrated continuum convergence.
+
+\textbf{Why it matters.} The table currently assigns quantitative verification credibility that the data do not support.  Agreement of one scalar extremum on two grids does not verify fields, gradients, vortex topology, or the grid-dependent hybrid model.
+
+\textbf{Suggested fix.} Correct the formula and recompute the table.  Do not report an extrapolated continuum value or GCI uncertainty until an asymptotic triplet is demonstrated.  Tighten and report equation residuals below the grid differences.  Examine several quantities, including centerline profiles, vorticity norms, vortex centers, and the artificial-viscosity field.  The sentence claiming that refinement ``shrinks the spatial footprint of the hybrid upwind scheme ($1.79\%$ vs $3.09\%$)'' should also be corrected: those percentages are the \emph{central-differencing} area; the corresponding upwind-active areas are $98.21\%$ and $96.91\%$.
+
+\subsection*{4. The diagnostic pressure Poisson problem is generally incompatible as posed}
+
+\textbf{Classification: definite mathematical error.}
+
+\textbf{Location.} Section 6.1, equations for $\nabla_h^2p=S$, homogeneous Neumann copying, Jacobi stopping, and zero-mean projection.
+
+\textbf{Problem.} A Poisson equation with homogeneous Neumann data requires the compatibility condition
+\[
+\int_\Omega S\,dA=0
+\quad\text{(or its matching discrete sum).}
+\]
+The manuscript replaces the momentum-consistent pressure flux with zero flux but does not show or enforce the resulting source compatibility.  Subtracting the mean of $p$ removes only the constant nullspace; it cannot make an incompatible right-hand side solvable.  A maximum Jacobi update below $10^{-5}$, or termination after $2500$ iterations, is also not a pressure-equation residual and can hide slowly converging low-frequency error on large grids.  In addition, the nondimensionalization omits the pressure scale $p^*=p/(\rho U^2)$, although the later pressure equation assumes such a scale.
+
+\textbf{Why it matters.} The resulting field need not solve either the physical pressure problem or the stated homogeneous-Neumann surrogate.  It therefore should not be included in a benchmark archive as a pressure field without a residual and compatibility audit.
+
+\textbf{Suggested fix.} Define the nondimensional pressure.  Prefer momentum-consistent normal pressure fluxes and verify discrete compatibility.  If a zero-flux diagnostic is retained, explicitly project the source to zero mean and state that this changes the source problem.  Solve the singular system with a gauge-aware Poisson method and report $\|\nabla_h^2p-S\|$ plus the boundary-flux residual; do not use iteration increments alone.
+
+\subsection*{5. The $Re=100{,}000$ method is a domain-wide regularized model, not a localized corner treatment}
+
+\textbf{Classification: unsupported/overstated claim.}
+
+\textbf{Location.} Abstract; Section 3.3; Figure \texttt{fig:peclet\_dissipation\_map}; conclusion.
+
+\textbf{Problem.} On the $513^2$ grid, directional upwinding is active over $98.21\%$ of the domain, the domain-mean added-viscosity ratio is $16.32$, and even the quoted geometric-center directional mean is $1.485$.  On the $1025^2$ grid, upwinding remains active over $96.91\%$ of the domain and the domain-mean added ratio is $8.12$.  These values do not describe dissipation confined to corner shocks.  The effective diffusion is also a tensor,
+\[
+\boldsymbol{\nu}_{\mathrm{eff}}
+=\operatorname{diag}(\nu+\nu_{\mathrm{art},x},
+                     \nu+\nu_{\mathrm{art},y}),
+\]
+not the scalar expression $\nu_{\mathrm{eff}}=\nu+\nu_{\mathrm{art}}$ written in the text.  Two visibly different dissipation profiles do not by themselves ``demonstrate grid convergence.''
+
+\textbf{Why it matters.} The regularization changes transport through the core and most of the cavity.  Close agreement of $\psi_{\min}$ between two regularized grids cannot establish that the unregularized $Re=100{,}000$ Navier--Stokes solution has been approximated.
+
+\textbf{Suggested fix.} Describe these results consistently as grid-dependent hybrid-model solutions.  Move the active-area and mean-viscosity numbers into the abstract/conclusion if $Re=100{,}000$ remains a headline result.  Demonstrate convergence as $\nu_{\mathrm{art}}\to0$ for multiple field quantities, or use a higher-order bounded method and sufficient wall-normal resolution.  Replace ``core center'' at $(0.5,0.5)$ with ``geometric cavity center,'' since the tabulated primary vortex center is near $(0.5,0.5234)$.
+
+\subsection*{6. Wall relaxation changes meaning between steady iteration and physical time}
+
+\textbf{Classification: notation/terminology drift with a conceptual consequence.}
+
+\textbf{Location.} Section 2.2, the $k$-indexed and $n$-indexed wall updates; Section 4.3; Sections 5.3--5.5; conclusion.
+
+\textbf{Problem.} The same symbol $\beta_{\mathrm{wall}}$ first denotes iterative under-relaxation in a steady solve and then a physical-time recurrence.  For a converged steady iteration with $0<\beta_{\mathrm{wall}}\le1$, the fixed point still satisfies $\omega_{\mathrm{wall}}=\omega_{\mathrm{Thom}}$; under-relaxation changes the route to the fixed point, not the boundary equation.  It is therefore inaccurate to treat the converged steady $Re=50{,}000$ field as a filtered-boundary physical model solely because $\beta_{\mathrm{wall}}=0.85$.  In an unsteady calculation, by contrast, applying the recurrence once per physical time step does define a new time-discrete boundary law whose response depends jointly on $\beta_{\mathrm{wall}}$ and $\Delta t$.
+
+\textbf{Why it matters.} The manuscript mixes numerical convergence control with physical regularization, obscuring which reported quantities solve the original boundary condition and which solve a modified model.
+
+\textbf{Suggested fix.} Use separate symbols and descriptions, for example $\beta_{\mathrm{iter}}$ and $\beta_{\mathrm{time}}$.  Remove the steady-model filtering claim unless the steady boundary residual remains nonzero.  For unsteady runs, derive or measure the filter response, state how it scales with $\Delta t$, and provide sensitivity tests in both parameters.
+
+\subsection*{7. The discrete index convention is internally inconsistent}
+
+\textbf{Classification: definite presentation error with implementation ambiguity.}
+
+\textbf{Location.} Corner-vorticity equations in Section 2.2; convection stencil in Section 3.2; pressure derivatives in Section 6.1.
+
+\textbf{Problem.} Labelling $\omega_{0,N-1}$ as the bottom-right corner and $\omega_{N-1,0}$ as the top-left corner implies that the first array index is $y$ and the second is $x$.  Later,
+\[
+\delta_x\phi_{i,j}=\frac{\phi_{i+1,j}-\phi_{i-1,j}}{2h},
+\qquad
+\delta_y\phi_{i,j}=\frac{\phi_{i,j+1}-\phi_{i,j-1}}{2h},
+\]
+implies that the first index is $x$ and the second is $y$.  Because only the top wall moves, this is not a harmless transpose in an implementation-facing description.
+
+\textbf{Why it matters.} A reader cannot reproduce the boundary and derivative stencils unambiguously, and a literal implementation can place the lid terms on the wrong edges.
+
+\textbf{Suggested fix.} Define the mapping explicitly, for example
+$\omega_{j,i}=\omega(x_i,y_j)$ for row-major arrays, and rewrite every corner and derivative formula consistently.  Include the coordinate associated with each axis in the algorithm description.
+
+\subsection*{8. The high-$Re$ benchmark and Batchelor interpretations exceed the evidence}
+
+\textbf{Classification: unsupported causal and asymptotic claims.}
+
+\textbf{Location.} Sections 4.1, 4.3, and 4.5; Tables 1 and 4.
+
+\textbf{Problem.} The manuscript attributes the $7\%$--$8\%$ streamfunction offset and large near-lid vorticity differences ``directly'' to uniform-grid/corner treatment without a controlled study.  At $Re=25{,}000$, for example, the manuscript itself reports $\omega(0.1563,0.95)=4.1694$ versus $2.2803$ and $\omega(0.5,0.95)=-0.0085$ versus $-1.9814$.  These discrepancies can also indicate insufficient convergence, a different steady branch, or numerical oscillation.  Similarly, a one-dimensional average and a standard deviation of about $0.10$ do not establish $\nabla\omega\to0$ throughout a two-dimensional inviscid core.  Migration of $x_c$ toward the symmetry plane is not by itself evidence of Batchelor homogenization, and the $Re=100{,}000$ case solves the strongly regularized model described above.
+
+\textbf{Why it matters.} The manuscript presents the archive as a verification benchmark and uses Batchelor's theorem as a primary physical interpretation.  Both require stronger field-level evidence than agreement of selected extrema.
+
+\textbf{Suggested fix.} Replace causal attributions with hypotheses unless supported by controlled changes of grid, wall closure, and corner regularization.  Define a two-dimensional core mask and report $\|\nabla_h\omega\|$ (or its components), variation within the core, and grid trends.  Keep the unregularized and hybrid-model results separate.  The local first-order truncation error of Thom's closure also should not be asserted to set the global convergence order without a norm-specific derivation or measured asymptotic study.
+
+\subsection*{9. Temporal accuracy and stability require verification}
+
+\textbf{Classification: implementation ambiguity / missing verification.}
+
+\textbf{Location.} Section 3.2 and all unsteady-result sections.
+
+\textbf{Problem.} The two ADI stages give a first-order explicit treatment of the frozen convective term, while only the diffusive part has unconditional linear stability.  The manuscript reports CFL values but no amplification/stability analysis for explicit centered convection plus split implicit diffusion and no time-step refinement of the frequencies.  For $Re\ge50{,}000$, the physical-time wall filter adds another $\Delta t$-dependent operation.
+
+\textbf{Why it matters.} A spectral peak can shift because of first-order temporal error, numerical damping, or the boundary filter.  Calling the simulations ``time-accurate'' requires a temporal convergence demonstration.
+
+\textbf{Suggested fix.} Provide a stability restriction appropriate to the actual combined scheme, not diffusion alone.  Repeat at least $Re=10{,}000$, $25{,}000$, and one filtered case using $\Delta t/2$, comparing integral histories, amplitudes, and frequencies over the same stationary physical-time window.
+
+\section*{Meaningful editorial and consistency issues}
+
+\begin{itemize}
+    \item In Section 5.4, ``Section~\texttt{\textbackslash ref\{eq:excess\_visc\}}'' points to an equation label, so the compiled text calls an equation number a section.  Write ``equation'' or use \texttt{\textbackslash eqref}.
+    \item Figure 1 uses $\nu_{\mathrm{num}}/\nu$, whereas the manuscript defines $\nu_{\mathrm{art}}/\nu$.  Use one term throughout.
+    \item The abstract's ``average ratio ... at the core'' is a directional average evaluated at one point, $(0.5,0.5)$, not an average over the core.  State ``directional mean at the geometric center.''
+    \item The internal titles printed on several unsteady figures say ``Hopf Limit Cycle Onset'' even for cases described in the text as multi-frequency or filtered-boundary dynamics.  These headings should be removed or made case-neutral.
+    \item The manuscript title differs from the title in \texttt{highlights.tex} and \texttt{cover\_letter.tex}.  The cover letter also says 28 released datasets, while the manuscript and manifest say 30.  Synchronize all submission files.
+    \item The phrase ``boundary re-normalization'' after bicubic interpolation is undefined.  Specify which variables are reset, how corner values are treated, and whether the interpolation preserves $\nabla_h^2\psi=-\omega$.
+\end{itemize}
+
+\section*{Proofing sweep}
+
+The supplied mechanical scan was run on the compiled manuscript and its hits were spot-checked.  Its double-period hit is the typeset ellipsis in $1,\ldots,N-2$, and its semicolon-capitalization hits are the legitimate symbol $N$ in a parenthetical grid list; these are false positives.  A manual scan found no missing citation keys, undefined references, duplicate labels, duplicated comma punctuation, malformed quoted bibliography titles, or product-name capitalization errors.  The concrete copy/consistency fixes worth making are therefore the cross-reference, terminology, figure-heading, title, and dataset-count items listed above rather than generic line editing.
+
+\section*{Highest-priority revision sequence}
+
+\begin{enumerate}
+    \item Reproduce the unsteady runs without unexplained discontinuities, establish stationary windows, and reassess every regime and frequency claim.
+    \item Demonstrate that every reported steady state satisfies the steady discrete residuals; use a method capable of tracking unstable steady branches.
+    \item Correct the GCI equation and withdraw quantitative uncertainty claims until an asymptotic range and tighter solver residuals are demonstrated.
+    \item Repair or remove the diagnostic pressure datasets unless compatibility and residual checks are supplied.
+    \item Reframe $Re=100{,}000$ as a domain-wide hybrid regularized model and verify convergence of more than one scalar quantity.
+    \item Make the index convention, wall-relaxation roles, pressure scaling, and ancillary submission files internally consistent.
+\end{enumerate}
+
+\section*{Items requiring external verification}
+
+The local paper bundle does not contain the solver, raw \texttt{.npz} datasets, or archive contents.  Consequently, the stated SHA-256 prefixes, dataset count and sizes, GitHub/Zenodo completeness, timing measurements, and correspondence between plotted signals and archived records require external verification.  The exact literature-dependent Hopf thresholds and frequencies, the quoted Burggraf value, and the claim that the cited high-$Re$ benchmark differences arise from corner treatment should also be checked against the original cited sources and matching lid boundary conditions; these items are not treated here as definite factual errors.
+
+\end{document}
