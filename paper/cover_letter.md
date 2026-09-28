@@ -7,7 +7,7 @@
 **Manuscript Title:**  
 A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows  
 
-**Author:** Kartikey Singh  
+**Author:** Kartikeya Gangwar  
 Department of Mathematics, University of Delhi, Delhi, 110007, India  
 Email: kartikeysingh525@protonmail.com | ORCID: https://orcid.org/0009-0009-1973-7532  
 
@@ -37,6 +37,6 @@ The incompressible 2D lid-driven cavity flow remains the canonical proving groun
 - There are no competing financial or non-financial interests to declare.
 
 Sincerely yours,  
-**Kartikey Singh**  
+**Kartikeya Gangwar**  
 Department of Mathematics, University of Delhi, Delhi, 110007, India  
 Email: kartikeysingh525@protonmail.com | ORCID: https://orcid.org/0009-0009-1973-7532  

@@ -11,7 +11,7 @@ Numerical methods:
   * 'regularized': Singularity-free polynomial profile u(x, 1) = 16*U*(x/L)^2*(1 - x/L)^2
 - Physical coordinate system with instant post-processing and Ghia et al. validation
 
-Author: Kartikey Singh
+Author: Kartikeya Gangwar
 Year: 2026
 License: MIT
 """

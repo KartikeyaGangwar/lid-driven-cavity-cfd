@@ -11,7 +11,7 @@
 
 Official open-source repository and benchmark suite accompanying the research article:
 > **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"**  
-> *Author:* Kartikey Singh (Department of Mathematics, University of Delhi, India)  
+> *Author:* Kartikeya Gangwar (Department of Mathematics, University of Delhi, India)  
 > *Target Journal:* Computers & Fluids (Elsevier) | *Preprint:* [`paper/manuscript.pdf`](paper/manuscript.pdf) | *Permanent DOI:* [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938)
 
 A high-performance, publication-grade finite-difference computational fluid dynamics (CFD) suite solving the 2D incompressible Navier–Stokes equations in the streamfunction–vorticity ($\psi$–$\omega$) formulation across laminar, transitional, and extreme Reynolds number regimes ($Re = 100 \to 100,000$).
@@ -352,15 +352,15 @@ Inversion via inverse DST yields exact streamfunction solutions in $O(N^2 \log N
 If you use this solver, verification datasets, or methodology in your research, please cite both the paper and the dataset:
 
 ```bibtex
-@article{singh2026lid_driven_cavity,
+@article{gangwar2026lid_driven_cavity,
   title={A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows},
-  author={Singh, Kartikey},
+  author={Gangwar, Kartikeya},
   journal={arXiv preprint / Submitted to Computers \& Fluids},
   year={2026}
 }
 
-@misc{singh2026solver,
-  author       = {Singh, Kartikey},
+@misc{gangwar2026solver,
+  author       = {Gangwar, Kartikeya},
   title        = {[dataset] Reference Finite-Difference Solutions and Verification Datasets for {2D} Lid-Driven Cavity Flows up to Extreme {Reynolds} Numbers},
   year         = {2026},
   publisher    = {Zenodo},

@@ -12,7 +12,7 @@ Features:
 - Dynamic 4-phase cycle snapshot extraction
 - Publication-grade LaTeX typography (Computer Modern) with externalized legends
 
-Author: Kartikey Singh
+Author: Kartikeya Gangwar
 Year: 2026
 License: MIT
 """

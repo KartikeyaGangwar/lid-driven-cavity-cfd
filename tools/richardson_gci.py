@@ -10,7 +10,7 @@ Computes:
 - Asymptotic range of convergence check: GCI_coarse / (r^p * GCI_fine) ~ 1.00
 - 17-point Ghia centerline velocity benchmark tables
 
-Author: Kartikey Singh
+Author: Kartikeya Gangwar
 Year: 2026
 License: MIT
 """

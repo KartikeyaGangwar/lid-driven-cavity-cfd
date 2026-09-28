@@ -10,7 +10,7 @@ Features:
 - Physical time-accurate unsteady marching (Hopf bifurcations, Strouhal number, phase portraits).
 - 60-frame synchronized publication-grade animated GIF generation.
 
-Author: Kartikey Singh
+Author: Kartikeya Gangwar
 Year: 2026
 License: MIT
 """

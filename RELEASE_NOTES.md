@@ -2,7 +2,7 @@
 
 **Tag:** `v2.0.0`  
 **Title:** Reference CFD Solver, Verified Benchmark Datasets ($Re = 100 \to 100,000$) & Paper Preprint  
-**Author:** Kartikey Singh (Department of Mathematics, University of Delhi, Delhi, 110007, India)  
+**Author:** Kartikeya Gangwar (Department of Mathematics, University of Delhi, Delhi, 110007, India)  
 **Permanent Zenodo DOI:** [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938)  
 **License:** [MIT License](LICENSE)  
 
@@ -13,7 +13,7 @@
 This release provides the complete open-source scientific software suite, 30 verified high-resolution benchmark datasets, and the full research manuscript preprint accompanying the submission to *Computers & Fluids* (Elsevier):
 
 > **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"**  
-> *Author:* Kartikey Singh  
+> *Author:* Kartikeya Gangwar  
 > *Preprint PDF:* [`paper/manuscript.pdf`](paper/manuscript.pdf) (25 pages, 32 verified references, 4 Appendices)  
 
 ---
@@ -75,15 +75,15 @@ print(f"Minimum Streamfunction psi_min = {psi.min():.7f}")
 ## 📜 How to Cite
 
 ```bibtex
-@article{singh2026lid_driven_cavity,
+@article{gangwar2026lid_driven_cavity,
   title={A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows},
-  author={Singh, Kartikey},
+  author={Gangwar, Kartikeya},
   journal={arXiv preprint / Submitted to Computers \& Fluids},
   year={2026}
 }
 
-@misc{singh2026solver,
-  author       = {Singh, Kartikey},
+@misc{gangwar2026solver,
+  author       = {Gangwar, Kartikeya},
   title        = {[dataset] Reference Finite-Difference Solutions and Verification Datasets for {2D} Lid-Driven Cavity Flows up to Extreme {Reynolds} Numbers},
   year         = {2026},
   publisher    = {Zenodo},

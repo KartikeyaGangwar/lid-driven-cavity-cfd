@@ -29,8 +29,8 @@ Lid-driven cavity; Finite difference method; Streamfunction--vorticity; Central 
 4. AUTHOR & INSTITUTIONAL AFFILIATION
 ================================================================================
 Sole Author / Corresponding Author:
-- First Name: Kartikey
-- Last Name: Singh
+- First Name: Kartikeya
+- Last Name: Gangwar
 - Degree / Title: Undergraduate Researcher / Investigator
 - Affiliation / Department: Department of Mathematics, University of Delhi
 - City / Postal Code / Country: Delhi, 110007, India
@@ -86,7 +86,7 @@ Reviewer 4:
 7. MANDATORY STATEMENTS & DECLARATIONS
 ================================================================================
 [A] CRediT Authorship Contribution Statement:
-Kartikey Singh: Conceptualization, Methodology, Software, Validation, Formal Analysis, Investigation, Data Curation, Writing - Original Draft, Writing - Review & Editing, Visualization, Project administration.
+Kartikeya Gangwar: Conceptualization, Methodology, Software, Validation, Formal Analysis, Investigation, Data Curation, Writing - Original Draft, Writing - Review & Editing, Visualization, Project administration.
 
 [B] Declaration of Competing Interest:
 The author declares that he has no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.

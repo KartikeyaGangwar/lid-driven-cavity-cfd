@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software or benchmark dataset, please cite both the paper and the dataset as below."
 title: "A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to Re = 100,000 in 2D Lid-Driven Cavity Flows"
 authors:
-  - family-names: Singh
-    given-names: Kartikey
+  - family-names: Gangwar
+    given-names: Kartikeya
     orcid: "https://orcid.org/0009-0009-1973-7532"
     affiliation: "Department of Mathematics, University of Delhi, Delhi, 110007, India"
 version: 2.0.0

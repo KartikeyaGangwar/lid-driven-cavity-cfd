@@ -24,7 +24,7 @@
 
 \title{\LARGE \textbf{A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows}}
 
-\author{\textbf{Kartikey Singh}\thanks{Department of Mathematics, University of Delhi, Delhi, 110007, India. Corresponding author email: \texttt{kartikeysingh525@protonmail.com}. ORCID: \url{https://orcid.org/0009-0009-1973-7532}. Open-source repository: \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}. Permanent Archive DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}.}}
+\author{\textbf{Kartikeya Gangwar}\thanks{Department of Mathematics, University of Delhi, Delhi, 110007, India. Corresponding author email: \texttt{kartikeysingh525@protonmail.com}. ORCID: \url{https://orcid.org/0009-0009-1973-7532}. Open-source repository: \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}. Permanent Archive DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}.}}
 
 \date{September 2026}
 
@@ -55,7 +55,7 @@ Despite widespread adoption of the cavity for numerical verification, researcher
 
 This study presents an open-source finite-difference framework implemented in vectorized Python (NumPy, SciPy). The framework pairs an exact Discrete Sine Transform (DST-I) Poisson solver with a vectorized Alternating Direction Implicit (ADI) marching scheme. Spatial discretization preserves pure second-order central differencing ($\nu_{\text{art}} = 0$) for all Reynolds numbers up to $Re = 50{,}000$. At $Re = 100{,}000$, where cell P\'eclet numbers exceed 195, an interior hybrid upwind scheme stabilizes the singular corner shocks under an explicitly defined regularized model. We compute stationary continuation solutions from $Re = 100$ to $100{,}000$ on uniform Cartesian meshes up to $1025 \times 1025$ ($1{,}050{,}625$ nodes), examine grid convergence via the ASME V\&V 20 standard, and track finite-window unsteady vortex shedding on $513 \times 513$ grids.
 
-All flow fields, processing utilities, and verification datasets are permanently archived under the MIT license on GitHub\footnote{\url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}} and Zenodo~\cite{singh2026solver}\footnote{\url{https://doi.org/10.5281/zenodo.18312938}}.
+All flow fields, processing utilities, and verification datasets are permanently archived under the MIT license on GitHub\footnote{\url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}} and Zenodo~\cite{gangwar2026solver}\footnote{\url{https://doi.org/10.5281/zenodo.18312938}}.
 
 The remainder of this article is organized as follows. Section~\ref{sec:boundary_conditions} and Section~2 establish the non-dimensional governing equations and boundary closures. Section~3 details the numerical algorithms, including the fast DST-I Poisson solver, vectorized ADI time integration, and the directional hybrid regularization formulation. Section~4 presents the stationary continuation solutions, grid convergence analysis, and validation against classical benchmark literature. Section~5 investigates finite-window unsteady dynamics, vortex shedding mechanisms, and spectral energy characteristics. Section~6 summarizes the principal findings and outlines future extensions. Mathematical derivations, dataset manifests, pseudocode algorithms, and computing hardware specifications are detailed in the Appendices.
 
@@ -396,7 +396,7 @@ Table~\ref{tab:erturk_vorticity_benchmark} and Figure~\ref{fig:erturk_vorticity}
 
 \subsection{Tabulated Centerline Velocity Profiles and Reference Benchmarks}
 \label{sec:centerline_profiles}
-Centerline velocity profiles provide direct insight into boundary layer thinning and core vortex dynamics across the Reynolds number spectrum. Near the moving lid ($y \to 1$) and stationary floor ($y \to 0$), steep shear gradients develop, while the interior vertical profile $u(0.5, y)$ crosses zero near the vortex core before reaching an inflection point. To serve as a standardized numerical benchmark for algorithm verification, the complete 17-point horizontal velocity profiles at the vertical centerline stations of Ghia et al.~\cite{ghia1982high} are compiled across six Reynolds numbers ($Re = 1{,}000$ to $100{,}000$) in Appendix~\ref{sec:appendix_velocities} (Table~\ref{tab:ghia_u_benchmark}). The complementary vertical-velocity profiles $v(x, 0.5)$ and full 2D tensor arrays are archived in the Zenodo repository~\cite{singh2026solver}.
+Centerline velocity profiles provide direct insight into boundary layer thinning and core vortex dynamics across the Reynolds number spectrum. Near the moving lid ($y \to 1$) and stationary floor ($y \to 0$), steep shear gradients develop, while the interior vertical profile $u(0.5, y)$ crosses zero near the vortex core before reaching an inflection point. To serve as a standardized numerical benchmark for algorithm verification, the complete 17-point horizontal velocity profiles at the vertical centerline stations of Ghia et al.~\cite{ghia1982high} are compiled across six Reynolds numbers ($Re = 1{,}000$ to $100{,}000$) in Appendix~\ref{sec:appendix_velocities} (Table~\ref{tab:ghia_u_benchmark}). The complementary vertical-velocity profiles $v(x, 0.5)$ and full 2D tensor arrays are archived in the Zenodo repository~\cite{gangwar2026solver}.
 
 \section{Finite-Window Unsteady Dynamics and Vortex Shedding}
 
@@ -593,7 +593,7 @@ until the maximum step increment satisfies $\max_{1 \le i, j \le N-2} |p_{i, j}^
 This diagnostic scalar field serves strictly for qualitative flow topology visualization. Users requiring momentum-consistent wall pressure distributions should note that the diagnostic Neumann boundary condition neglects boundary-normal viscous diffusion terms and modifies the effective Poisson source.
 
 \subsection{Open Benchmark Datasets and Archival Structure}
-Flow fields are serialized into platform-independent NumPy binary archives (\texttt{.npz}). Thirty verified benchmark datasets—comprising 23 stationary continuation flow fields and 7 finite-window unsteady telemetry records—are openly published under the MIT license~\cite{singh2026solver}. Appendix~\ref{sec:appendix_manifest} provides the complete auditable dataset inventory (Table~\ref{tab:dataset_manifest}), detailing Reynolds numbers, grid dimensions, spatial discretization schemes, boundary filter parameters, integration time steps, compressed file sizes, and SHA-256 integrity checksums.
+Flow fields are serialized into platform-independent NumPy binary archives (\texttt{.npz}). Thirty verified benchmark datasets—comprising 23 stationary continuation flow fields and 7 finite-window unsteady telemetry records—are openly published under the MIT license~\cite{gangwar2026solver}. Appendix~\ref{sec:appendix_manifest} provides the complete auditable dataset inventory (Table~\ref{tab:dataset_manifest}), detailing Reynolds numbers, grid dimensions, spatial discretization schemes, boundary filter parameters, integration time steps, compressed file sizes, and SHA-256 integrity checksums.
 
 The accompanying software repository guarantees end-to-end reproducibility:
 \begin{itemize}
@@ -609,7 +609,7 @@ Geometric comparisons against canonical benchmarks confirm four-decimal core pos
 Releasing all thirty verified datasets, solver implementations, and figure reproduction pipelines under the MIT license establishes an auditable open benchmark for fluid dynamics algorithms.
 
 \section*{CRediT Authorship Contribution Statement}
-\textbf{Kartikey Singh:} Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing -- original draft, Writing -- review \& editing, Visualization.
+\textbf{Kartikeya Gangwar:} Conceptualization, Methodology, Software, Validation, Formal analysis, Investigation, Data curation, Writing -- original draft, Writing -- review \& editing, Visualization.
 
 \section*{Declaration of Competing Interest}
 The author declares that he has no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
@@ -621,7 +621,7 @@ This research did not receive any specific grant from funding agencies in the pu
 During the preparation of this work, the author used AI-assisted technologies solely for editorial consistency, grammar verification, and scientific language polishing. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content and conclusions of the published article.
 
 \section*{Data Availability}
-The underlying research data, full 2D tensor fields (\texttt{.npz}), verification scripts, and high-resolution animation pipelines are openly available on Zenodo under permanent DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}~\cite{singh2026solver} and hosted on GitHub at \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}.
+The underlying research data, full 2D tensor fields (\texttt{.npz}), verification scripts, and high-resolution animation pipelines are openly available on Zenodo under permanent DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}~\cite{gangwar2026solver} and hosted on GitHub at \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}.
 
 \bibliographystyle{unsrt}
 \bibliography{references}
@@ -641,7 +641,7 @@ The underlying research data, full 2D tensor fields (\texttt{.npz}), verificatio
 \label{sec:appendix_manifest}
 \setcounter{table}{0}
 
-Table~\ref{tab:dataset_manifest} catalogs all thirty (30) verified numerical datasets produced in this study and released in the open repository (\texttt{data/}) and Zenodo archive~\cite{singh2026solver}. The inventory details simulation parameters, grid dimensions, differencing schemes, wall relaxation parameters, time steps, compressed archive sizes, and SHA-256 cryptographic hashes.
+Table~\ref{tab:dataset_manifest} catalogs all thirty (30) verified numerical datasets produced in this study and released in the open repository (\texttt{data/}) and Zenodo archive~\cite{gangwar2026solver}. The inventory details simulation parameters, grid dimensions, differencing schemes, wall relaxation parameters, time steps, compressed archive sizes, and SHA-256 cryptographic hashes.
 
 \begin{table}[htbp]
 \centering
