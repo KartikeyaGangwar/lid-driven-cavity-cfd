@@ -12,7 +12,7 @@
 Official open-source repository and benchmark suite accompanying the research article:
 > **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"**  
 > *Author:* Kartikeya Gangwar (Department of Mathematics, University of Delhi, India)  
-> *Target Journal:* Computers & Fluids (Elsevier) | *Preprint:* [`paper/manuscript.pdf`](paper/manuscript.pdf) | *Permanent DOI:* [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938)
+> *Target Journal:* Applied Mathematical Modelling (Elsevier) | *Preprint:* [`paper/manuscript.pdf`](paper/manuscript.pdf) | *Permanent DOI:* [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938)
 
 A high-performance, publication-grade finite-difference computational fluid dynamics (CFD) suite solving the 2D incompressible Navier–Stokes equations in the streamfunction–vorticity ($\psi$–$\omega$) formulation across laminar, transitional, and extreme Reynolds number regimes ($Re = 100 \to 100,000$).
 
@@ -341,8 +341,8 @@ Inversion via inverse DST yields exact streamfunction solutions in $O(N^2 \log N
 
 1. **Ghia, U., Ghia, K. N., & Shin, C. T. (1982).** *High-Re solutions for incompressible flow using the Navier–Stokes equations and a multigrid method*. Journal of Computational Physics, 48(3), 387–411.
 2. **Erturk, E., Corke, T. C., & Gökçöl, C. (2005).** *Numerical solutions of 2-D steady incompressible driven cavity flow at high Reynolds numbers*. International Journal for Numerical Methods in Fluids, 48(7), 747–774.
-3. **Bruneau, C. H., & Saad, M. (2006).** *The 2D lid-driven cavity problem revisited*. Computers & Fluids, 35(3), 326–348.
-4. **Peng, Y. F., Shiau, Y. H., & Hwang, R. R. (2003).** *Transition in a 2-D lid-driven cavity flow*. Computers & Fluids, 32(3), 337–352.
+3. **Bruneau, C. H., & Saad, M. (2006).** *The 2D lid-driven cavity problem revisited*. Applied Mathematical Modelling, 35(3), 326–348.
+4. **Peng, Y. F., Shiau, Y. H., & Hwang, R. R. (2003).** *Transition in a 2-D lid-driven cavity flow*. Applied Mathematical Modelling, 32(3), 337–352.
 5. **Thom, A. (1933).** *The flow past circular cylinders at low speeds*. Proceedings of the Royal Society of London. Series A, 141(845), 651–669.
 
 ---
@@ -355,7 +355,7 @@ If you use this solver, verification datasets, or methodology in your research, 
 @article{gangwar2026lid_driven_cavity,
   title={A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows},
   author={Gangwar, Kartikeya},
-  journal={arXiv preprint / Submitted to Computers \& Fluids},
+  journal={arXiv preprint / Submitted to Applied Mathematical Modelling},
   year={2026}
 }
 

@@ -1,6 +1,6 @@
 # Cover Letter for Journal Submission
 
-**To:** Editor-in-Chief, *Computers & Fluids* (Elsevier)  
+**To:** Editor-in-Chief, *Applied Mathematical Modelling* (Elsevier)  
 **Date:** September 2026  
 **Subject:** Submission of Original Research Manuscript  
 
@@ -15,7 +15,7 @@ Email: kartikeysingh525@protonmail.com | ORCID: https://orcid.org/0009-0009-1973
 
 Dear Editor-in-Chief and Editorial Board,
 
-We are pleased to submit our original research manuscript entitled **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"** for consideration as a regular research article in *Computers \& Fluids*.
+We are pleased to submit our original research manuscript entitled **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"** for consideration as a regular research article in *Applied Mathematical Modelling*.
 
 ### Significance and Key Contributions:
 The incompressible 2D lid-driven cavity flow remains the canonical proving ground for computational fluid dynamics. However, established benchmarks stagnate at $Re \le 10,000$ (Ghia et al., 1982) or $Re \le 25,000$ (Erturk et al., 2005). In this manuscript, we push the numerical and scientific frontiers through several key contributions:

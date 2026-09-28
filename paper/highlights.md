@@ -1,6 +1,6 @@
 # Research Highlights
 
-**Journal:** *Computers & Fluids* (Elsevier)  
+**Journal:** *Applied Mathematical Modelling* (Elsevier)  
 **Title:** A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows  
 **Author:** Kartikeya Gangwar (ORCID: https://orcid.org/0009-0009-1973-7532)  
 

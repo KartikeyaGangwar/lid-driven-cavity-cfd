@@ -10,7 +10,7 @@
 
 ## 📌 Release Overview
 
-This release provides the complete open-source scientific software suite, 30 verified high-resolution benchmark datasets, and the full research manuscript preprint accompanying the submission to *Computers & Fluids* (Elsevier):
+This release provides the complete open-source scientific software suite, 30 verified high-resolution benchmark datasets, and the full research manuscript preprint accompanying the submission to *Applied Mathematical Modelling* (Elsevier):
 
 > **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"**  
 > *Author:* Kartikeya Gangwar  
@@ -21,7 +21,7 @@ This release provides the complete open-source scientific software suite, 30 ver
 ## 📦 What is Included in this Release?
 
 ### 1. Research Manuscript & Submission Package
-* **`paper/manuscript.pdf`**: The full compiled 25-page research article adhering to Elsevier *Computers & Fluids* standards.
+* **`paper/manuscript.pdf`**: The full compiled 25-page research article adhering to Elsevier *Applied Mathematical Modelling* standards.
 * **`paper/manuscript.tex` & `paper/references.bib`**: Complete LaTeX sources and 32 audited bibliographic entries.
 * **`submission_package/`**: Complete ready-to-submit archive including Cover Letter (`01_Cover_Letter.pdf`), Highlights (`02_Highlights.pdf`), Manuscript (`03_Manuscript.pdf`), Declaration of Competing Interest (`04_Declaration_of_Competing_Interest.pdf`), and Metadata (`05_Metadata_and_Reviewer_Details.txt`).
 
@@ -78,7 +78,7 @@ print(f"Minimum Streamfunction psi_min = {psi.min():.7f}")
 @article{gangwar2026lid_driven_cavity,
   title={A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows},
   author={Gangwar, Kartikeya},
-  journal={arXiv preprint / Submitted to Computers \& Fluids},
+  journal={arXiv preprint / Submitted to Applied Mathematical Modelling},
   year={2026}
 }
 

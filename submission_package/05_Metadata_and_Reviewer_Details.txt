@@ -1,10 +1,10 @@
 ================================================================================
-ELSEVIER SUBMISSION PACKAGE: COMPUTERS & FLUIDS (ISSN 0045-7930)
+ELSEVIER SUBMISSION PACKAGE: APPLIED MATHEMATICAL MODELLING (ISSN 0307-904X)
 ================================================================================
-Submission Portal: https://submit.elsevier.com/CAF
-Direct Editorial Manager: https://www.editorialmanager.com/caf/
+Submission Portal: https://submit.elsevier.com/AMM
+Direct Editorial Manager: https://www.editorialmanager.com/apm/
 Article Type: Research Paper / Full Length Article
-Target Journal: Computers & Fluids (Elsevier)
+Target Journal: Applied Mathematical Modelling (Elsevier)
 
 ================================================================================
 1. MANUSCRIPT TITLE & SHORT TITLE
