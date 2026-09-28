@@ -219,6 +219,7 @@ paper/*.bbl
 submission_package/*.aux
 submission_package/*.log
 submission_package/*.out
+submission_package/*.zip
 submission_package/cover_letter.pdf
 submission_package/highlights.pdf
 
