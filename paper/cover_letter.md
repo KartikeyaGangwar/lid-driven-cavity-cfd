@@ -36,6 +36,9 @@ The incompressible 2D lid-driven cavity flow remains the canonical proving groun
 - All data and tools are openly available.
 - There are no competing financial or non-financial interests to declare.
 
+### Note to the Editor regarding Author Identity:
+The author's publication name on the manuscript is formalized as **Kartikeya Gangwar** to reflect the author's preferred ancestral and professional publication name, matching the author's registered ORCID profile ([0009-0009-1973-7532](https://orcid.org/0009-0009-1973-7532)) and the accompanying open-source GitHub ([github.com/KartikeyaGangwar](https://github.com/KartikeyaGangwar)) and Zenodo archives.
+
 Sincerely yours,  
 **Kartikeya Gangwar**  
 Department of Mathematics, University of Delhi, Delhi, 110007, India  
