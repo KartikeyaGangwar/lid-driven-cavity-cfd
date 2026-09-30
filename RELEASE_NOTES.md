@@ -1,7 +1,7 @@
-# Release Notes — v2.0.0: Reference Benchmark Suite & Research Preprint
+# Release Notes — v2.0.1: Reference Benchmark Suite & Research Preprint
 
-**Tag:** `v2.0.0`  
-**Title:** Reference CFD Solver, Verified Benchmark Datasets ($Re = 100 \to 100,000$) & Paper Preprint  
+**Tag:** `v2.0.1`  
+**Title:** Reference CFD Solver, Verified Benchmark Datasets ($Re = 100 \to 100,000$) & AMM Submission Package  
 **Author:** Kartikeya Gangwar (Department of Mathematics, University of Delhi, Delhi, 110007, India)  
 **Permanent Zenodo DOI:** [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938)  
 **License:** [MIT License](LICENSE)  
@@ -10,11 +10,16 @@
 
 ## 📌 Release Overview
 
-This release provides the complete open-source scientific software suite, 30 verified high-resolution benchmark datasets, and the full research manuscript preprint accompanying the submission to *Applied Mathematical Modelling* (Elsevier):
+This release provides the complete open-source scientific software suite, 30 verified high-resolution benchmark datasets, and the full research manuscript preprint accompanying the formal submission to *Applied Mathematical Modelling* (Elsevier):
 
 > **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"**  
 > *Author:* Kartikeya Gangwar  
 > *Preprint PDF:* [`paper/manuscript.pdf`](paper/manuscript.pdf) (25 pages, 32 verified references, 4 Appendices)  
+
+### 🌟 What's New in v2.0.1:
+* **Author Identity Standardization:** Formalized author name to **Kartikeya Gangwar** across all 26+ codebase files, metadata manifests, and compiled PDFs to match registered ORCID (`0009-0009-1973-7532`).
+* **Applied Mathematical Modelling Alignment:** Updated submission package (`submission_package/`), cover letter, and formatting to conform with Elsevier's AMM author guidelines.
+* **Archival Packaging:** Updated metadata manifests, CFF citation schema, and verification hashes for Zenodo automatic synchronization.
 
 ---
 
