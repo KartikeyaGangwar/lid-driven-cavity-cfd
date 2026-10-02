@@ -11,6 +11,7 @@ Features:
 - 60-frame synchronized publication-grade animated GIF generation.
 
 Author: Kartikeya Gangwar
+Email: kartikeyagangwar@proton.me
 Year: 2026
 License: MIT
 """

@@ -4,6 +4,7 @@ title: "A High-Resolution Finite-Difference Framework for Steady Continuation an
 authors:
   - family-names: Gangwar
     given-names: Kartikeya
+    email: "kartikeyagangwar@proton.me"
     orcid: "https://orcid.org/0009-0009-1973-7532"
     affiliation: "Department of Mathematics, University of Delhi, Delhi, 110007, India"
 version: 2.0.1

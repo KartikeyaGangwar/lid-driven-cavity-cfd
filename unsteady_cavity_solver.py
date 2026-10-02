@@ -13,6 +13,7 @@ Features:
 - Publication-grade LaTeX typography (Computer Modern) with externalized legends
 
 Author: Kartikeya Gangwar
+Email: kartikeyagangwar@proton.me
 Year: 2026
 License: MIT
 """

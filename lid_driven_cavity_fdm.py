@@ -12,6 +12,7 @@ Numerical methods:
 - Physical coordinate system with instant post-processing and Ghia et al. validation
 
 Author: Kartikeya Gangwar
+Email: kartikeyagangwar@proton.me
 Year: 2026
 License: MIT
 """
