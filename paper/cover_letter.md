@@ -9,7 +9,7 @@ A High-Resolution Finite-Difference Framework for Steady Continuation and Finite
 
 **Author:** Kartikeya Gangwar  
 Department of Mathematics, University of Delhi, Delhi, 110007, India  
-Email: kartikeysingh525@protonmail.com | ORCID: https://orcid.org/0009-0009-1973-7532  
+Email: kartikeyagangwar@proton.me | ORCID: https://orcid.org/0009-0009-1973-7532  
 
 ---
 
@@ -42,4 +42,4 @@ The author's publication name on the manuscript is formalized as **Kartikeya Gan
 Sincerely yours,  
 **Kartikeya Gangwar**  
 Department of Mathematics, University of Delhi, Delhi, 110007, India  
-Email: kartikeysingh525@protonmail.com | ORCID: https://orcid.org/0009-0009-1973-7532  
+Email: kartikeyagangwar@proton.me | ORCID: https://orcid.org/0009-0009-1973-7532  
