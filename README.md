@@ -10,7 +10,7 @@
 [![Matplotlib](https://img.shields.io/badge/Matplotlib-3.7+-11557c.svg)](https://matplotlib.org/)
 
 Official open-source repository and benchmark suite accompanying the research article:
-> **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"**  
+> **"High-Resolution Finite-Difference Framework for Steady Continuation and Unsteady Dynamics up to $Re = 100{,}000$ in Lid-Driven Cavity Flows"**  
 > *Author:* Kartikeya Gangwar (Department of Mathematics, University of Delhi, India)  
 > *Preprint Archive:* [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938) | [`paper/manuscript.pdf`](paper/manuscript.pdf)
 
@@ -352,7 +352,7 @@ If you use this solver, verification datasets, or methodology in your research, 
 
 ```bibtex
 @article{gangwar2026lid_driven_cavity,
-  title={A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows},
+  title={High-Resolution Finite-Difference Framework for Steady Continuation and Unsteady Dynamics up to $Re = 100{,}000$ in Lid-Driven Cavity Flows},
   author={Gangwar, Kartikeya},
   journal={arXiv preprint / Zenodo},
   year={2026},

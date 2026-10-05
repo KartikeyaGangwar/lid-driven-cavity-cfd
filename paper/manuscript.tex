@@ -22,7 +22,7 @@
     urlcolor=magenta!80!black
 }
 
-\title{\LARGE \textbf{A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows}}
+\title{\LARGE \textbf{High-Resolution Finite-Difference Framework for Steady Continuation and Unsteady Dynamics up to $Re = 100{,}000$ in Lid-Driven Cavity Flows}}
 
 \author{\textbf{Kartikeya Gangwar}\thanks{Department of Mathematics, University of Delhi, Delhi, 110007, India. Corresponding author email: \texttt{kartikeyagangwar@proton.me}. ORCID: \url{https://orcid.org/0009-0009-1973-7532}. Open-source repository: \url{https://github.com/KartikeyaGangwar/lid-driven-cavity-cfd}. Permanent Archive DOI: \href{https://doi.org/10.5281/zenodo.18312938}{10.5281/zenodo.18312938}.}}
 
@@ -340,7 +340,7 @@ $100,000$ & $1025 \to 513 \to 257$ & $-0.1257155846$ & $-0.1257154273$ & $-0.125
 }
 \end{table}
 
-As documented in Table~\ref{tab:gci}, the apparent orders of convergence ($p = 4.7055$ at $Re = 10{,}000$ and $p = 10.1882$ at $Re = 100{,}000$) significantly exceed the formal second-order accuracy of the interior spatial operators. Verification theory~\cite{roache1998verification,asme2009standard} identifies such elevated apparent orders as characteristic of pre-asymptotic behavior on grids where thin boundary layers ($\delta \sim Re^{-1/2}$) are only marginally resolved. At $Re = 100{,}000$, refining the mesh from $513 \times 513$ to $1025 \times 1025$ also contracts the spatial footprint of the hybrid upwind scheme from $98.21\%$ to $96.91\%$ (with pure central differencing expanding from $1.79\%$ to $3.09\%$). Because the grid triplets lie outside an established asymptotic convergence range, the computed GCI indices ($\text{GCI}_{21} = 0.0185\%$ and $\text{GCI}_{32} = 0.48\%$ at $Re = 10{,}000$; $\text{GCI}_{21} < 10^{-6}\%$ and $\text{GCI}_{32} = 0.00016\%$ at $Re = 100{,}000$) and extrapolated values $f_{h=0}$ serve as pre-asymptotic mesh sensitivity indicators rather than rigorous asymptotic continuum uncertainty bounds. In particular, at $Re = 100{,}000$, the fine-to-medium difference $|f_1 - f_2| = 1.573 \times 10^{-7}$ is much smaller than the per-iteration stopping increment $10^{-5}$, indicating near-saturation of the scalar streamfunction extremum under the grid-dependent regularized hybrid model rather than true continuum grid convergence.
+As documented in Table~\ref{tab:gci} and illustrated in Figure~\ref{fig:grid_convergence}, the apparent orders of convergence ($p = 4.7055$ at $Re = 10{,}000$ and $p = 10.1882$ at $Re = 100{,}000$) significantly exceed the formal second-order accuracy of the interior spatial operators. Verification theory~\cite{roache1998verification,asme2009standard} identifies such elevated apparent orders as characteristic of pre-asymptotic behavior on grids where thin boundary layers ($\delta \sim Re^{-1/2}$) are only marginally resolved. At $Re = 100{,}000$, refining the mesh from $513 \times 513$ to $1025 \times 1025$ also contracts the spatial footprint of the hybrid upwind scheme from $98.21\%$ to $96.91\%$ (with pure central differencing expanding from $1.79\%$ to $3.09\%$). Because the grid triplets lie outside an established asymptotic convergence range, the computed GCI indices ($\text{GCI}_{21} = 0.0185\%$ and $\text{GCI}_{32} = 0.48\%$ at $Re = 10{,}000$; $\text{GCI}_{21} < 10^{-6}\%$ and $\text{GCI}_{32} = 0.00016\%$ at $Re = 100{,}000$) and extrapolated values $f_{h=0}$ serve as pre-asymptotic mesh sensitivity indicators rather than rigorous asymptotic continuum uncertainty bounds. In particular, at $Re = 100{,}000$, the fine-to-medium difference $|f_1 - f_2| = 1.573 \times 10^{-7}$ is much smaller than the per-iteration stopping increment $10^{-5}$, indicating near-saturation of the scalar streamfunction extremum under the grid-dependent regularized hybrid model rather than true continuum grid convergence.
 
 \begin{figure}[htbp]
 \centering
@@ -616,6 +616,9 @@ The author declares that he has no known competing financial interests or person
 
 \section*{Funding}
 This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+
+\section*{Ethical Approval}
+Not applicable. This numerical simulation study does not involve human participants, animals, or clinical data.
 
 \section*{Declaration of Generative AI in the Manuscript Preparation Process}
 During the preparation of this work, the author used AI-assisted technologies solely for editorial consistency, grammar verification, and scientific language polishing. After using these tools, the author reviewed and edited the content as needed and takes full responsibility for the content and conclusions of the published article.
