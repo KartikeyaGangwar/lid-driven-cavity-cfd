@@ -226,3 +226,7 @@ submission_package/highlights.pdf
 # Dataset backups
 data/backups/
 
+# Submission packages & journal review artifacts
+submission_package_emerald/
+paper/anonymized_manuscript.*
+
