@@ -223,10 +223,10 @@ submission_package/*.zip
 submission_package/cover_letter.pdf
 submission_package/highlights.pdf
 
+submission_package_emerald/*.aux
+submission_package_emerald/*.log
+submission_package_emerald/*.out
+
 # Dataset backups
 data/backups/
-
-# Submission packages & journal review artifacts
-submission_package_emerald/
-paper/anonymized_manuscript.*
 

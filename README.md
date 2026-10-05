@@ -12,13 +12,13 @@
 Official open-source repository and benchmark suite accompanying the research article:
 > **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"**  
 > *Author:* Kartikeya Gangwar (Department of Mathematics, University of Delhi, India)  
-> *Target Journal:* Applied Mathematical Modelling (Elsevier) | *Preprint:* [`paper/manuscript.pdf`](paper/manuscript.pdf) | *Permanent DOI:* [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938)
+> *Target Journal:* International Journal of Numerical Methods for Heat \& Fluid Flow (Emerald) | *Preprint:* [`paper/manuscript.pdf`](paper/manuscript.pdf) | *Permanent DOI:* [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938)
 
 A high-performance, publication-grade finite-difference computational fluid dynamics (CFD) suite solving the 2D incompressible Navier–Stokes equations in the streamfunction–vorticity ($\psi$–$\omega$) formulation across laminar, transitional, and extreme Reynolds number regimes ($Re = 100 \to 100,000$).
 
 ### 📑 Quick Access Links
 * 📄 **Complete Research Paper (Preprint PDF):** [`paper/manuscript.pdf`](paper/manuscript.pdf) (25 pages, 32 verified references, 4 Appendices)
-* 📦 **Elsevier Submission Package:** [`submission_package/`](submission_package/) (Cover letter, highlights, manuscript, declarations, metadata)
+* 📦 **Emerald Submission Package (IJNMHFF):** [`submission_package_emerald/`](submission_package_emerald/) (Title page, anonymized manuscript, cover letter, metadata cheat sheet)
 * 💾 **30 Verified Benchmark Datasets:** [`data/`](data/) (23 steady continuation + 7 unsteady `.npz` flow fields with SHA-256 hashes)
 * 🚀 **Interactive Cloud Colab Notebook:** [Launch in Google Colab](https://colab.research.google.com/github/KartikeyaGangwar/lid-driven-cavity-cfd/blob/main/cavity_hpc_colab.ipynb)
 * 🎬 **Vortex Shedding Animations:** [`figures/`](figures/) (Real-time synchronized GIFs)
@@ -355,7 +355,7 @@ If you use this solver, verification datasets, or methodology in your research, 
 @article{gangwar2026lid_driven_cavity,
   title={A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows},
   author={Gangwar, Kartikeya},
-  journal={arXiv preprint / Submitted to Applied Mathematical Modelling},
+  journal={Preprint / Submitted to International Journal of Numerical Methods for Heat \& Fluid Flow},
   year={2026}
 }
 
