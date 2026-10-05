@@ -230,3 +230,12 @@ submission_package_emerald/*.out
 # Dataset backups
 data/backups/
 
+# Journal submission packages, cover letters, and private review notes
+submission_package/
+submission_package_emerald/
+technical_review/
+paper/anonymized_manuscript.*
+paper/cover_letter.*
+paper/declaration_of_competing_interest.*
+paper/highlights.*
+

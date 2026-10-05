@@ -12,13 +12,12 @@
 Official open-source repository and benchmark suite accompanying the research article:
 > **"A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows"**  
 > *Author:* Kartikeya Gangwar (Department of Mathematics, University of Delhi, India)  
-> *Target Journal:* International Journal of Numerical Methods for Heat \& Fluid Flow (Emerald) | *Preprint:* [`paper/manuscript.pdf`](paper/manuscript.pdf) | *Permanent DOI:* [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938)
+> *Preprint Archive:* [10.5281/zenodo.18312938](https://doi.org/10.5281/zenodo.18312938) | [`paper/manuscript.pdf`](paper/manuscript.pdf)
 
 A high-performance, publication-grade finite-difference computational fluid dynamics (CFD) suite solving the 2D incompressible Navier–Stokes equations in the streamfunction–vorticity ($\psi$–$\omega$) formulation across laminar, transitional, and extreme Reynolds number regimes ($Re = 100 \to 100,000$).
 
 ### 📑 Quick Access Links
-* 📄 **Complete Research Paper (Preprint PDF):** [`paper/manuscript.pdf`](paper/manuscript.pdf) (25 pages, 32 verified references, 4 Appendices)
-* 📦 **Emerald Submission Package (IJNMHFF):** [`submission_package_emerald/`](submission_package_emerald/) (Title page, anonymized manuscript, cover letter, metadata cheat sheet)
+* 📄 **Research Paper (Preprint PDF):** [`paper/manuscript.pdf`](paper/manuscript.pdf) (25 pages, 32 verified references, 4 Appendices)
 * 💾 **30 Verified Benchmark Datasets:** [`data/`](data/) (23 steady continuation + 7 unsteady `.npz` flow fields with SHA-256 hashes)
 * 🚀 **Interactive Cloud Colab Notebook:** [Launch in Google Colab](https://colab.research.google.com/github/KartikeyaGangwar/lid-driven-cavity-cfd/blob/main/cavity_hpc_colab.ipynb)
 * 🎬 **Vortex Shedding Animations:** [`figures/`](figures/) (Real-time synchronized GIFs)
@@ -168,9 +167,9 @@ lid-driven-cavity-cfd/
 ├── paper/                       # Publication-grade preprint manuscript
 │   ├── figures/                 # 21 publication figures referenced in manuscript
 │   ├── manuscript.tex           # LaTeX source
-│   ├── manuscript.pdf           # Compiled 20-page research paper (21.9 MB)
+│   ├── manuscript.pdf           # Compiled 25-page research paper (21.9 MB)
 │   └── references.bib           # BibTeX bibliography
-├── data/                        # 28 precomputed flow fields (.npz) up to Re=100,000
+├── data/                        # 30 precomputed flow fields (.npz) up to Re=100,000
 │   ├── flow_fields_Re100_N129.npz ... flow_fields_Re30000_N257.npz
 │   ├── flow_fields_Re10000_N513.npz ... flow_fields_Re100000_N513.npz
 │   ├── flow_fields_Re100000_N1025.npz (1.05M nodes mega-mesh benchmark)
@@ -355,8 +354,10 @@ If you use this solver, verification datasets, or methodology in your research, 
 @article{gangwar2026lid_driven_cavity,
   title={A High-Resolution Finite-Difference Framework for Steady Continuation and Finite-Window Unsteady Dynamics up to $Re = 100{,}000$ in 2D Lid-Driven Cavity Flows},
   author={Gangwar, Kartikeya},
-  journal={Preprint / Submitted to International Journal of Numerical Methods for Heat \& Fluid Flow},
-  year={2026}
+  journal={arXiv preprint / Zenodo},
+  year={2026},
+  doi={10.5281/zenodo.18312938},
+  url={https://doi.org/10.5281/zenodo.18312938}
 }
 
 @misc{gangwar2026solver,
