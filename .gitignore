@@ -233,9 +233,11 @@ data/backups/
 # Journal submission packages, cover letters, and private review notes
 submission_package/
 submission_package_emerald/
+submitted_version_HFF_10_2026_1582/
 technical_review/
 paper/anonymized_manuscript.*
 paper/cover_letter.*
 paper/declaration_of_competing_interest.*
 paper/highlights.*
+
 
